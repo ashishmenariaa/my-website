@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradingIndicatorPro - Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .status {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 TradingIndicatorPro</h1>
+        <p>Your trading indicator platform is starting up!</p>
+        
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="/subscriptions.html" style="display: inline-block; background: linear-gradient(45deg, #007bff, #0056b3); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; margin: 10px; font-weight: bold; font-size: 16px;">
+                💎 View Plans
+            </a>
+            <a href="/signup.html" style="display: inline-block; background: #28a745; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; margin: 10px; font-weight: bold;">
+                📝 Sign Up
+            </a>
+            <a href="/login.html" style="display: inline-block; background: #17a2b8; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; margin: 10px; font-weight: bold;">
+                🔐 Login
+            </a>
+        </div>
+        
+        <div id="status" class="status">
+            ⏳ Testing server connection...
+        </div>
+        
+        <button onclick="testServer()">Test Server Connection</button>
+        <button onclick="testAuth()">Test Authentication</button>
+        
+        <div style="margin-top: 30px;">
+            <h3>Setup Progress:</h3>
+            <ul style="text-align: left; display: inline-block;">
+                <li>✅ Basic server setup</li>
+                <li>✅ Static file serving</li>
+                <li>✅ Database connection</li>
+                <li>✅ Authentication system</li>
+                <li>✅ Login/Signup pages</li>
+                <li>✅ Dashboard page</li>
+                <li>⏳ Payment integration</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Test server connection
+        async function testServer() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = '⏳ Testing server...';
+            statusDiv.className = 'status';
+            
+            try {
+                const response = await fetch('/api/test');
+                const data = await response.json();
+                
+                statusDiv.textContent = `✅ Server working! Message: ${data.message}`;
+                statusDiv.className = 'status success';
+            } catch (error) {
+                statusDiv.textContent = `❌ Server error: ${error.message}`;
+                statusDiv.className = 'status error';
+            }
+        }
+        
+        // Test authentication
+        async function testAuth() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = '⏳ Testing authentication...';
+            statusDiv.className = 'status';
+            
+            try {
+                const response = await fetch('/api/auth/test');
+                const data = await response.json();
+                
+                statusDiv.textContent = `✅ Authentication working! ${data.message}`;
+                statusDiv.className = 'status success';
+            } catch (error) {
+                statusDiv.textContent = `❌ Auth error: ${error.message}`;
+                statusDiv.className = 'status error';
+            }
+        }
+        
+        // Auto-test on page load
+        window.onload = function() {
+            setTimeout(testServer, 1000);
+        };
+    </script>
+</body>
+</html>

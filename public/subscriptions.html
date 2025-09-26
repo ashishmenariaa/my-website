@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Plans - TradingIndicatorPro</title>
+    <!-- Include Razorpay Checkout with fallback -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js" 
+            onerror="console.error('Razorpay script failed to load')"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .plan-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s;
+        }
+        
+        .plan-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .plan-card.popular {
+            border: 3px solid #007bff;
+            transform: scale(1.02);
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            padding: 8px 25px;
+            border-radius: 25px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .plan-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .plan-price {
+            font-size: 42px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+        
+        .plan-duration {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+        
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin: 25px 0;
+            text-align: left;
+        }
+        
+        .plan-features li {
+            padding: 12px 0;
+            color: #555;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .plan-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 12px;
+            color: #28a745;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .buy-button {
+            width: 100%;
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            padding: 18px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 25px;
+            transition: all 0.3s;
+        }
+        
+        .buy-button:hover {
+            background: linear-gradient(45deg, #0056b3, #004085);
+            transform: translateY(-2px);
+        }
+        
+        .buy-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .alert {
+            padding: 18px;
+            margin: 20px 0;
+            border-radius: 10px;
+            font-weight: bold;
+            border: none;
+        }
+        
+        .alert-success {
+            background: linear-gradient(45deg, #d4edda, #c3e6cb);
+            color: #155724;
+        }
+        
+        .alert-error {
+            background: linear-gradient(45deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+        }
+        
+        .alert-info {
+            background: linear-gradient(45deg, #d1ecf1, #bee5eb);
+            color: #0c5460;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .nav-links a {
+            color: #007bff;
+            text-decoration: none;
+            margin: 0 20px;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:hover {
+            background: #007bff;
+            color: white;
+        }
+        
+        .guarantee-box {
+            background: linear-gradient(45deg, #e8f5e8, #d4f4d4);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 40px;
+            border: 2px solid #28a745;
+        }
+        
+        .payment-methods {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+        
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="/">🏠 Home</a>
+            <a href="/dashboard.html">📊 Dashboard</a>
+            <a href="/login.html">🔐 Login</a>
+        </div>
+        
+        <div class="header">
+            <h1>💎 Choose Your Trading Plan</h1>
+            <p style="font-size: 18px; color: #666;">Professional trading indicators with <strong>87% accuracy</strong> and <strong>1:4 risk-reward ratio</strong></p>
+        </div>
+        
+        <div id="alert-container"></div>
+        
+        <div id="plans-container" class="plans-grid">
+            <div style="text-align: center; grid-column: 1 / -1;">
+                <div class="loading-spinner"></div>
+                <p>Loading plans...</p>
+            </div>
+        </div>
+        
+        <div class="guarantee-box">
+            <h3>🛡️ 7-Day Money Back Guarantee</h3>
+            <p>Not satisfied with the results? Get a full refund within 7 days, no questions asked!</p>
+        </div>
+        
+        <div class="payment-methods">
+            <h3>🔒 Secure Payment Options</h3>
+            <p>💳 Credit/Debit Cards • 📱 UPI • 🏦 Net Banking • 💰 Wallets</p>
+            <p><small>Powered by Razorpay - India's most trusted payment gateway</small></p>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alert-container');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = message;
+            
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alert);
+            
+            // Auto remove after 8 seconds
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.parentNode.removeChild(alert);
+                }
+            }, 8000);
+        }
+        
+        // Check authentication
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentUser = data.user;
+                    if (currentUser.hasActiveSubscription) {
+                        showAlert(`🎉 You have an active <strong>${currentUser.activePlan.name}</strong> subscription with <strong>${currentUser.daysRemaining} days</strong> remaining!`, 'info');
+                    }
+                }
+            } catch (error) {
+                console.log('User not logged in');
+            }
+        }
+        
+        // Load plans
+        async function loadPlans() {
+            try {
+                console.log('🔄 Loading plans...');
+                const response = await fetch('/api/plans');
+                console.log('📡 Plans response:', response);
+                
+                const data = await response.json();
+                console.log('📊 Plans data:', data);
+                
+                if (data.success) {
+                    displayPlans(data.plans);
+                } else {
+                    console.error('❌ Plans error:', data);
+                    showAlert('❌ Error loading plans: ' + (data.message || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('❌ Plans fetch error:', error);
+                showAlert('❌ Error loading plans: ' + error.message, 'error');
+            }
+        }
+        
+        // Display plans
+function displayPlans(plans) {
+    const container = document.getElementById('plans-container');
+    
+    container.innerHTML = plans.map((plan, index) => {
+        const isPopular = index === 1;
+        return `
+            <div class="plan-card ${isPopular ? 'popular' : ''}">
+                <div class="plan-name">${plan.name}</div>
+                <div class="plan-price">₹${plan.price.toLocaleString()}</div>
+                <div class="plan-duration">${plan.durationMonths} Month${plan.durationMonths > 1 ? 's' : ''}</div>
+                <ul class="plan-features">
+                    ${plan.features.map(f => `<li>${f}</li>`).join('')}
+                </ul>
+                <button class="buy-button" data-plan-id="${plan.planId}" data-plan-name="${plan.name}" data-plan-price="${plan.price}">
+                    ${currentUser ? `🚀 Get ${plan.name} Plan` : '🔐 Login to Subscribe'}
+                </button>
+            </div>
+        `;
+    }).join('');
+
+    // Attach event listeners after rendering
+    document.querySelectorAll('.buy-button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const planId = btn.dataset.planId;
+            const planName = btn.dataset.planName;
+            const price = parseInt(btn.dataset.planPrice);
+            purchasePlan(planId, planName, price);
+        });
+    });
+}
+
+        
+        // Purchase plan with Razorpay
+        async function purchasePlan(planId, planName, price) {
+            console.log('🛒 Purchase plan called:', { planId, planName, price });
+            console.log('👤 Current user:', currentUser);
+            
+            if (!currentUser) {
+                showAlert('🔐 Please <a href="/login.html">login</a> first to purchase a subscription', 'error');
+                return;
+            }
+            
+            try {
+                showAlert('💳 Creating payment order...', 'info');
+                console.log('🔄 Creating order for plan:', planId);
+                
+                // Create Razorpay order
+                const orderResponse = await fetch('/api/payments/create-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ planId })
+                });
+                
+                console.log('📡 Order response:', orderResponse);
+                const orderData = await orderResponse.json();
+                console.log('📊 Order data:', orderData);
+                
+                if (!orderData.success) {
+                    throw new Error(orderData.message || 'Failed to create order');
+                }
+                
+                console.log('✅ Order created successfully, opening Razorpay...');
+                
+                // Check if Razorpay is available
+                if (typeof Razorpay === 'undefined') {
+                    throw new Error('Razorpay is not loaded. Please check your internet connection.');
+                }
+                
+                // Configure Razorpay checkout options
+                const options = {
+                    key: orderData.key,
+                    amount: orderData.order.amount,
+                    currency: orderData.order.currency,
+                    order_id: orderData.order.id,
+                    name: 'TradingIndicatorPro',
+                    description: `${planName} Plan - Professional Trading Indicators`,
+                    image: '/favicon.ico',
+                    handler: function(response) {
+                        console.log('💳 Payment successful:', response);
+                        verifyPayment(response, planId, planName);
+                    },
+                    prefill: {
+                        name: orderData.userDetails.name,
+                        email: orderData.userDetails.email
+                    },
+                    notes: {
+                        planId: planId,
+                        planName: planName
+                    },
+                    theme: {
+                        color: '#007bff'
+                    },
+                    modal: {
+                        ondismiss: function() {
+                            console.log('❌ Payment cancelled');
+                            showAlert('❌ Payment cancelled by user', 'error');
+                        }
+                    },
+                    method: {
+                        upi: true,
+                        card: true,
+                        netbanking: true,
+                        wallet: true
+                    }
+                };
+                
+                console.log('🚀 Opening Razorpay with options:', options);
+                
+                // Open Razorpay checkout
+                const razorpay = new Razorpay(options);
+                razorpay.open();
+                
+            } catch (error) {
+                console.error('❌ Purchase error:', error);
+                showAlert(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Verify payment after successful Razorpay checkout
+        async function verifyPayment(paymentData, planId, planName) {
+            try {
+                showAlert('✅ Payment successful! Verifying...', 'info');
+                
+                const verificationData = {
+                    razorpay_payment_id: paymentData.razorpay_payment_id,
+                    razorpay_order_id: paymentData.razorpay_order_id,
+                    razorpay_signature: paymentData.razorpay_signature,
+                    planId: planId
+                };
+                
+                const response = await fetch('/api/payments/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(verificationData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert(`🎉 <strong>Payment Successful!</strong><br>Your ${planName} subscription is now active!<br>Redirecting to dashboard...`, 'success');
+                    
+                    // Update current user
+                    currentUser.hasActiveSubscription = true;
+                    
+                    // Redirect after 3 seconds
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 3000);
+                } else {
+                    throw new Error(data.message || 'Payment verification failed');
+                }
+                
+            } catch (error) {
+                console.error('Payment verification error:', error);
+                showAlert(`❌ Payment verification failed: ${error.message}<br>Please contact support if money was debited.`, 'error');
+            }
+        }
+        
+        // Initialize page
+    window.onload = async function() {
+    await checkAuth();  // make sure currentUser is loaded
+    await loadPlans();  // then load plans and render buttons
+};
+
+    </script>
+</body>
+</html>

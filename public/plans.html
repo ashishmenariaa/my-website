@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Plans - TradingIndicatorPro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .plan-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+        }
+        
+        .plan-card.popular {
+            border: 3px solid #007bff;
+            transform: scale(1.05);
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #007bff;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .plan-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .plan-price {
+            font-size: 36px;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        
+        .plan-duration {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+        
+        .plan-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            color: #555;
+        }
+        
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .plan-features li:before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        button {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .nav-links {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .nav-links a {
+            color: #007bff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+        
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-links">
+            <a href="/">← Home</a>
+            <a href="/dashboard.html">Dashboard</a>
+            <a href="/login.html">Login</a>
+        </div>
+        
+        <div class="header">
+            <h1>💎 Choose Your Plan</h1>
+            <p>Get access to professional trading indicators with proven results</p>
+        </div>
+        
+        <div id="alert-container"></div>
+        
+        <div id="plans-container" class="plans-grid">
+            <div style="text-align: center; grid-column: 1 / -1;">
+                Loading plans...
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px;">
+            <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; max-width: 600px; margin: 0 auto;">
+                <h3>🔒 Secure Payment</h3>
+                <p>All payments are processed securely. For now, we're using <strong>simulated payments</strong> for testing.</p>
+                <p><small>Razorpay integration coming next!</small></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alert-container');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alert);
+            
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.parentNode.removeChild(alert);
+                }
+            }, 5000);
+        }
+        
+        // Check if user is logged in
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { credentials: 'include' });
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentUser = data.user;
+                    if (currentUser.hasActiveSubscription) {
+                        showAlert(`You have an active ${currentUser.activePlan.name} subscription with ${currentUser.daysRemaining} days remaining.`, 'info');
+                    }
+                }
+            } catch (error) {
+                // User not logged in, that's okay
+            }
+        }
+        
+        // Load plans
+        async function loadPlans() {
+            try {
+                const response = await fetch('/api/plans');
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayPlans(data.plans);
+                } else {
+                    showAlert('Error loading plans', 'error');
+                }
+            } catch (error) {
+                showAlert('Error loading plans', 'error');
+            }
+        }
+        
+        // Display plans
+        function displayPlans(plans) {
+            const container = document.getElementById('plans-container');
+            
+            container.innerHTML = plans.map((plan, index) => `
+                <div class="plan-card ${index === 1 ? 'popular' : ''}">
+                    ${index === 1 ? '<div class="popular-badge">Most Popular</div>' : ''}
+                    <div class="plan-name">${plan.name}</div>
+                    <div class="plan-price">₹${plan.price.toLocaleString()}</div>
+                    <div class="plan-duration">${plan.durationMonths} Month${plan.durationMonths > 1 ? 's' : ''}</div>
+                    <div class="plan-description">${plan.description}</div>
+                    <ul class="plan-features">
+                        ${plan.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
+                    <button onclick="selectPlan('${plan.planId}', '${plan.name}', ${plan.price})" ${currentUser ? '' : 'disabled'}>
+                        ${currentUser ? 'Choose ' + plan.name : 'Login to Subscribe'}
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        // Select plan (simulate payment for now)
+        async function selectPlan(planId, planName, price) {
+            if (!currentUser) {
+                showAlert('Please login first', 'error');
+                setTimeout(() => window.location.href = '/login.html', 2000);
+                return;
+            }
+            
+            const confirmed = confirm(`Subscribe to ${planName} plan for ₹${price.toLocaleString()}?\n\n(This is a SIMULATED payment for testing)`);
+            
+            if (!confirmed) return;
+            
+            try {
+                showAlert('Processing payment...', 'info');
+                
+                const response = await fetch('/api/payments/simulate-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ planId })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showAlert(`Success! ${planName} subscription activated!`, 'success');
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 2000);
+                } else {
+                    showAlert(data.message || 'Payment failed', 'error');
+                }
+            } catch (error) {
+                showAlert('Payment error', 'error');
+            }
+        }
+        
+        // Initialize page
+        window.onload = async function() {
+            await checkAuth();
+            await loadPlans();
+        };
+    </script>
+</body>
+</html>
