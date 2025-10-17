@@ -3,141 +3,375 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - TradingIndicatorPro</title>
+    <title>Sign Up - SD Zone</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        
-        .form-container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #555;
-            font-weight: bold;
-        }
-        
-        input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
-        
-        input:focus {
-            outline: none;
-            border-color: #007bff;
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            position: relative;
+            overflow-x: hidden;
         }
-        
-        button {
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            background-color: #007bff;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .floating-orbs {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #2563eb, transparent);
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 15%;
+            animation-delay: -5s;
+        }
+
+        .orb:nth-child(3) {
+            width: 120px;
+            height: 120px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: -10s;
+        }
+
+        .orb:nth-child(4) {
+            width: 180px;
+            height: 180px;
+            top: 20%;
+            right: 25%;
+            animation-delay: -15s;
+        }
+
+        .orb:nth-child(5) {
+            width: 100px;
+            height: 100px;
+            bottom: 40%;
+            right: 40%;
+            animation-delay: -7s;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1);
+                opacity: 0.1;
+            }
+            25% { 
+                transform: translate(-20px, -30px) scale(1.1);
+                opacity: 0.15;
+            }
+            50% { 
+                transform: translate(30px, -20px) scale(0.9);
+                opacity: 0.08;
+            }
+            75% { 
+                transform: translate(-10px, 20px) scale(1.05);
+                opacity: 0.12;
+            }
+        }
+
+        .grid-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(37, 99, 235, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-card {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 0.5rem;
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #f8fafc;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #f8fafc;
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            font-size: 1rem;
+            color: #f8fafc;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input::placeholder {
+            color: #64748b;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .form-input:valid:not(:placeholder-shown) {
+            border-color: #10b981;
+        }
+
+        .form-input:invalid:not(:focus):not(:placeholder-shown) {
+            border-color: #ef4444;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.875rem;
+            background: #2563eb;
             color: white;
-            padding: 12px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
+            transition: background-color 0.2s ease;
+            margin-bottom: 1.5rem;
         }
-        
-        button:hover {
-            background-color: #0056b3;
+
+        .submit-btn:hover:not(:disabled) {
+            background: #1d4ed8;
         }
-        
-        button:disabled {
-            background-color: #ccc;
+
+        .submit-btn:disabled {
+            opacity: 0.6;
             cursor: not-allowed;
         }
-        
+
+        .loading {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         .alert {
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-            font-weight: bold;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            border-left: 4px solid;
         }
-        
+
         .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: #064e3b;
+            color: #6ee7b7;
+            border-color: #10b981;
         }
-        
+
         .alert-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: #7f1d1d;
+            color: #fca5a5;
+            border-color: #ef4444;
         }
-        
-        .link {
+
+        .auth-links {
             text-align: center;
-            margin-top: 20px;
         }
-        
-        .link a {
-            color: #007bff;
+
+        .auth-link {
+            color: #94a3b8;
             text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
         }
-        
-        .link a:hover {
-            text-decoration: underline;
+
+        .auth-link:hover {
+            color: #2563eb;
+        }
+
+
+
+        @media (max-width: 480px) {
+            .form-card {
+                padding: 1.5rem;
+            }
+
+            .title {
+                font-size: 1.25rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h1>🚀 Sign Up</h1>
-        
-        <div id="alert-container"></div>
-        
-        <form id="signup-form">
-            <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" minlength="6" required>
-                <small style="color: #666;">Minimum 6 characters</small>
-            </div>
-            
-            <button type="submit" id="signup-btn">Create Account</button>
-        </form>
-        
-        <div class="link">
-            Already have an account? <a href="/login.html">Sign in here</a>
+    <div class="animated-bg">
+        <div class="grid-pattern"></div>
+        <div class="floating-orbs">
+            <div class="orb"></div>
+            <div class="orb"></div>
+            <div class="orb"></div>
+            <div class="orb"></div>
+            <div class="orb"></div>
         </div>
-        
-        <div class="link">
-            <a href="/">← Back to Home</a>
+    </div>
+
+    <div class="container">
+        <div class="form-card">
+            <div class="header">
+                <div class="logo">SD Zone</div>
+                <h1 class="title">Create Account</h1>
+                <p class="subtitle">Join our trading platform</p>
+            </div>
+
+            <div id="alert-container"></div>
+
+            <form id="signup-form">
+                <div class="form-group">
+                    <label class="form-label" for="name">Full Name</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        class="form-input"
+                        placeholder="Enter your full name"
+                        required
+                        autocomplete="name"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-input"
+                        placeholder="Enter your email"
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input"
+                        placeholder="Create a password"
+                        minlength="6"
+                        required
+                        autocomplete="new-password"
+                    >
+                </div>
+
+
+
+                <button type="submit" class="submit-btn" id="signup-btn">
+                    <div class="loading" id="loading"></div>
+                    <span id="btn-text">Create Account</span>
+                </button>
+            </form>
+
+            <div class="auth-links">
+                <a href="/login.html" class="auth-link">
+                    Already have an account? Sign in
+                </a>
+            </div>
         </div>
     </div>
 
@@ -151,10 +385,9 @@
             alertContainer.innerHTML = '';
             alertContainer.appendChild(alert);
             
-            // Auto remove after 5 seconds
             setTimeout(() => {
                 if (alert.parentNode) {
-                    alert.parentNode.removeChild(alert);
+                    alert.remove();
                 }
             }, 5000);
         }
@@ -163,24 +396,28 @@
             e.preventDefault();
             
             const submitBtn = document.getElementById('signup-btn');
+            const btnText = document.getElementById('btn-text');
+            const loading = document.getElementById('loading');
             const formData = new FormData(this);
             
             const name = formData.get('name').trim();
             const email = formData.get('email').trim();
             const password = formData.get('password');
             
+            // Basic validation
             if (!name || !email || !password) {
                 showAlert('All fields are required', 'error');
                 return;
             }
             
             if (password.length < 6) {
-                showAlert('Password must be at least 6 characters long', 'error');
+                showAlert('Password must be at least 6 characters', 'error');
                 return;
             }
             
-            // Show loading state
-            submitBtn.textContent = 'Creating Account...';
+            // Show loading
+            btnText.textContent = 'Creating Account...';
+            loading.style.display = 'inline-block';
             submitBtn.disabled = true;
             
             try {
@@ -189,24 +426,30 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ name, email, password })
+                    body: JSON.stringify({ name, email, password }),
+                    credentials: 'include'
                 });
                 
                 const data = await response.json();
                 
                 if (data.success) {
-                    showAlert('Account created successfully! Redirecting...', 'success');
+                    showAlert('Account created successfully!', 'success');
+                    btnText.textContent = 'Success!';
+                    
                     setTimeout(() => {
-                        window.location.href = '/dashboard.html';
-                    }, 2000);
+                        window.location.href = '/index.html';
+                    }, 1500);
                 } else {
                     showAlert(data.message || 'Error creating account', 'error');
                 }
             } catch (error) {
                 showAlert('Network error. Please try again.', 'error');
             } finally {
-                submitBtn.textContent = 'Create Account';
-                submitBtn.disabled = false;
+                if (!document.querySelector('.alert-success')) {
+                    btnText.textContent = 'Create Account';
+                    loading.style.display = 'none';
+                    submitBtn.disabled = false;
+                }
             }
         });
     </script>

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms and Conditions - SD Zone</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --danger-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-accent: #00f2fe;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .grid-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(37, 99, 235, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+
+        .header {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #334155;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.2s;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: #2563eb;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid rgba(0, 242, 254, 0.2);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .last-updated {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .disclaimer-box {
+            background: linear-gradient(145deg, rgba(255, 107, 107, 0.15) 0%, rgba(255, 107, 107, 0.05) 100%);
+            border: 2px solid rgba(255, 107, 107, 0.4);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .disclaimer-box::before {
+            content: '⚠️';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0a0a0a;
+            padding: 0 1rem;
+            font-size: 2rem;
+        }
+
+        .disclaimer-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .disclaimer-text {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            text-align: center;
+            font-size: 1.05rem;
+        }
+
+        .disclaimer-text strong {
+            color: #ff8a8a;
+        }
+
+        .content-section {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-accent);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-number {
+            background: var(--success-gradient);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .section-content {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .section-content h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .section-content p {
+            margin-bottom: 1rem;
+        }
+
+        .section-content ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-content li {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: rgba(0, 242, 254, 0.1);
+            border-left: 4px solid #00f2fe;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .highlight-box strong {
+            color: var(--text-accent);
+        }
+
+        .warning-box {
+            background: rgba(255, 107, 107, 0.1);
+            border-left: 4px solid #ff6b6b;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .warning-box strong {
+            color: #ff8a8a;
+        }
+
+        .footer {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(51, 65, 85, 0.6);
+            padding: 2rem 0;
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .disclaimer-box {
+                padding: 1.5rem;
+            }
+
+            .content-section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg">
+        <div class="grid-pattern"></div>
+    </div>
+
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">SD Zone</a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/subscriptions.html" class="nav-link">Pricing</a>
+                <a href="/terms.html" class="nav-link">Terms</a>
+                <a href="/contact.html" class="nav-link">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Terms and Conditions</h1>
+            <p class="last-updated">Last Updated: January 2024</p>
+        </div>
+
+        <div class="disclaimer-box">
+            <h2 class="disclaimer-title">IMPORTANT REGULATORY DISCLOSURE</h2>
+            <p class="disclaimer-text">
+                <strong>SD Zone is NOT registered with the Securities and Exchange Board of India (SEBI)</strong> as an Investment Advisor, Research Analyst, or Portfolio Manager. We provide trading indicators and educational tools only. All trading signals and information are for <strong>educational purposes</strong> and should not be construed as investment advice. Users must conduct their own research and consult with a SEBI-registered advisor before making any investment decisions.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">1</span>
+                Acceptance of Terms
+            </h2>
+            <div class="section-content">
+                <p>By accessing and using SD Zone's services, including our trading indicators, website, and related tools, you agree to be bound by these Terms and Conditions. If you do not agree with any part of these terms, you must not use our services.</p>
+                <p>These terms constitute a legally binding agreement between you and SD Zone. Your continued use of our services indicates your acceptance of these terms and any future modifications.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">2</span>
+                Service Description
+            </h2>
+            <div class="section-content">
+                <h3>What We Provide</h3>
+                <p>SD Zone offers trading indicators and technical analysis tools designed for use with TradingView and other trading platforms. Our services include:</p>
+                <ul>
+                    <li>Algorithmic trading indicators based on technical analysis</li>
+                    <li>Real-time buy/sell signal alerts</li>
+                    <li>Educational resources and trading strategies</li>
+                    <li>Customer support for technical issues</li>
+                    <li>Access to our trading community and resources</li>
+                </ul>
+
+                <div class="warning-box">
+                    <strong>What We Do NOT Provide:</strong>
+                    <p>We do NOT provide investment advice, portfolio management services, or guaranteed returns. We are NOT SEBI registered and do not claim to be financial advisors.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">3</span>
+                Risk Disclosure
+            </h2>
+            <div class="section-content">
+                <div class="warning-box">
+                    <strong>Trading involves substantial risk of loss and is not suitable for all investors.</strong>
+                </div>
+                
+                <p>You acknowledge and understand that:</p>
+                <ul>
+                    <li><strong>Past Performance:</strong> Historical results do not guarantee future performance. Our stated accuracy rates are based on backtesting and may not reflect actual trading results.</li>
+                    <li><strong>Market Risk:</strong> Financial markets are volatile and unpredictable. You may lose some or all of your invested capital.</li>
+                    <li><strong>No Guarantees:</strong> We make no guarantees about profitability, accuracy, or trading outcomes. All indicators and signals are probabilistic, not certain.</li>
+                    <li><strong>Personal Responsibility:</strong> You are solely responsible for your trading decisions and any resulting profits or losses.</li>
+                    <li><strong>Leverage Risk:</strong> Trading with leverage can amplify both gains and losses significantly.</li>
+                    <li><strong>Technical Failures:</strong> Platform outages, internet connectivity issues, or software errors may impact your ability to trade.</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>Recommendation:</strong> Only trade with money you can afford to lose. Never invest funds needed for essential expenses. Consider consulting with a SEBI-registered financial advisor before trading.
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">4</span>
+                User Responsibilities
+            </h2>
+            <div class="section-content">
+                <p>As a user of SD Zone services, you agree to:</p>
+                <ul>
+                    <li>Provide accurate and complete registration information</li>
+                    <li>Maintain the confidentiality of your account credentials</li>
+                    <li>Use our services in compliance with all applicable laws and regulations</li>
+                    <li>Not share, resell, or distribute our indicators or signals to third parties</li>
+                    <li>Not reverse engineer, decompile, or attempt to extract source code from our indicators</li>
+                    <li>Conduct your own research and due diligence before making trading decisions</li>
+                    <li>Accept full responsibility for all trading activities conducted using our tools</li>
+                    <li>Report any unauthorized access to your account immediately</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">5</span>
+                Subscription and Payment Terms
+            </h2>
+            <div class="section-content">
+                <h3>Subscription Plans</h3>
+                <ul>
+                    <li>All subscription fees are charged in Indian Rupees (INR)</li>
+                    <li>Subscriptions are non-refundable except within our 7-day money-back guarantee period</li>
+                    <li>Subscriptions automatically expire at the end of the paid period unless renewed</li>
+                    <li>We reserve the right to change pricing with 30 days notice to existing subscribers</li>
+                </ul>
+
+                <h3>Refund Policy</h3>
+                <ul>
+                    <li><strong>7-Day Guarantee:</strong> Full refund available within 7 days of purchase if not satisfied</li>
+                    <li>Refund requests must be submitted through our support system</li>
+                    <li>After 7 days, all sales are final and non-refundable</li>
+                    <li>Refunds typically process within 5-7 business days</li>
+                    <li>We reserve the right to deny refunds in cases of abuse or violation of terms</li>
+                </ul>
+
+                <h3>Payment Processing</h3>
+                <p>All payments are processed securely through Razorpay. We do not store your payment information. By making a purchase, you agree to Razorpay's terms and conditions.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">6</span>
+                Intellectual Property Rights
+            </h2>
+            <div class="section-content">
+                <p>All content, indicators, algorithms, logos, and materials provided by SD Zone are protected by intellectual property laws and remain our exclusive property.</p>
+                
+                <h3>License Grant</h3>
+                <p>We grant you a limited, non-exclusive, non-transferable, revocable license to use our indicators solely for personal trading purposes during your active subscription period.</p>
+
+                <h3>Restrictions</h3>
+                <p>You may NOT:</p>
+                <ul>
+                    <li>Copy, modify, or create derivative works from our indicators</li>
+                    <li>Share your subscription access with others</li>
+                    <li>Use our services for commercial purposes without written permission</li>
+                    <li>Remove or alter any copyright notices or branding</li>
+                    <li>Resell, redistribute, or sublicense our indicators</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">7</span>
+                Disclaimer of Warranties
+            </h2>
+            <div class="section-content">
+                <div class="warning-box">
+                    <p><strong>OUR SERVICES ARE PROVIDED "AS IS" WITHOUT ANY WARRANTIES</strong></p>
+                </div>
+
+                <p>We expressly disclaim all warranties, whether express or implied, including but not limited to:</p>
+                <ul>
+                    <li>Warranties of merchantability or fitness for a particular purpose</li>
+                    <li>Warranties regarding accuracy, reliability, or completeness of signals</li>
+                    <li>Warranties of uninterrupted or error-free service</li>
+                    <li>Any guarantees of profit or trading success</li>
+                </ul>
+
+                <p>We make no representations that our indicators will meet your requirements or expectations, or that trading signals will be accurate, timely, or profitable.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">8</span>
+                Limitation of Liability
+            </h2>
+            <div class="section-content">
+                <div class="warning-box">
+                    <strong>IMPORTANT:</strong> To the maximum extent permitted by law, SD Zone and its affiliates shall not be liable for any direct, indirect, incidental, consequential, or punitive damages arising from your use of our services.
+                </div>
+
+                <p>This includes but is not limited to:</p>
+                <ul>
+                    <li>Trading losses or missed trading opportunities</li>
+                    <li>Loss of profits, revenue, or business</li>
+                    <li>Data loss or corruption</li>
+                    <li>Service interruptions or technical failures</li>
+                    <li>Reliance on any signals, indicators, or information provided</li>
+                </ul>
+
+                <p>In no event shall our total liability exceed the amount you paid for your subscription in the 12 months preceding the claim.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">9</span>
+                Account Termination
+            </h2>
+            <div class="section-content">
+                <h3>By You</h3>
+                <p>You may cancel your subscription at any time through your account settings. Cancellation will be effective at the end of your current billing period.</p>
+
+                <h3>By Us</h3>
+                <p>We reserve the right to suspend or terminate your account immediately if you:</p>
+                <ul>
+                    <li>Violate these Terms and Conditions</li>
+                    <li>Engage in fraudulent or illegal activities</li>
+                    <li>Share or resell our indicators</li>
+                    <li>Abuse our services or support team</li>
+                    <li>Fail to pay subscription fees</li>
+                </ul>
+
+                <p>Upon termination, your right to access and use our services immediately ceases, and we may delete your account data.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">10</span>
+                Privacy and Data Protection
+            </h2>
+            <div class="section-content">
+                <p>We are committed to protecting your privacy. Our collection and use of personal information is governed by our Privacy Policy, which is incorporated into these Terms by reference.</p>
+
+                <h3>Data We Collect</h3>
+                <ul>
+                    <li>Account information (name, email, phone)</li>
+                    <li>Payment and billing information</li>
+                    <li>Usage data and trading activity (anonymized)</li>
+                    <li>Technical data (IP address, browser type, device information)</li>
+                </ul>
+
+                <h3>Data Security</h3>
+                <p>We implement industry-standard security measures to protect your data. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">11</span>
+                Modifications to Terms
+            </h2>
+            <div class="section-content">
+                <p>We reserve the right to modify these Terms and Conditions at any time. Changes will be effective immediately upon posting to our website.</p>
+                
+                <div class="highlight-box">
+                    <strong>Your Responsibility:</strong> It is your responsibility to review these terms periodically. Continued use of our services after changes constitutes acceptance of the modified terms.
+                </div>
+
+                <p>For material changes that significantly affect your rights, we will provide notice via email or prominent website notification at least 30 days before the changes take effect.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">12</span>
+                Governing Law and Jurisdiction
+            </h2>
+            <div class="section-content">
+                <p>These Terms and Conditions shall be governed by and construed in accordance with the laws of India, without regard to its conflict of law provisions.</p>
+
+                <p>Any disputes arising from these terms or your use of our services shall be subject to the exclusive jurisdiction of the courts located in [Your City], India.</p>
+
+                <h3>Dispute Resolution</h3>
+                <p>Before initiating legal proceedings, you agree to attempt to resolve any disputes through good-faith negotiation with our support team.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">13</span>
+                Educational Purpose Statement
+            </h2>
+            <div class="section-content">
+                <div class="highlight-box">
+                    <p><strong>SD Zone is an educational platform providing trading tools and indicators.</strong> All signals, strategies, and information are provided for educational and informational purposes only.</p>
+                </div>
+
+                <p>Our services are designed to:</p>
+                <ul>
+                    <li>Help users learn about technical analysis and trading strategies</li>
+                    <li>Provide tools for independent research and analysis</li>
+                    <li>Support user education in financial markets</li>
+                </ul>
+
+                <p><strong>We do NOT:</strong></p>
+                <ul>
+                    <li>Provide personalized investment advice</li>
+                    <li>Recommend specific securities or trading actions</li>
+                    <li>Manage portfolios or execute trades on behalf of users</li>
+                    <li>Guarantee any specific trading outcomes</li>
+                </ul>
+
+                <div class="warning-box">
+                    <strong>Consult a Professional:</strong> Before making investment decisions, consult with a SEBI-registered Investment Advisor or Research Analyst who can provide personalized advice based on your financial situation.
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">14</span>
+                Contact Information
+            </h2>
+            <div class="section-content">
+                <p>For questions, concerns, or support regarding these Terms and Conditions, please contact us:</p>
+                
+                <div class="highlight-box">
+                    <p><strong>SD Zone Support</strong></p>
+                    <p>Email: support@sdzone.com</p>
+                    <p>Phone: +91 9876543210</p>
+                    <p>Support Hours: 24/7</p>
+                </div>
+
+                <p>We aim to respond to all inquiries within 24-48 hours during business days.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">15</span>
+                Severability
+            </h2>
+            <div class="section-content">
+                <p>If any provision of these Terms and Conditions is found to be invalid, illegal, or unenforceable, the remaining provisions shall continue in full force and effect.</p>
+                
+                <p>The invalid provision shall be modified to the minimum extent necessary to make it valid and enforceable while preserving its original intent.</p>
+            </div>
+        </div>
+
+        <div class="disclaimer-box" style="margin-top: 3rem;">
+            <h2 class="disclaimer-title">FINAL ACKNOWLEDGMENT</h2>
+            <p class="disclaimer-text">
+                By using SD Zone services, you acknowledge that you have read, understood, and agree to be bound by these Terms and Conditions. You confirm that you understand the risks involved in trading and that <strong>SD Zone is NOT SEBI registered</strong>. You agree to make all trading decisions independently and accept full responsibility for the outcomes.
+            </p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-text">
+            <p>&copy; 2024 SD Zone. All rights reserved.</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">
+                Trading in financial markets involves risk. Past performance is not indicative of future results. 
+                SD Zone is not registered with SEBI and does not provide investment advice.
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

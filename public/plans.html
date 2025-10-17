@@ -3,312 +3,755 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subscription Plans - TradingIndicatorPro</title>
+    <title>Pricing Plans - SD Zone</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-accent: #00f2fe;
+            --shadow-glow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            --shadow-intense: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .plans-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin: 40px 0;
-        }
-        
-        .plan-card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            text-align: center;
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
             position: relative;
         }
-        
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .floating-orbs {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #2563eb, transparent);
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 15%;
+            animation-delay: -5s;
+        }
+
+        .orb:nth-child(3) {
+            width: 120px;
+            height: 120px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: -10s;
+        }
+
+        .orb:nth-child(4) {
+            width: 180px;
+            height: 180px;
+            top: 20%;
+            right: 25%;
+            animation-delay: -15s;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1);
+                opacity: 0.1;
+            }
+            25% { 
+                transform: translate(-20px, -30px) scale(1.1);
+                opacity: 0.15;
+            }
+            50% { 
+                transform: translate(30px, -20px) scale(0.9);
+                opacity: 0.08;
+            }
+            75% { 
+                transform: translate(-10px, 20px) scale(1.05);
+                opacity: 0.12;
+            }
+        }
+
+        .grid-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(37, 99, 235, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+
+        /* Header */
+        .header {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #334155;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: #2563eb;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Plans Grid */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .plan-card {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--success-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-intense);
+            border-color: rgba(0, 242, 254, 0.4);
+        }
+
+        .plan-card:hover::before {
+            transform: scaleX(1);
+        }
+
         .plan-card.popular {
-            border: 3px solid #007bff;
+            border: 2px solid #00f2fe;
             transform: scale(1.05);
         }
-        
+
         .popular-badge {
             position: absolute;
-            top: -10px;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
-            background: #007bff;
+            background: var(--success-gradient);
             color: white;
-            padding: 5px 20px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
         }
-        
+
+        .plan-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--success-gradient);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.3);
+        }
+
         .plan-name {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
         }
-        
+
         .plan-price {
-            font-size: 36px;
-            font-weight: bold;
-            color: #007bff;
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--text-accent);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 0.5rem;
         }
-        
+
+        .original-price {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .discount-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: #000;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
         .plan-duration {
-            color: #666;
-            margin-bottom: 20px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
         }
-        
+
         .plan-features {
-            list-style: none;
-            padding: 0;
-            margin: 20px 0;
+            display: none;
         }
-        
-        .plan-features li {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-            color: #555;
-        }
-        
-        .plan-features li:last-child {
-            border-bottom: none;
-        }
-        
-        .plan-features li:before {
-            content: "✓";
-            color: #28a745;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        
-        button {
+
+        .plan-button {
             width: 100%;
-            background-color: #007bff;
+            padding: 1rem 2rem;
+            background: var(--success-gradient);
             color: white;
-            padding: 15px;
             border: none;
-            border-radius: 5px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 1.5rem;
         }
-        
-        button:hover {
-            background-color: #0056b3;
+
+        .plan-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: all 0.5s;
         }
-        
-        button:disabled {
-            background-color: #ccc;
+
+        .plan-button:hover::before {
+            left: 100%;
+        }
+
+        .plan-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 242, 254, 0.5);
+        }
+
+        .plan-button:disabled {
+            opacity: 0.6;
             cursor: not-allowed;
+            transform: none;
         }
-        
+
+        .plan-button:disabled::before {
+            display: none;
+        }
+
+        /* Alert System */
         .alert {
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-            font-weight: bold;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            border: 1px solid;
+            backdrop-filter: blur(10px);
+            position: relative;
+            animation: slideIn 0.5s ease-out;
         }
-        
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 2px 0 0 2px;
+        }
+
         .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: linear-gradient(145deg, rgba(0, 242, 254, 0.15) 0%, rgba(0, 242, 254, 0.05) 100%);
+            color: #00f2fe;
+            border-color: rgba(0, 242, 254, 0.3);
         }
-        
+
+        .alert-success::before {
+            background: var(--success-gradient);
+        }
+
         .alert-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: linear-gradient(145deg, rgba(255, 107, 107, 0.15) 0%, rgba(255, 107, 107, 0.05) 100%);
+            color: #ff6b6b;
+            border-color: rgba(255, 107, 107, 0.3);
         }
-        
+
+        .alert-error::before {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+
         .alert-info {
-            background-color: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
+            background: linear-gradient(145deg, rgba(67, 233, 123, 0.15) 0%, rgba(67, 233, 123, 0.05) 100%);
+            color: #43e97b;
+            border-color: rgba(67, 233, 123, 0.3);
         }
-        
-        .nav-links {
+
+        .alert-info::before {
+            background: var(--warning-gradient);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Security Section */
+        .security-info {
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
             text-align: center;
-            margin-bottom: 30px;
+            margin-top: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        
-        .nav-links a {
-            color: #007bff;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: bold;
+
+        .security-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
         }
-        
-        .nav-links a:hover {
-            text-decoration: underline;
+
+        .security-text {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .security-highlight {
+            color: var(--text-accent);
+            font-weight: 600;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(0, 242, 254, 0.3);
+            border-top: 2px solid #00f2fe;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .plans-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .plan-card.popular {
+                transform: none;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="animated-bg">
+        <div class="grid-pattern"></div>
+        <div class="floating-orbs">
+            <div class="orb"></div>
+            <div class="orb"></div>
+            <div class="orb"></div>
+            <div class="orb"></div>
+        </div>
+    </div>
+
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">SD Zone</a>
+            <div class="nav-links" id="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <!-- Profile/Logout/Login will be injected here by JS -->
+            </div>
+        </nav>
+    </header>
+
     <div class="container">
-        <div class="nav-links">
-            <a href="/">← Home</a>
-            <a href="/dashboard.html">Dashboard</a>
-            <a href="/login.html">Login</a>
+        <div class="page-header">
+            <h1 class="page-title">Choose Your Trading Plan</h1>
+            <p class="page-subtitle">Unlock professional trading signals and analytics with our premium subscription plans</p>
         </div>
-        
-        <div class="header">
-            <h1>💎 Choose Your Plan</h1>
-            <p>Get access to professional trading indicators with proven results</p>
-        </div>
-        
+
         <div id="alert-container"></div>
-        
+
         <div id="plans-container" class="plans-grid">
-            <div style="text-align: center; grid-column: 1 / -1;">
+            <div class="loading">
+                <div class="spinner"></div>
                 Loading plans...
             </div>
         </div>
-        
-        <div style="text-align: center; margin-top: 40px;">
-            <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; max-width: 600px; margin: 0 auto;">
-                <h3>🔒 Secure Payment</h3>
-                <p>All payments are processed securely. For now, we're using <strong>simulated payments</strong> for testing.</p>
-                <p><small>Razorpay integration coming next!</small></p>
-            </div>
+
+        <div class="security-info">
+            <h3 class="security-title">Secure Payment Processing</h3>
+            <p class="security-text">All payments are processed securely through encrypted channels.</p>
+            <p class="security-text">Currently using <span class="security-highlight">simulated payments</span> for testing purposes.</p>
+            <p class="security-text"><small>Razorpay integration coming soon!</small></p>
         </div>
     </div>
 
     <script>
-        let currentUser = null;
-        
+        // Single robust event delegation for logout button
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.id === 'logout-btn') {
+                logoutUser();
+            }
+        });
+    // ...existing code...
+
+    // Hardcoded plans data with discount calculations
+    const plans = [
+        {
+            planId: 'starter',
+            name: 'Starter',
+            price: 999,
+            originalPrice: 1499,
+            durationMonths: 1,
+            description: 'Perfect for beginners starting their trading journey'
+        },
+        {
+            planId: 'professional',
+            name: 'Professional',
+            price: 2499,
+            originalPrice: 2997,
+            durationMonths: 3,
+            description: 'Most popular choice for serious traders'
+        },
+        {
+            planId: 'expert',
+            name: 'Expert',
+            price: 4499,
+            originalPrice: 5994,
+            durationMonths: 6,
+            description: 'Advanced package for experienced traders'
+        },
+        {
+            planId: 'elite',
+            name: 'Elite',
+            price: 7999,
+            originalPrice: 11988,
+            durationMonths: 12,
+            description: 'Ultimate trading experience with VIP support'
+        }
+    ];
+
+    // Auth check helper
+    function isUserLoggedIn() {
+        return !!sessionStorage.getItem('user');
+    }
+
+                        if (isUserLoggedIn()) {
+        function renderNavbar() {
+            const navLinks = document.getElementById('nav-links');
+            navLinks.innerHTML = '<a href="/" class="nav-link">Home</a>';
+            if (currentUser) {
+                // Get initials from name
+                let initials = 'U';
+                if (currentUser.name) {
+                    const parts = currentUser.name.trim().split(' ');
+                    initials = parts.length > 1 ? (parts[0][0] + parts[parts.length-1][0]).toUpperCase() : parts[0][0].toUpperCase();
+                }
+                navLinks.innerHTML += `
+                    <div class="profile-menu" style="position:relative;">
+                        <div id="profile-avatar" style="width:40px;height:40px;background:var(--success-gradient);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem;cursor:pointer;box-shadow:0 2px 8px rgba(0,242,254,0.2);margin-left:1rem;">
+                            ${initials}
+                        </div>
+                        <div id="profile-dropdown" style="display:none;position:absolute;right:0;top:48px;background:rgba(30,41,59,0.98);border-radius:12px;box-shadow:0 8px 32px rgba(31,38,135,0.37);min-width:180px;padding:1rem 0;z-index:200;">
+                            <div style="padding:0.5rem 1.5rem;font-weight:600;color:#00f2fe;">${currentUser.name}</div>
+                            <div style="padding:0.5rem 1.5rem;color:#cbd5e1;font-size:0.95rem;">${currentUser.email}</div>
+                            <hr style="border:none;border-top:1px solid #334155;margin:0.5rem 0;">
+                            <button id="logout-btn" style="width:100%;background:none;border:none;color:#ff6b6b;font-weight:700;padding:0.75rem 1.5rem;cursor:pointer;text-align:left;">Logout</button>
+                        </div>
+                    </div>
+                `;
+                // Dropdown logic
+                setTimeout(() => {
+                    const avatar = document.getElementById('profile-avatar');
+                    const dropdown = document.getElementById('profile-dropdown');
+                    avatar.onclick = function(e) {
+                        e.stopPropagation();
+                        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                    };
+                    document.body.addEventListener('click', function() {
+                        dropdown.style.display = 'none';
+                    });
+                }, 100);
+            }
+    // ...existing code...
+                        // currentUser is no longer used
+        function logoutUser() {
+            sessionStorage.removeItem('user');
+            localStorage.removeItem('authToken');
+            currentUser = null;
+            showAlert('Logged out successfully.', 'info');
+            setTimeout(() => {
+                window.location.href = '/login.html';
+            }, 1000);
+    // ...existing code...
+                        if (!isUserLoggedIn()) {
         function showAlert(message, type = 'info') {
             const alertContainer = document.getElementById('alert-container');
             const alert = document.createElement('div');
             alert.className = `alert alert-${type}`;
-            alert.textContent = message;
-            
+            alert.innerHTML = message;
             alertContainer.innerHTML = '';
             alertContainer.appendChild(alert);
-            
             setTimeout(() => {
-                if (alert.parentNode) {
-                    alert.parentNode.removeChild(alert);
-                }
+                alertContainer.innerHTML = '';
             }, 5000);
         }
-        
+
         // Check if user is logged in
         async function checkAuth() {
+            // Try API auth first
             try {
                 const response = await fetch('/api/auth/me', { credentials: 'include' });
                 const data = await response.json();
-                
-                if (data.success) {
+                if (data.success && data.user) {
                     currentUser = data.user;
-                    if (currentUser.hasActiveSubscription) {
-                        showAlert(`You have an active ${currentUser.activePlan.name} subscription with ${currentUser.daysRemaining} days remaining.`, 'info');
-                    }
-                }
-            } catch (error) {
-                // User not logged in, that's okay
-            }
-        }
-        
-        // Load plans
-        async function loadPlans() {
-            try {
-                const response = await fetch('/api/plans');
-                const data = await response.json();
-                
-                if (data.success) {
-                    displayPlans(data.plans);
                 } else {
-                    showAlert('Error loading plans', 'error');
+                    currentUser = null;
                 }
             } catch (error) {
-                showAlert('Error loading plans', 'error');
+                currentUser = null;
             }
+            // Fallback to local/session storage
+            if (!currentUser) {
+                const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+                const userDataString = sessionStorage.getItem('user') || localStorage.getItem('user');
+                if (token || userDataString) {
+                    let userData = {};
+                    if (userDataString) {
+                        userData = JSON.parse(userDataString);
+                    }
+                    currentUser = {
+                        name: userData.name || "User",
+                        email: userData.email || "user@example.com"
+                    };
+                } else {
+                    currentUser = null;
+                }
+            }
+            renderNavbar();
         }
-        
-        // Display plans
-        function displayPlans(plans) {
+
+        // Display plans (only if logged in)
+        function displayPlans() {
             const container = document.getElementById('plans-container');
-            
-            container.innerHTML = plans.map((plan, index) => `
-                <div class="plan-card ${index === 1 ? 'popular' : ''}">
-                    ${index === 1 ? '<div class="popular-badge">Most Popular</div>' : ''}
-                    <div class="plan-name">${plan.name}</div>
-                    <div class="plan-price">₹${plan.price.toLocaleString()}</div>
-                    <div class="plan-duration">${plan.durationMonths} Month${plan.durationMonths > 1 ? 's' : ''}</div>
-                    <div class="plan-description">${plan.description}</div>
-                    <ul class="plan-features">
-                        ${plan.features.map(feature => `<li>${feature}</li>`).join('')}
-                    </ul>
-                    <button onclick="selectPlan('${plan.planId}', '${plan.name}', ${plan.price})" ${currentUser ? '' : 'disabled'}>
-                        ${currentUser ? 'Choose ' + plan.name : 'Login to Subscribe'}
-                    </button>
-                </div>
-            `).join('');
+            if (!currentUser) {
+                container.innerHTML = `<div class="alert alert-info">Please <a href='/login.html' style='color:inherit;text-decoration:underline;'>login</a> to view and subscribe to plans.</div>`;
+                return;
+            }
+            container.innerHTML = plans.map((plan, index) => {
+                const isPopular = index === 1;
+                const savings = index > 0 ? Math.round(((plans[0].price * plan.durationMonths) - plan.price) / (plans[0].price * plan.durationMonths) * 100) : 0;
+                const planIcons = ['🚀', '💎', '⚡', '👑'];
+                const planIcon = planIcons[index] || '💎';
+                return `
+                    <div class="plan-card ${isPopular ? 'popular' : ''}">
+                        ${isPopular ? '<div class="popular-badge">Most Popular</div>' : ''}
+                        ${savings > 0 ? `<div class="savings-badge">Save ${savings}%</div>` : ''}
+                        <div class="plan-icon">${planIcon}</div>
+                        <div class="plan-name">${plan.name}</div>
+                        ${plan.originalPrice ? `<div class="original-price">₹${plan.originalPrice.toLocaleString()}</div>` : ''}
+                        <div class="plan-price">₹${plan.price.toLocaleString()}<small>/total</small></div>
+                        ${savings > 0 ? `<div class="discount-badge">${savings}% OFF</div>` : ''}
+                        <div class="plan-duration">${plan.durationMonths} Month${plan.durationMonths > 1 ? 's' : ''} Access</div>
+                        <div class="plan-description">${plan.description || 'Professional trading indicators for consistent profits'}</div>
+                        <div class="plan-buttons">
+                            <button class="plan-button" onclick="selectPlan('${plan.planId}', '${plan.name}', ${plan.price})" style="font-size:1.125rem;padding:1rem;">Get ${plan.name} Plan</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
-        
+
         // Select plan (simulate payment for now)
         async function selectPlan(planId, planName, price) {
             if (!currentUser) {
-                showAlert('Please login first', 'error');
-                setTimeout(() => window.location.href = '/login.html', 2000);
+                showAlert('Please login first to purchase a subscription plan', 'error');
+                setTimeout(() => {
+                    window.location.href = '/login.html';
+                }, 2000);
                 return;
             }
-            
-            const confirmed = confirm(`Subscribe to ${planName} plan for ₹${price.toLocaleString()}?\n\n(This is a SIMULATED payment for testing)`);
-            
+            const confirmed = confirm(`Subscribe to ${planName} plan for ₹${price.toLocaleString()}?\n\n(This is a SIMULATED payment for testing purposes)`);
             if (!confirmed) return;
-            
             try {
-                showAlert('Processing payment...', 'info');
-                
-                const response = await fetch('/api/payments/simulate-payment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({ planId })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    showAlert(`Success! ${planName} subscription activated!`, 'success');
-                    setTimeout(() => {
-                        window.location.href = '/dashboard.html';
-                    }, 2000);
-                } else {
-                    showAlert(data.message || 'Payment failed', 'error');
-                }
+                showAlert('Simulated payment successful! Your subscription is now active.', 'success');
+                // Simulate subscription activation
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 2000);
             } catch (error) {
-                showAlert('Payment error', 'error');
+                showAlert('Payment failed. Please try again.', 'error');
             }
         }
-        
+
         // Initialize page
-        window.onload = async function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             await checkAuth();
-            await loadPlans();
-        };
+            displayPlans();
+        });
+    // End of script
     </script>
 </body>
 </html>

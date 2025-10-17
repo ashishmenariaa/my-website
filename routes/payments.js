@@ -5,95 +5,73 @@ const User = require('../models/user');
 const Payment = require('../models/payment');
 const plans = require('../config/plans');
 const { authenticate } = require('../middleware/auth');
+const transporter = require('../config/email');
+const { purchaseConfirmationEmail } = require('../config/emailTemplates');
 
 const router = express.Router();
 
-// Initialize Razorpay
+// Initialize Razorpay instance
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
-// Test route
+// ✅ Test route (no auth needed, just for debugging server)
 router.get('/test', (req, res) => {
-  res.json({ 
+  res.json({
     message: 'Payment routes working!',
     razorpayConfigured: !!(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET)
   });
 });
 
-// Create Razorpay order
+/**
+ * ✅ Create Razorpay order
+ * Requires: user must be logged in
+ */
 router.post('/create-order', authenticate, async (req, res) => {
   try {
-    console.log('🔄 Creating order for user:', req.user._id);
-    console.log('📋 Request body:', req.body);
-    
     const { planId } = req.body;
-    console.log("🔑 Razorpay Key ID loaded:", process.env.RAZORPAY_KEY_ID ? true : false);
-    console.log("🔑 Razorpay Key Secret loaded:", process.env.RAZORPAY_KEY_SECRET ? true : false);
 
     if (!planId) {
-      console.log('❌ No planId provided');
-      return res.status(400).json({
-        success: false,
-        message: 'Plan ID is required'
-      });
+      return res.status(400).json({ success: false, message: 'Plan ID is required' });
     }
 
-    // Check if Razorpay is configured
+    // Check Razorpay keys
     if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
-      console.log('❌ Razorpay keys not configured');
-      return res.status(500).json({
-        success: false,
-        message: 'Payment system not configured. Please check Razorpay keys.'
-      });
+      return res.status(500).json({ success: false, message: 'Razorpay keys not configured' });
     }
 
     // Find plan
     const plan = plans.find(p => p.planId === planId);
     if (!plan) {
-      console.log('❌ Invalid plan:', planId);
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid plan selected'
-      });
+      return res.status(400).json({ success: false, message: 'Invalid plan selected' });
     }
 
-    console.log('✅ Plan found:', plan.name);
-
-    // Create a short receipt to avoid Razorpay length error
-    const shortTimestamp = Date.now().toString().slice(-5); // last 5 digits
+    // Create unique receipt (max 40 chars allowed)
+    const shortTimestamp = Date.now().toString().slice(-5);
     const receipt = `${req.user._id}_${planId}_${shortTimestamp}`.substring(0, 40);
 
     // Create Razorpay order
-    const orderOptions = {
-      amount: plan.amountInPaise, // Amount in paise
+    const order = await razorpay.orders.create({
+      amount: plan.amountInPaise,
       currency: 'INR',
-      receipt: receipt,
+      receipt,
       notes: {
         userId: req.user._id.toString(),
-        planId: planId,
+        planId: plan.planId,
         planName: plan.name
       }
-    };
+    });
 
-    console.log('🔄 Creating Razorpay order with options:', orderOptions);
-
-    const order = await razorpay.orders.create(orderOptions);
-    console.log('✅ Razorpay order created:', order.id);
-
-    // Save payment record
-    const payment = new Payment({
+    // Save payment record in DB
+    await new Payment({
       userId: req.user._id,
-      planId: planId,
+      planId: plan.planId,
       planName: plan.name,
       amount: plan.price,
       razorpayOrderId: order.id,
       status: 'created'
-    });
-
-    await payment.save();
-    console.log('✅ Payment record saved');
+    }).save();
 
     res.json({
       success: true,
@@ -102,7 +80,7 @@ router.post('/create-order', authenticate, async (req, res) => {
         amount: order.amount,
         currency: order.currency,
         planName: plan.name,
-        planId: planId
+        planId: plan.planId
       },
       key: process.env.RAZORPAY_KEY_ID,
       userDetails: {
@@ -112,61 +90,42 @@ router.post('/create-order', authenticate, async (req, res) => {
     });
   } catch (error) {
     console.error('❌ Create order error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error creating payment order: ' + error.message
-    });
+    res.status(500).json({ success: false, message: 'Error creating payment order: ' + error.message });
   }
 });
 
-
-// Verify payment
+/**
+ * ✅ Verify Razorpay payment
+ * Requires: user must be logged in
+ */
 router.post('/verify', authenticate, async (req, res) => {
   try {
-    const { 
-      razorpay_payment_id, 
-      razorpay_order_id, 
-      razorpay_signature, 
-      planId 
-    } = req.body;
+    const { razorpay_payment_id, razorpay_order_id, razorpay_signature, planId } = req.body;
 
     if (!razorpay_payment_id || !razorpay_order_id || !razorpay_signature || !planId) {
-      return res.status(400).json({
-        success: false,
-        message: 'Missing required payment details'
-      });
+      return res.status(400).json({ success: false, message: 'Missing payment details' });
     }
 
-    // Verify signature
-    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    // Validate signature
     const expectedSignature = crypto
       .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-      .update(body.toString())
+      .update(razorpay_order_id + "|" + razorpay_payment_id)
       .digest('hex');
 
     if (expectedSignature !== razorpay_signature) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid payment signature'
-      });
+      return res.status(400).json({ success: false, message: 'Invalid payment signature' });
     }
 
     // Find payment record
     const payment = await Payment.findOne({ razorpayOrderId: razorpay_order_id });
     if (!payment) {
-      return res.status(400).json({
-        success: false,
-        message: 'Payment record not found'
-      });
+      return res.status(400).json({ success: false, message: 'Payment record not found' });
     }
 
     // Find plan
     const plan = plans.find(p => p.planId === planId);
     if (!plan) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid plan'
-      });
+      return res.status(400).json({ success: false, message: 'Invalid plan' });
     }
 
     // Update payment record
@@ -186,49 +145,67 @@ router.post('/verify', authenticate, async (req, res) => {
       planId: plan.planId,
       name: plan.name,
       price: plan.price,
-      startDate: startDate,
-      endDate: endDate
+      startDate,
+      endDate
     };
 
     await user.save();
+
+    // 📧 SEND PURCHASE CONFIRMATION EMAIL
+    try {
+      const expiryDate = endDate.toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+
+      const planDetails = {
+        name: plan.name,
+        price: plan.price,
+        duration: plan.durationMonths * 30, // Convert months to approximate days
+        expiryDate: expiryDate
+      };
+
+      const mailOptions = purchaseConfirmationEmail(user.email, user.name, planDetails);
+      await transporter.sendMail(mailOptions);
+      
+      console.log('✅ Purchase confirmation email sent to:', user.email);
+    } catch (emailError) {
+      console.error('❌ Failed to send purchase email:', emailError);
+      // Don't fail the payment if email fails
+    }
 
     res.json({
       success: true,
       message: 'Payment verified successfully',
       subscription: {
         planName: plan.name,
-        startDate: startDate,
-        endDate: endDate,
+        startDate,
+        endDate,
         daysRemaining: user.getDaysRemaining()
       }
     });
   } catch (error) {
-    console.error('Payment verification error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error verifying payment'
-    });
+    console.error('❌ Payment verification error:', error);
+    res.status(500).json({ success: false, message: 'Error verifying payment' });
   }
 });
 
-// Keep the simulate payment for testing
+/**
+ * ✅ Simulate payment (for testing only)
+ * Requires: user must be logged in
+ */
 router.post('/simulate-payment', authenticate, async (req, res) => {
   try {
     const { planId } = req.body;
 
     if (!planId) {
-      return res.status(400).json({
-        success: false,
-        message: 'Plan ID is required'
-      });
+      return res.status(400).json({ success: false, message: 'Plan ID is required' });
     }
 
     const plan = plans.find(p => p.planId === planId);
     if (!plan) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid plan selected'
-      });
+      return res.status(400).json({ success: false, message: 'Invalid plan selected' });
     }
 
     const user = await User.findById(req.user._id);
@@ -240,28 +217,49 @@ router.post('/simulate-payment', authenticate, async (req, res) => {
       planId: plan.planId,
       name: plan.name,
       price: plan.price,
-      startDate: startDate,
-      endDate: endDate
+      startDate,
+      endDate
     };
 
     await user.save();
+
+    // 📧 SEND PURCHASE CONFIRMATION EMAIL (for simulated payment too)
+    try {
+      const expiryDate = endDate.toLocaleDateString('en-IN', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+
+      const planDetails = {
+        name: plan.name,
+        price: plan.price,
+        duration: plan.durationMonths * 30, // Convert months to approximate days
+        expiryDate: expiryDate
+      };
+
+      const mailOptions = purchaseConfirmationEmail(user.email, user.name, planDetails);
+      await transporter.sendMail(mailOptions);
+      
+      console.log('✅ Purchase confirmation email sent to:', user.email);
+    } catch (emailError) {
+      console.error('❌ Failed to send purchase email:', emailError);
+      // Don't fail the payment if email fails
+    }
 
     res.json({
       success: true,
       message: 'Payment simulated successfully! Subscription activated.',
       subscription: {
         planName: plan.name,
-        startDate: startDate,
-        endDate: endDate,
+        startDate,
+        endDate,
         daysRemaining: user.getDaysRemaining()
       }
     });
   } catch (error) {
-    console.error('Simulate payment error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error processing payment simulation'
-    });
+    console.error('❌ Simulate payment error:', error);
+    res.status(500).json({ success: false, message: 'Error processing payment simulation' });
   }
 });
 

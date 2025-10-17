@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - SD Zone</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-accent: #00f2fe;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .floating-orbs {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: float 25s infinite ease-in-out;
+            filter: blur(60px);
+        }
+
+        .orb:nth-child(1) {
+            width: 350px;
+            height: 350px;
+            top: 10%;
+            left: -5%;
+            background: radial-gradient(circle at 30% 30%, #2563eb, transparent);
+        }
+
+        .orb:nth-child(2) {
+            width: 300px;
+            height: 300px;
+            top: 50%;
+            right: 0;
+            background: radial-gradient(circle at 30% 30%, #00f2fe, transparent);
+            animation-delay: -8s;
+        }
+
+        .orb:nth-child(3) {
+            width: 280px;
+            height: 280px;
+            bottom: 5%;
+            left: 30%;
+            background: radial-gradient(circle at 30% 30%, #43e97b, transparent);
+            animation-delay: -16s;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1);
+                opacity: 0.15;
+            }
+            33% { 
+                transform: translate(40px, -60px) scale(1.2);
+                opacity: 0.25;
+            }
+            66% { 
+                transform: translate(-30px, 50px) scale(0.9);
+                opacity: 0.1;
+            }
+        }
+
+        .grid-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(37, 99, 235, 0.05) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.05) 2px, transparent 2px);
+            background-size: 50px 50px;
+            animation: gridMove 40s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .header {
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid rgba(0, 242, 254, 0.15);
+            padding: 1.2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: var(--success-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--success-gradient);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        .nav-link:hover {
+            color: var(--text-accent);
+        }
+
+        .hero-section {
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 5rem 2rem 3rem;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            letter-spacing: -2px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 4rem;
+            margin-top: 4rem;
+        }
+
+        .contact-info {
+            animation: fadeInLeft 1s ease-out;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .info-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .info-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.9;
+            margin-bottom: 3rem;
+        }
+
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .contact-method {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(51, 65, 85, 0.5);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .contact-method:hover {
+            transform: translateX(10px);
+            border-color: rgba(0, 242, 254, 0.6);
+            box-shadow: 0 15px 50px rgba(0, 242, 254, 0.2);
+        }
+
+        .method-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--success-gradient);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.4);
+        }
+
+        .method-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .method-content p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        .method-content a {
+            color: var(--text-accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .method-content a:hover {
+            color: #43e97b;
+        }
+
+        .contact-form {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(51, 65, 85, 0.5);
+            border-radius: 30px;
+            padding: 3rem;
+            animation: fadeInRight 1s ease-out;
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.8rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.7rem;
+            color: var(--text-primary);
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: rgba(0, 242, 254, 0.6);
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.2);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .form-button {
+            width: 100%;
+            padding: 1.3rem;
+            background: var(--success-gradient);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 30px rgba(0, 242, 254, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .form-button:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .form-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(0, 242, 254, 0.6);
+        }
+
+        .form-button:active {
+            transform: translateY(-1px);
+        }
+
+        .social-section {
+            margin-top: 6rem;
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(145deg, rgba(0, 242, 254, 0.08) 0%, rgba(67, 233, 123, 0.08) 100%);
+            border-radius: 30px;
+            border: 2px solid rgba(0, 242, 254, 0.3);
+        }
+
+        .social-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .social-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            width: 180px;
+            padding: 1.5rem;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(51, 65, 85, 0.5);
+            border-radius: 20px;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .social-link:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 242, 254, 0.6);
+            box-shadow: 0 20px 60px rgba(0, 242, 254, 0.3);
+        }
+
+        .social-icon {
+            font-size: 3rem;
+        }
+
+        .social-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .social-handle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .footer {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 242, 254, 0.1);
+            padding: 3rem 0;
+            margin-top: 6rem;
+            text-align: center;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 1024px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.8rem;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .contact-form {
+                padding: 2rem;
+            }
+
+            .social-links {
+                gap: 1rem;
+            }
+
+            .social-link {
+                width: 140px;
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg">
+        <div class="grid-pattern"></div>
+        <div class="floating-orbs">
+            <div class="orb"></div>
+            <div class="orb"></div>
+            <div class="orb"></div>
+        </div>
+    </div>
+
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">SD ZONE</a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/subscriptions.html" class="nav-link">Pricing</a>
+                <a href="/features.html" class="nav-link">Features</a>
+                <a href="/contact.html" class="nav-link">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Get In Touch</h1>
+            <p class="hero-subtitle">Have questions about our trading indicators? Need technical support? We're here to help you succeed in your trading journey.</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-info">
+                <h2 class="info-title">Let's Connect</h2>
+                <p class="info-description">
+                    Whether you're a beginner looking to learn or an experienced trader seeking advanced tools, our team is ready to assist you. Reach out through any of these channels.
+                </p>
+
+                <div class="contact-methods">
+                    <div class="contact-method">
+                        <div class="method-icon">📧</div>
+                        <div class="method-content">
+                            <h3>Email Support</h3>
+                            <p><a href="mailto:support@sdzone.com">support@sdzone.com</a></p>
+                            <p style="margin-top: 0.3rem; font-size: 0.95rem;">Response within 24 hours</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-method">
+                        <div class="method-icon">💬</div>
+                        <div class="method-content">
+                            <h3>Telegram Community</h3>
+                            <p><a href="https://t.me/ashishmenaria" target="_blank">Join Our Channel</a></p>
+                            <p style="margin-top: 0.3rem; font-size: 0.95rem;">Live chat & trading signals</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-method">
+                        <div class="method-icon">🕒</div>
+                        <div class="method-content">
+                            <h3>Availability</h3>
+                            <p>24/7 Support Available</p>
+                            <p style="margin-top: 0.3rem; font-size: 0.95rem;">We're always here to help</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <h2 class="form-title">Send Us a Message</h2>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label class="form-label" for="name">Your Name</label>
+                        <input type="text" id="name" class="form-input" placeholder="Enter your name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" id="email" class="form-input" placeholder="your@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="subject">Subject</label>
+                        <input type="text" id="subject" class="form-input" placeholder="How can we help?" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="message">Message</label>
+                        <textarea id="message" class="form-textarea" placeholder="Tell us more about your inquiry..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="form-button">Send Message</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="social-section">
+            <h2 class="social-title">Follow Us</h2>
+            <p class="social-subtitle">Stay updated with trading tips, market insights, and exclusive content</p>
+            
+            <div class="social-links">
+                <a href="https://t.me/ashishmenaria" target="_blank" class="social-link">
+                    <div class="social-icon">📱</div>
+                    <div class="social-name">Telegram</div>
+                    <div class="social-handle">Live Updates</div>
+                </a>
+
+                <a href="#" target="_blank" class="social-link">
+                    <div class="social-icon">📸</div>
+                    <div class="social-name">Instagram</div>
+                    <div class="social-handle">11K+ Followers</div>
+                </a>
+
+                <a href="#" target="_blank" class="social-link">
+                    <div class="social-icon">📺</div>
+                    <div class="social-name">YouTube</div>
+                    <div class="social-handle">Tutorials</div>
+                </a>
+
+                <a href="#" target="_blank" class="social-link">
+                    <div class="social-icon">🐦</div>
+                    <div class="social-name">Twitter</div>
+                    <div class="social-handle">Daily Tips</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-text">
+            <p>&copy; 2024 SD Zone. All rights reserved.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.95rem; opacity: 0.7;">
+                Trading involves risk. Past performance does not guarantee future results.
+            </p>
+        </div>
+    </footer>
+<script>
+    document.getElementById('contactForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const submitButton = this.querySelector('.form-button');
+        const originalText = submitButton.textContent;
+        
+        // Show loading state
+        submitButton.textContent = 'Sending...';
+        submitButton.disabled = true;
+        
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            subject: document.getElementById('subject').value,
+            message: document.getElementById('message').value
+        };
+        
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                alert(data.message || 'Message sent successfully!');
+                this.reset();
+            } else {
+                alert(data.message || 'Failed to send message. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to send message. Please try again or email us directly at help.sdzone@gmail.com');
+        } finally {
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+        }
+    });
+</script>
+    <!-- <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // Here you would typically send this to your backend
+            console.log('Form submitted:', { name, email, subject, message });
+            
+            // Show success message
+            alert('Thank you for your message! We will get back to you soon.');
+            
+            // Reset form
+            this.reset();
+        });
+    </script> -->
+</body>
+</html>

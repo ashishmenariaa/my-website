@@ -1,45 +1,64 @@
 const plans = [
   {
-    planId: "bronze_1m",
-    name: "Bronze",
+    planId: "starter_1m",
+    name: "Starter",
     durationMonths: 1,
     price: 999,
     amountInPaise: 99900, // Razorpay expects amount in paise
-    description: "1 month access to TradingIndicatorPro",
+    description: "Perfect for beginners starting their trading journey",
     features: [
       "Real-time trading signals",
-      "87% accuracy rate",
+      "89% accuracy rate",
       "Email support",
       "Basic indicator access"
     ]
   },
   {
-    planId: "silver_3m",
-    name: "Silver",
+    planId: "professional_3m",
+    name: "Professional",
     durationMonths: 3,
     price: 2499,
     amountInPaise: 249900,
-    description: "3 months access to TradingIndicatorPro",
+    originalPrice: 2997,
+    description: "Most popular choice for serious traders",
     features: [
-      "Real-time trading signals",
-      "87% accuracy rate",
-      "Priority email support",
+      "All Starter features",
+      "Priority support",
       "Advanced indicators",
-      "Market analysis reports"
+      "Market analysis reports",
+      "SMS alerts"
     ]
   },
   {
-    planId: "gold_6m",
-    name: "Gold",
+    planId: "expert_6m",
+    name: "Expert",
     durationMonths: 6,
-    price: 4999,
-    amountInPaise: 499900,
-    description: "6 months access to TradingIndicatorPro",
+    price: 4499,
+    amountInPaise: 449900,
+    originalPrice: 5994,
+    description: "Advanced package for experienced traders",
     features: [
-      "All Silver features",
+      "All Professional features",
       "Custom alerts",
       "Weekly market analysis",
-      "Phone support"
+      "Phone support",
+      "Advanced risk management"
+    ]
+  },
+  {
+    planId: "elite_12m",
+    name: "Elite",
+    durationMonths: 12,
+    price: 7999,
+    amountInPaise: 799900,
+    originalPrice: 11988,
+    description: "Ultimate trading experience with VIP support",
+    features: [
+      "All Expert features",
+      "VIP support hotline",
+      "Custom strategy development",
+      "1-on-1 trading sessions",
+      "Lifetime updates"
     ]
   }
 ];

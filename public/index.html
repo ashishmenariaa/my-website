@@ -3,143 +3,1319 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TradingIndicatorPro - Test Page</title>
+    <title>SD Zone - Supply & Demand Zone Trading</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --premium-gradient: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-accent: #00f2fe;
+            --shadow-glow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            --shadow-intense: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .floating-orbs {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #2563eb, transparent);
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+            filter: blur(40px);
+        }
+
+        .orb:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb:nth-child(2) {
+            width: 250px;
+            height: 250px;
+            top: 60%;
+            right: 15%;
+            animation-delay: -5s;
+            background: radial-gradient(circle at 30% 30%, #00f2fe, transparent);
+        }
+
+        .orb:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: -10s;
+            background: radial-gradient(circle at 30% 30%, #43e97b, transparent);
+        }
+
+        .orb:nth-child(4) {
+            width: 280px;
+            height: 280px;
+            top: 20%;
+            right: 25%;
+            animation-delay: -15s;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1);
+                opacity: 0.15;
+            }
+            25% { 
+                transform: translate(-30px, -40px) scale(1.2);
+                opacity: 0.2;
+            }
+            50% { 
+                transform: translate(40px, -30px) scale(0.9);
+                opacity: 0.1;
+            }
+            75% { 
+                transform: translate(-20px, 30px) scale(1.1);
+                opacity: 0.18;
+            }
+        }
+
+        .grid-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(37, 99, 235, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+
+        .header {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 242, 254, 0.1);
+            padding: 1.2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-container {
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: var(--success-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            letter-spacing: 1px;
         }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
         }
-        
-        .status {
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 5px;
-            font-weight: bold;
+
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            position: relative;
         }
-        
-        .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--success-gradient);
+            transition: width 0.3s;
         }
-        
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+
+        .nav-link:hover::after {
+            width: 80%;
         }
-        
-        button {
-            background-color: #007bff;
+
+        .nav-link:hover {
+            color: var(--text-accent);
+        }
+
+        .nav-btn {
+            background: var(--success-gradient);
             color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 10px;
+            padding: 0.7rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
         }
-        
-        button:hover {
-            background-color: #0056b3;
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.5);
+        }
+
+        .user-profile {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            background: var(--success-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 242, 254, 0.3);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(0, 242, 254, 0.3);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: rgba(30, 41, 59, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(51, 65, 85, 0.8);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            min-width: 240px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+        }
+
+        .profile-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-name {
+            font-weight: 700;
+            color: var(--text-accent);
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .dropdown-email {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.25rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .dropdown-item.logout {
+            color: #ff6b6b;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-item.logout:hover {
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff8a8a;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin: 2rem auto;
+            max-width: 1400px;
+            font-weight: 500;
+            border: 1px solid;
+            backdrop-filter: blur(10px);
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 2px 0 0 2px;
+        }
+
+        .alert-success {
+            background: linear-gradient(145deg, rgba(0, 242, 254, 0.15) 0%, rgba(0, 242, 254, 0.05) 100%);
+            color: #00f2fe;
+            border-color: rgba(0, 242, 254, 0.3);
+        }
+
+        .alert-success::before {
+            background: var(--success-gradient);
+        }
+
+        .alert-error {
+            background: linear-gradient(145deg, rgba(255, 107, 107, 0.15) 0%, rgba(255, 107, 107, 0.05) 100%);
+            color: #ff6b6b;
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        .alert-error::before {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+
+        .alert-info {
+            background: linear-gradient(145deg, rgba(67, 233, 123, 0.15) 0%, rgba(67, 233, 123, 0.05) 100%);
+            color: #43e97b;
+            border-color: rgba(67, 233, 123, 0.3);
+        }
+
+        .alert-info::before {
+            background: var(--warning-gradient);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .hero-section {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .brand-tagline {
+            display: inline-block;
+            background: rgba(0, 242, 254, 0.1);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-accent);
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(0, 242, 254, 0.5);
+            }
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            letter-spacing: -2px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-weight: 400;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 3rem;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .cta-button {
+            padding: 1.2rem 3rem;
+            border-radius: 30px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .cta-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cta-primary {
+            background: var(--success-gradient);
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.4);
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(0, 242, 254, 0.6);
+        }
+
+        .cta-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            border-color: rgba(0, 242, 254, 0.5);
+        }
+
+        .about-section {
+            padding: 6rem 0;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(20px);
+            margin: 4rem 0;
+            border-top: 1px solid rgba(0, 242, 254, 0.1);
+            border-bottom: 1px solid rgba(0, 242, 254, 0.1);
+        }
+
+        .about-container {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .about-image {
+            position: relative;
+            animation: fadeInLeft 1s ease-out;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .mentor-photo {
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1;
+            background: var(--success-gradient);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8rem;
+            box-shadow: 0 20px 60px rgba(0, 242, 254, 0.3);
+            border: 3px solid rgba(0, 242, 254, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mentor-photo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% {
+                transform: rotate(0deg) translateY(-100%);
+            }
+            100% {
+                transform: rotate(0deg) translateY(100%);
+            }
+        }
+
+        .about-content {
+            animation: fadeInRight 1s ease-out;
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .section-label {
+            display: inline-block;
+            background: var(--warning-gradient);
+            color: #000;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .about-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .about-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.9;
+            margin-bottom: 2rem;
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+
+        .stat-box {
+            background: rgba(0, 242, 254, 0.05);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            background: rgba(0, 242, 254, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: var(--success-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .expertise-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+        }
+
+        .tag:hover {
+            background: rgba(0, 242, 254, 0.1);
+            border-color: rgba(0, 242, 254, 0.3);
+            color: var(--text-accent);
+            transform: translateY(-2px);
+        }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 6rem 0;
+        }
+
+        .stat-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            border-radius: 25px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 242, 254, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 242, 254, 0.3);
+            border-color: rgba(0, 242, 254, 0.5);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: var(--success-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin: 6rem 0;
+        }
+
+        .feature-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            border-radius: 25px;
+            padding: 3rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            border-color: rgba(0, 242, 254, 0.5);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.4);
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 242, 254, 0.1);
+            padding: 4rem 0 2rem;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: var(--success-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+            color: var(--text-secondary);
+            transition: color 0.3s;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--text-accent);
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .success-badge {
+            display: inline-block;
+            background: var(--warning-gradient);
+            color: #000;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
+        }
+
+        @media (max-width: 1024px) {
+            .about-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .mentor-photo {
+                margin: 0 auto;
+            }
+
+            .about-stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .expertise-tags {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.8rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .about-title {
+                font-size: 2rem;
+            }
+
+            .about-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .profile-dropdown {
+                right: auto;
+                left: 0;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-button {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .mentor-photo {
+                font-size: 5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🚀 TradingIndicatorPro</h1>
-        <p>Your trading indicator platform is starting up!</p>
-        
-        <div style="text-align: center; margin: 30px 0;">
-            <a href="/subscriptions.html" style="display: inline-block; background: linear-gradient(45deg, #007bff, #0056b3); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; margin: 10px; font-weight: bold; font-size: 16px;">
-                💎 View Plans
-            </a>
-            <a href="/signup.html" style="display: inline-block; background: #28a745; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; margin: 10px; font-weight: bold;">
-                📝 Sign Up
-            </a>
-            <a href="/login.html" style="display: inline-block; background: #17a2b8; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; margin: 10px; font-weight: bold;">
-                🔐 Login
-            </a>
-        </div>
-        
-        <div id="status" class="status">
-            ⏳ Testing server connection...
-        </div>
-        
-        <button onclick="testServer()">Test Server Connection</button>
-        <button onclick="testAuth()">Test Authentication</button>
-        
-        <div style="margin-top: 30px;">
-            <h3>Setup Progress:</h3>
-            <ul style="text-align: left; display: inline-block;">
-                <li>✅ Basic server setup</li>
-                <li>✅ Static file serving</li>
-                <li>✅ Database connection</li>
-                <li>✅ Authentication system</li>
-                <li>✅ Login/Signup pages</li>
-                <li>✅ Dashboard page</li>
-                <li>⏳ Payment integration</li>
-            </ul>
+    <div class="animated-bg">
+        <div class="grid-pattern"></div>
+        <div class="floating-orbs">
+            <div class="orb"></div>
+            <div class="orb"></div>
+            <div class="orb"></div>
+            <div class="orb"></div>
         </div>
     </div>
 
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">SD ZONE</a>
+            <div class="nav-links" id="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/subscriptions.html" class="nav-link">Pricing</a>
+                <a href="/features.html" class="nav-link">Features</a>
+                <a href="/contact.html" class="nav-link">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <div id="alert-container"></div>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <div class="brand-tagline">🎯 Master Supply & Demand Zones</div>
+            <h1 class="hero-title">SD ZONE</h1>
+            <p class="hero-subtitle">Supply & Demand Zone Trading Mastery</p>
+            <p class="hero-description">
+                Transform your trading with precision zone identification. Learn to spot high-probability setups where institutional money moves the market.
+            </p>
+            <div class="cta-buttons">
+                <a href="/subscriptions.html" class="cta-button cta-primary">Start Your Journey</a>
+                <a href="/features.html" class="cta-button cta-secondary">Explore Features</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="about-container">
+            <div class="about-image">
+                <div class="mentor-photo">
+                    👨‍💼
+                </div>
+            </div>
+            <div class="about-content">
+                <span class="section-label">Meet Your Mentor</span>
+                <h2 class="about-title">Empowering Traders Since 2020</h2>
+                <p class="about-description">
+                    At just 23 years old, I've dedicated the last 5 years to mastering the Indian stock market. With a strong foundation in Options Trading, Swing Trading, and Intraday strategies, I've built a community of over 11,000 followers on Instagram who trust my analysis and educational content.
+                </p>
+                <p class="about-description">
+                    My approach is simple: identify high-quality supply and demand zones where institutional traders operate, and execute with precision. I believe in genuine education over flashy promises, helping traders understand the 'why' behind every trade setup.
+                </p>
+                
+                <div class="about-stats">
+                    <div class="stat-box">
+                        <div class="stat-value">11K+</div>
+                        <div class="stat-label">Instagram Followers</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">23</div>
+                        <div class="stat-label">Young & Driven</div>
+                    </div>
+                </div>
+
+                <div class="expertise-tags">
+                    <span class="tag">📊 Options Trading</span>
+                    <span class="tag">📈 Swing Trading</span>
+                    <span class="tag">⚡ Intraday</span>
+                    <span class="tag">🇮🇳 Indian Markets</span>
+                    <span class="tag">🎓 Education First</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="stats-section">
+            <div class="stat-card">
+                <div class="stat-number">87%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">10K+</div>
+                <div class="stat-label">Active Traders</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">1:4</div>
+                <div class="stat-label">Risk-Reward Ratio</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Expert Support</div>
+            </div>
+        </section>
+
+        <section class="features-grid" id="features">
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3 class="feature-title">Real-time Signals</h3>
+                <p class="feature-description">Get instant buy/sell alerts directly on your TradingView charts with precise entry and exit points for maximum profitability.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">High Accuracy</h3>
+                <p class="feature-description">Our AI-powered algorithms deliver 87% accuracy across all market conditions and timeframes with proven results.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3 class="feature-title">Risk Management</h3>
+                <p class="feature-description">Built-in stop-loss and take-profit levels ensure optimal risk-reward ratios for every trade you take.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Multi-Timeframe Analysis</h3>
+                <p class="feature-description">Works perfectly on all timeframes from 1-minute scalping to daily swing trading strategies.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔔</div>
+                <h3 class="feature-title">Custom Alerts</h3>
+                <p class="feature-description">Set up personalized notifications via email, SMS, and push alerts to never miss a trading opportunity.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📞</div>
+                <h3 class="feature-title">Premium Support</h3>
+                <p class="feature-description">Get help from our team of professional traders and technical analysts whenever you need assistance.</p>
+            </div>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SD Zone</h3>
+                <p>Elite trading signals and analytics platform designed for serious traders who demand consistent results and professional-grade tools.</p>
+                <div class="success-badge">87% Success Rate</div>
+            </div>
+            <div class="footer-section">
+                <h3>Platform</h3>
+                <ul>
+                    <li>📧 support@sdzone.com</li>
+                    <li>🕒 24/7 Live Support</li>
+                    <li>💬 <a href="https://t.me/ashishmenaria" target="_blank">Telegram Community</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <ul>
+                    <li><a href="https://t.me/ashishmenaria" target="_blank">📱 Telegram</a></li>
+                    <li><a href="#">📘 Facebook Community</a></li>
+                    <li><a href="#">📸 Instagram (11K+ followers)</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 SD Zone. All rights reserved. Trading involves risk - past performance doesn't guarantee future results.</p>
+        </div>
+    </footer>
+
     <script>
-        // Test server connection
-        async function testServer() {
-            const statusDiv = document.getElementById('status');
-            statusDiv.textContent = '⏳ Testing server...';
-            statusDiv.className = 'status';
+        let currentUser = null;
+
+        function showAlert(message, type) {
+            const container = document.getElementById('alert-container');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = message;
+            container.appendChild(alert);
+            setTimeout(() => alert.remove(), 5000);
+        }
+
+        function isUserLoggedIn() {
+            return sessionStorage.getItem('user') !== null;
+        }
+
+        function getUserInitials(name) {
+            if (!name) return 'U';
+            const parts = name.trim().split(' ');
+            if (parts.length > 1) {
+                return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+            }
+            return parts[0][0].toUpperCase();
+        }
+
+        function renderNavbar() {
+            const navLinks = document.getElementById('nav-links');
+          
+            const baseLinks = `
+                <a href="/" class="nav-link">Home</a>
+                <a href="/subscriptions.html" class="nav-link">Pricing</a>
+                <a href="/features.html" class="nav-link">Features</a>
+                <a href="/contact.html" class="nav-link">Contact</a>
+            `;
             
-            try {
-                const response = await fetch('/api/test');
-                const data = await response.json();
+            if (isUserLoggedIn()) {
+                const userObj = JSON.parse(sessionStorage.getItem('user'));
+                const initials = getUserInitials(userObj.name);
                 
-                statusDiv.textContent = `✅ Server working! Message: ${data.message}`;
-                statusDiv.className = 'status success';
-            } catch (error) {
-                statusDiv.textContent = `❌ Server error: ${error.message}`;
-                statusDiv.className = 'status error';
+                navLinks.innerHTML = baseLinks + `
+                    <div class="user-profile">
+                        <div class="user-avatar" id="user-avatar">${initials}</div>
+                        <div class="profile-dropdown" id="profile-dropdown">
+                            <div class="dropdown-header">
+                                <div class="dropdown-name">${userObj.name || 'User'}</div>
+                                <div class="dropdown-email">${userObj.email || ''}</div>
+                            </div>
+                            <button class="dropdown-item logout" id="logout-btn">
+                                <span>🚪</span>
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                setTimeout(() => {
+                    const avatar = document.getElementById('user-avatar');
+                    const dropdown = document.getElementById('profile-dropdown');
+                    const logoutBtn = document.getElementById('logout-btn');
+                    
+                    avatar.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        dropdown.classList.toggle('active');
+                    });
+                    
+                    document.addEventListener('click', (e) => {
+                        if (!avatar.contains(e.target) && !dropdown.contains(e.target)) {
+                            dropdown.classList.remove('active');
+                        }
+                    });
+                    
+                    logoutBtn.addEventListener('click', handleLogout);
+                }, 100);
+            } else {
+                navLinks.innerHTML = baseLinks + '<a href="/login.html" class="nav-btn">Login</a>';
             }
         }
-        
-        // Test authentication
-        async function testAuth() {
-            const statusDiv = document.getElementById('status');
-            statusDiv.textContent = '⏳ Testing authentication...';
-            statusDiv.className = 'status';
-            
+
+        async function handleLogout() {
             try {
-                const response = await fetch('/api/auth/test');
-                const data = await response.json();
+                showAlert('Logging out...', 'info');
                 
-                statusDiv.textContent = `✅ Authentication working! ${data.message}`;
-                statusDiv.className = 'status success';
+                const response = await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                sessionStorage.removeItem('user');
+                localStorage.removeItem('authToken');
+                currentUser = null;
+                
+                showAlert('Logged out successfully!', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = '/login.html';
+                }, 1000);
+                
             } catch (error) {
-                statusDiv.textContent = `❌ Auth error: ${error.message}`;
-                statusDiv.className = 'status error';
+                console.error('Logout error:', error);
+                sessionStorage.removeItem('user');
+                localStorage.removeItem('authToken');
+                currentUser = null;
+                showAlert('Logged out successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = '/login.html';
+                }, 1000);
             }
         }
-        
-        // Auto-test on page load
-        window.onload = function() {
-            setTimeout(testServer, 1000);
-        };
+
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/auth/me', { 
+                    credentials: 'include',
+                    headers: { 'Cache-Control': 'no-cache' }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.user) {
+                        currentUser = {
+                            id: data.user.id,
+                            name: data.user.name,
+                            email: data.user.email,
+                            role: data.user.role,
+                            hasActiveSubscription: data.user.hasActiveSubscription,
+                            activePlan: data.user.activePlan,
+                            daysRemaining: data.user.daysRemaining
+                        };
+                        
+                        sessionStorage.setItem('user', JSON.stringify(currentUser));
+                        
+                        if (currentUser.hasActiveSubscription) {
+                            showAlert(`Welcome back, ${currentUser.name}! Your <strong>${currentUser.activePlan?.name || 'subscription'}</strong> is active with ${currentUser.daysRemaining} days remaining.`, 'info');
+                        } else {
+                            showAlert(`Welcome back, ${currentUser.name}! Ready to start trading?`, 'success');
+                        }
+                    } else {
+                        currentUser = null;
+                        sessionStorage.removeItem('user');
+                    }
+                } else {
+                    currentUser = null;
+                    sessionStorage.removeItem('user');
+                }
+            } catch (error) {
+                currentUser = null;
+                sessionStorage.removeItem('user');
+                console.log('API auth check failed:', error);
+            }
+            renderNavbar();
+        }
+
+        window.addEventListener('load', async function() {
+            await checkAuth();
+            
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease-in-out';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
     </script>
 </body>
 </html>

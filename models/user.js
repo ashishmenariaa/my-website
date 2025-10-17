@@ -22,13 +22,27 @@ const UserSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user'
   },
-  // Add subscription fields
+  // Subscription fields
   activePlan: {
     planId: String,
     name: String,
     price: Number,
     startDate: Date,
     endDate: Date
+  },
+  // ✅ Password reset fields
+  resetPasswordToken: {
+    type: String,
+    default: undefined
+  },
+  resetPasswordExpiry: {
+    type: Date,
+    default: undefined
+  },
+  // ✅ Email notification field
+  expiryWarningEmailSent: {
+    type: Boolean,
+    default: false
   },
   createdAt: {
     type: Date,
