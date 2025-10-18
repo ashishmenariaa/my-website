@@ -4,8 +4,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const bcrypt = require('bcrypt');
 const cron = require('node-cron');
+
+// Import User model
+const User = require('./models/user');
 
 // Import routes
 const plansRoutes = require('./routes/plans');
@@ -26,7 +28,6 @@ const connectDB = async () => {
     console.log('✅ Connected to MongoDB');
   } catch (err) {
     console.error('❌ MongoDB connection error:', err.message);
-    // Retry connection after 5 seconds
     setTimeout(connectDB, 5000);
   }
 };
@@ -42,53 +43,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ----------------------
-// User Schema & Model
-// ----------------------
-const userSchema = new mongoose.Schema({
-  name: { 
-    type: String, 
-    required: true,
-    trim: true
-  },
-  email: { 
-    type: String, 
-    required: true, 
-    unique: true,
-    lowercase: true,
-    match: /.+\@.+\..+/
-  },
-  password: { 
-    type: String, 
-    required: true,
-    minlength: 6
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  }
-});
-
-// Hash password before saving
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  try {
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
-  } catch (err) {
-    next(err);
-  }
-});
-
-// Remove password from responses
-userSchema.methods.toJSON = function() {
-  const obj = this.toObject();
-  delete obj.password;
-  return obj;
-};
-
-const User = mongoose.models.User || mongoose.model('User', userSchema);
-
-// ----------------------
 // Helper Functions
 // ----------------------
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -100,7 +54,7 @@ const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 // Register
 app.post('/api/auth/register', async (req, res, next) => {
   try {
-    const { name, email, password, confirmPassword } = req.body;
+    const { name, email, password } = req.body;
 
     // Validation
     if (!name || !email || !password) {
@@ -123,7 +77,7 @@ app.post('/api/auth/register', async (req, res, next) => {
     const user = new User({ 
       name: name.trim(), 
       email: email.toLowerCase(), 
-      password 
+      password
     });
     await user.save();
 
@@ -137,7 +91,7 @@ app.post('/api/auth/register', async (req, res, next) => {
   }
 });
 
-// Login (basic example - add JWT in production)
+// Login
 app.post('/api/auth/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -151,12 +105,11 @@ app.post('/api/auth/login', async (req, res, next) => {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
-    const isValidPassword = await bcrypt.compare(password, user.password);
+    const isValidPassword = await user.comparePassword(password);
     if (!isValidPassword) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
-    // TODO: Generate JWT token instead
     res.json({ 
       success: true, 
       message: 'Login successful',
@@ -165,6 +118,27 @@ app.post('/api/auth/login', async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+});
+
+// Get current user info (check if logged in)
+app.get('/api/auth/me', async (req, res, next) => {
+  try {
+    // For now, return error - in production, check JWT token or session
+    res.status(401).json({ 
+      success: false, 
+      message: 'Not logged in' 
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Logout
+app.post('/api/auth/logout', (req, res) => {
+  res.json({ 
+    success: true, 
+    message: 'Logged out successfully' 
+  });
 });
 
 // Import route handlers
@@ -211,9 +185,8 @@ process.on('SIGTERM', () => {
 // Error Handling
 // ----------------------
 app.use((err, req, res, next) => {
-  console.error('❌ Error:', err.message);
+  console.error('Error:', err.message);
   
-  // Mongoose validation error
   if (err.name === 'ValidationError') {
     return res.status(400).json({ 
       success: false, 
@@ -221,7 +194,6 @@ app.use((err, req, res, next) => {
     });
   }
 
-  // MongoDB duplicate key error
   if (err.code === 11000) {
     return res.status(409).json({ 
       success: false, 
@@ -237,7 +209,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ success: false, message: 'Route not found' });
@@ -248,7 +219,7 @@ app.use((req, res) => {
 // ----------------------
 const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📱 Visit: http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Visit: http://localhost:${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
