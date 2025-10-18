@@ -236,22 +236,7 @@ app.use((err, req, res, next) => {
       : err.message 
   });
 });
-app.get('/api/test-email', async (req, res) => {
-     const sgMail = require('@sendgrid/mail');
-     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-     
-     try {
-       await sgMail.send({
-         to: 'help.sdzone@gmail.com',
-         from: process.env.EMAIL_USER,
-         subject: 'Test',
-         html: '<p>Test</p>'
-       });
-       res.json({ success: true });
-     } catch (err) {
-       res.json({ error: err.message });
-     }
-   });
+
 
 // 404 handler
 app.use((req, res) => {
