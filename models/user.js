@@ -86,4 +86,4 @@ UserSchema.methods.getDaysRemaining = function() {
   return Math.max(0, diffDays);
 };
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.models.User || mongoose.model('User', UserSchema);
