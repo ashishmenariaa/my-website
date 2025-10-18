@@ -13,9 +13,10 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     lowercase: true
   },
-  passwordHash: {
+  password: {
     type: String,
-    required: true
+    required: true,
+    minlength: 6
   },
   role: {
     type: String,
@@ -30,7 +31,6 @@ const UserSchema = new mongoose.Schema({
     startDate: Date,
     endDate: Date
   },
-  // ✅ Password reset fields
   resetPasswordToken: {
     type: String,
     default: undefined
@@ -39,7 +39,6 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: undefined
   },
-  // ✅ Email notification field
   expiryWarningEmailSent: {
     type: Boolean,
     default: false
@@ -52,18 +51,22 @@ const UserSchema = new mongoose.Schema({
 
 // Hash password before saving
 UserSchema.pre('save', async function(next) {
-  if (!this.isModified('passwordHash')) {
+  if (!this.isModified('password')) {
     return next();
   }
   
-  const salt = await bcrypt.genSalt(10);
-  this.passwordHash = await bcrypt.hash(this.passwordHash, salt);
-  next();
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 
 // Compare password method
 UserSchema.methods.comparePassword = async function(password) {
-  return await bcrypt.compare(password, this.passwordHash);
+  return await bcrypt.compare(password, this.password);
 };
 
 // Check if user has active subscription
@@ -84,6 +87,13 @@ UserSchema.methods.getDaysRemaining = function() {
   const diffTime = endDate - now;
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   return Math.max(0, diffDays);
+};
+
+// Prevent password from appearing in toJSON
+UserSchema.methods.toJSON = function() {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
 };
 
 module.exports = mongoose.models.User || mongoose.model('User', UserSchema);
