@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - SD Zone</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --danger-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-accent: #00f2fe;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .grid-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(37, 99, 235, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+
+        .header {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #334155;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.2s;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: #2563eb;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid rgba(0, 242, 254, 0.2);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .last-updated {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .intro-box {
+            background: linear-gradient(145deg, rgba(0, 242, 254, 0.15) 0%, rgba(0, 242, 254, 0.05) 100%);
+            border: 2px solid rgba(0, 242, 254, 0.4);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .intro-box::before {
+            content: '🔒';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0a0a0a;
+            padding: 0 1rem;
+            font-size: 2rem;
+        }
+
+        .intro-text {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            text-align: center;
+            font-size: 1.05rem;
+        }
+
+        .content-section {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-accent);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-number {
+            background: var(--success-gradient);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .section-content {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .section-content h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .section-content p {
+            margin-bottom: 1rem;
+        }
+
+        .section-content ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-content li {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: rgba(0, 242, 254, 0.1);
+            border-left: 4px solid #00f2fe;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .highlight-box strong {
+            color: var(--text-accent);
+        }
+
+        .info-box {
+            background: rgba(67, 233, 123, 0.1);
+            border-left: 4px solid #43e97b;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+
+        .info-box strong {
+            color: #43e97b;
+        }
+
+        .footer {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(51, 65, 85, 0.6);
+            padding: 2rem 0;
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .intro-box {
+                padding: 1.5rem;
+            }
+
+            .content-section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg">
+        <div class="grid-pattern"></div>
+    </div>
+
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">SD Zone</a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/subscriptions.html" class="nav-link">Pricing</a>
+                <a href="/terms.html" class="nav-link">Terms</a>
+                <a href="/privacy.html" class="nav-link">Privacy</a>
+                <a href="/contact.html" class="nav-link">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Privacy Policy</h1>
+            <p class="last-updated">Last Updated: January 2024</p>
+        </div>
+
+        <div class="intro-box">
+            <p class="intro-text">
+                At SD Zone, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, store, and protect your data when you use our trading indicators and services.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">1</span>
+                Information We Collect
+            </h2>
+            <div class="section-content">
+                <h3>Personal Information</h3>
+                <p>When you register for SD Zone services, we collect the following information:</p>
+                <ul>
+                    <li><strong>Account Information:</strong> Name, email address, phone number</li>
+                    <li><strong>Login Credentials:</strong> Username and encrypted password</li>
+                    <li><strong>Profile Data:</strong> Trading preferences and settings you configure</li>
+                </ul>
+
+                <h3>Payment Information</h3>
+                <p>When you subscribe to our services:</p>
+                <ul>
+                    <li>Payment transactions are processed securely through Razorpay</li>
+                    <li>We do NOT store your credit card, debit card, or banking details</li>
+                    <li>We only store transaction IDs and payment status for record-keeping</li>
+                    <li>Razorpay handles all sensitive payment data according to PCI-DSS standards</li>
+                </ul>
+
+                <h3>Usage Data</h3>
+                <p>We automatically collect certain information when you use our services:</p>
+                <ul>
+                    <li><strong>Device Information:</strong> IP address, browser type, operating system</li>
+                    <li><strong>Usage Metrics:</strong> How you interact with our indicators and platform</li>
+                    <li><strong>Log Data:</strong> Access times, pages viewed, actions performed</li>
+                    <li><strong>Technical Data:</strong> Error reports and performance metrics</li>
+                </ul>
+
+                <div class="info-box">
+                    <strong>Note:</strong> We do NOT collect or store your trading account credentials, brokerage information, or actual trading positions. We only provide indicators for your use on TradingView.
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">2</span>
+                How We Use Your Information
+            </h2>
+            <div class="section-content">
+                <p>We use your personal information for the following purposes:</p>
+
+                <h3>Service Delivery</h3>
+                <ul>
+                    <li>Create and manage your SD Zone account</li>
+                    <li>Provide access to our trading indicators and tools</li>
+                    <li>Process your subscription payments</li>
+                    <li>Deliver indicator updates and improvements</li>
+                </ul>
+
+                <h3>Communication</h3>
+                <ul>
+                    <li>Send account confirmation emails after registration</li>
+                    <li>Notify you about subscription expiry and renewal reminders</li>
+                    <li>Send password reset emails when requested</li>
+                    <li>Provide customer support and respond to inquiries</li>
+                    <li>Send important service updates and announcements</li>
+                </ul>
+
+                <h3>Service Improvement</h3>
+                <ul>
+                    <li>Analyze usage patterns to improve our indicators</li>
+                    <li>Identify and fix technical issues</li>
+                    <li>Develop new features based on user needs</li>
+                    <li>Enhance overall user experience</li>
+                </ul>
+
+                <h3>Security and Compliance</h3>
+                <ul>
+                    <li>Detect and prevent fraud or unauthorized access</li>
+                    <li>Enforce our Terms and Conditions</li>
+                    <li>Comply with legal obligations</li>
+                    <li>Protect our rights and property</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>We Will Never:</strong> Sell, rent, or share your personal information with third parties for their marketing purposes without your explicit consent.
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">3</span>
+                How We Store Your Data
+            </h2>
+            <div class="section-content">
+                <h3>Data Storage Infrastructure</h3>
+                <ul>
+                    <li><strong>Database:</strong> Your data is stored securely in MongoDB databases</li>
+                    <li><strong>Hosting:</strong> Our services are hosted on Render cloud infrastructure</li>
+                    <li><strong>Location:</strong> Data is primarily stored on servers located in secure data centers</li>
+                    <li><strong>Encryption:</strong> All data is encrypted both in transit (using SSL/TLS) and at rest</li>
+                </ul>
+
+                <h3>Security Measures</h3>
+                <p>We implement industry-standard security practices to protect your data:</p>
+                <ul>
+                    <li>Encrypted password storage using secure hashing algorithms</li>
+                    <li>Regular security audits and vulnerability assessments</li>
+                    <li>Secure API communications with authentication tokens</li>
+                    <li>Access controls limiting who can view or modify data</li>
+                    <li>Regular backups to prevent data loss</li>
+                    <li>Monitoring systems to detect suspicious activity</li>
+                </ul>
+
+                <h3>Data Retention</h3>
+                <ul>
+                    <li>We retain your account data while your subscription is active</li>
+                    <li>After subscription expiry, data is retained for 90 days in case you renew</li>
+                    <li>Transaction records are kept for 7 years for tax and legal compliance</li>
+                    <li>You can request data deletion by contacting our support team</li>
+                </ul>
+
+                <div class="info-box">
+                    <strong>Important:</strong> While we implement robust security measures, no method of transmission over the internet or electronic storage is 100% secure. We cannot guarantee absolute security but continuously work to protect your data.
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">4</span>
+                Third-Party Services
+            </h2>
+            <div class="section-content">
+                <p>We use the following third-party services that may access your data:</p>
+
+                <h3>Razorpay (Payment Processing)</h3>
+                <ul>
+                    <li>Handles all payment transactions securely</li>
+                    <li>Processes and stores your payment information</li>
+                    <li>Subject to Razorpay's Privacy Policy</li>
+                    <li>PCI-DSS compliant payment gateway</li>
+                </ul>
+
+                <h3>TradingView (Indicator Platform)</h3>
+                <ul>
+                    <li>Our indicators run on the TradingView platform</li>
+                    <li>TradingView may collect data about your chart usage</li>
+                    <li>Subject to TradingView's Privacy Policy</li>
+                    <li>We do not control TradingView's data practices</li>
+                </ul>
+
+                <h3>Render (Cloud Hosting)</h3>
+                <ul>
+                    <li>Hosts our application and database infrastructure</li>
+                    <li>Provides server and network security</li>
+                    <li>Subject to Render's security and privacy standards</li>
+                </ul>
+
+                <h3>Email Service Provider</h3>
+                <ul>
+                    <li>Used to send transactional emails (confirmations, password resets, reminders)</li>
+                    <li>Has access to your email address for delivery purposes</li>
+                    <li>Does not use your email for marketing without consent</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>Third-Party Policies:</strong> We carefully select service providers with strong privacy and security standards. However, we are not responsible for their privacy practices. Please review their respective privacy policies.
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">5</span>
+                Cookies and Tracking
+            </h2>
+            <div class="section-content">
+                <h3>Current Cookie Usage</h3>
+                <p>At launch, SD Zone uses minimal cookies primarily for:</p>
+                <ul>
+                    <li><strong>Essential Cookies:</strong> Required for login authentication and session management</li>
+                    <li><strong>Security Cookies:</strong> Help protect against unauthorized access</li>
+                    <li><strong>Preference Cookies:</strong> Remember your settings and preferences</li>
+                </ul>
+
+                <h3>Future Analytics</h3>
+                <p>We may implement analytics tools in the future to improve our services:</p>
+                <ul>
+                    <li>If we add Google Analytics or similar tools, we will update this policy</li>
+                    <li>You will be notified of any changes to our tracking practices</li>
+                    <li>Analytics data will be anonymized where possible</li>
+                    <li>You will have the option to opt-out of non-essential tracking</li>
+                </ul>
+
+                <h3>Managing Cookies</h3>
+                <p>You can control cookies through your browser settings:</p>
+                <ul>
+                    <li>Most browsers allow you to refuse cookies or delete existing ones</li>
+                    <li>Blocking essential cookies may affect site functionality</li>
+                    <li>Refer to your browser's help documentation for specific instructions</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">6</span>
+                Your Privacy Rights
+            </h2>
+            <div class="section-content">
+                <p>You have the following rights regarding your personal data:</p>
+
+                <h3>Access and Portability</h3>
+                <ul>
+                    <li><strong>Right to Access:</strong> Request a copy of all personal data we hold about you</li>
+                    <li><strong>Data Portability:</strong> Receive your data in a structured, machine-readable format</li>
+                    <li>We will provide this information within 30 days of your request</li>
+                </ul>
+
+                <h3>Correction and Updates</h3>
+                <ul>
+                    <li><strong>Right to Rectification:</strong> Correct any inaccurate personal information</li>
+                    <li>Update your account details directly through your profile settings</li>
+                    <li>Contact support for assistance with data corrections</li>
+                </ul>
+
+                <h3>Deletion</h3>
+                <ul>
+                    <li><strong>Right to Erasure:</strong> Request deletion of your personal data</li>
+                    <li>Contact help.sdzone@gmail.com to request account deletion</li>
+                    <li>We will delete data within 30 days, except where legally required to retain it</li>
+                    <li>Some data may be retained for legal, accounting, or security purposes</li>
+                </ul>
+
+                <h3>Objection and Restriction</h3>
+                <ul>
+                    <li><strong>Right to Object:</strong> Object to processing of your personal data for certain purposes</li>
+                    <li><strong>Right to Restriction:</strong> Request limitation of how we process your data</li>
+                    <li>We will honor these requests where legally permissible</li>
+                </ul>
+
+                <h3>Withdrawal of Consent</h3>
+                <ul>
+                    <li>You can withdraw consent for data processing at any time</li>
+                    <li>This does not affect the lawfulness of processing before withdrawal</li>
+                    <li>May impact our ability to provide certain services</li>
+                </ul>
+
+                <div class="info-box">
+                    <strong>Exercise Your Rights:</strong> To exercise any of these rights, please contact us at help.sdzone@gmail.com with your request. We will respond within 30 days.
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">7</span>
+                Data Sharing and Disclosure
+            </h2>
+            <div class="section-content">
+                <h3>When We Share Your Data</h3>
+                <p>We may share your personal information in the following limited circumstances:</p>
+
+                <h3>Service Providers</h3>
+                <ul>
+                    <li>Payment processors (Razorpay) for transaction processing</li>
+                    <li>Cloud hosting providers (Render, MongoDB) for infrastructure</li>
+                    <li>Email service providers for sending transactional emails</li>
+                    <li>All service providers are bound by confidentiality agreements</li>
+                </ul>
+
+                <h3>Legal Requirements</h3>
+                <p>We may disclose your information when required by law:</p>
+                <ul>
+                    <li>To comply with court orders, subpoenas, or legal processes</li>
+                    <li>To respond to government or regulatory requests</li>
+                    <li>To enforce our Terms and Conditions</li>
+                    <li>To protect our rights, property, or safety</li>
+                    <li>To prevent fraud or illegal activities</li>
+                </ul>
+
+                <h3>Business Transfers</h3>
+                <ul>
+                    <li>In case of merger, acquisition, or sale of assets</li>
+                    <li>Your data may be transferred to the new entity</li>
+                    <li>You will be notified of any such changes</li>
+                    <li>The new entity will be bound by this Privacy Policy</li>
+                </ul>
+
+                <h3>Aggregated Data</h3>
+                <ul>
+                    <li>We may share anonymized, aggregated statistics</li>
+                    <li>This data cannot identify individual users</li>
+                    <li>Used for industry research or marketing purposes</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>We Will Never:</strong> Sell your personal information to data brokers, advertisers, or marketing companies. Your data is not a product we sell.
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">8</span>
+                Children's Privacy
+            </h2>
+            <div class="section-content">
+                <p>SD Zone services are not intended for individuals under 18 years of age.</p>
+                <ul>
+                    <li>We do not knowingly collect data from children under 18</li>
+                    <li>Trading and financial services are restricted to adults only</li>
+                    <li>If we discover we have collected data from a minor, we will delete it immediately</li>
+                    <li>Parents or guardians should contact us if they believe their child has provided us with information</li>
+                </ul>
+
+                <div class="info-box">
+                    <strong>Age Verification:</strong> By using SD Zone, you confirm that you are at least 18 years old and legally capable of entering into binding contracts.
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">9</span>
+                International Data Transfers
+            </h2>
+            <div class="section-content">
+                <p>SD Zone primarily operates within India, and your data is stored on servers located in secure data centers.</p>
+
+                <h3>Current Status</h3>
+                <ul>
+                    <li>Our services are currently targeted at Indian users</li>
+                    <li>Data is primarily stored and processed within India or on servers with adequate protections</li>
+                    <li>Third-party services may process data in other countries</li>
+                </ul>
+
+                <h3>Future International Users</h3>
+                <p>If we expand to serve international users:</p>
+                <ul>
+                    <li>We will update this policy to reflect any international data transfers</li>
+                    <li>We will ensure adequate safeguards are in place</li>
+                    <li>Transfers will comply with applicable data protection laws</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">10</span>
+                Updates to This Privacy Policy
+            </h2>
+            <div class="section-content">
+                <p>We may update this Privacy Policy from time to time to reflect changes in our practices, technology, legal requirements, or other factors.</p>
+
+                <h3>How We Notify You</h3>
+                <ul>
+                    <li>The "Last Updated" date at the top will be changed</li>
+                    <li>For significant changes, we will send email notifications</li>
+                    <li>We may display a prominent notice on our website</li>
+                    <li>You will have at least 30 days notice before material changes take effect</li>
+                </ul>
+
+                <h3>Your Responsibility</h3>
+                <ul>
+                    <li>Please review this Privacy Policy periodically</li>
+                    <li>Continued use of our services after changes constitutes acceptance</li>
+                    <li>If you disagree with changes, you may discontinue using our services</li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>Stay Informed:</strong> We recommend checking this page regularly for updates. Major changes will be communicated directly via email.
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2 class="section-title">
+                <span class="section-number">11</span>
+                Contact Us
+            </h2>
+            <div class="section-content">
+                <p>If you have any questions, concerns, or requests regarding this Privacy Policy or how we handle your personal data, please contact us:</p>
+                
+                <div class="highlight-box">
+                    <p><strong>Data Protection Contact</strong></p>
+                    <p>Email: help.sdzone@gmail.com</p>
+                    <p>Subject Line: "Privacy Inquiry" or "Data Request"</p>
+                    <p>Response Time: We aim to respond within 48-72 hours</p>
+                </div>
+
+                <h3>What to Include in Your Request</h3>
+                <ul>
+                    <li>Your full name and registered email address</li>
+                    <li>Clear description of your request or concern</li>
+                    <li>Any relevant account details (do not send passwords)</li>
+                    <li>Preferred method of response</li>
+                </ul>
+
+                <p>We take all privacy inquiries seriously and will work diligently to address your concerns and fulfill legitimate requests in accordance with applicable laws.</p>
+            </div>
+        </div>
+
+        <div class="intro-box" style="margin-top: 3rem;">
+            <p class="intro-text">
+                <strong>Your privacy matters to us.</strong> We are committed to transparency in our data practices and continuously improving our security measures. By using SD Zone, you trust us with your information, and we take that responsibility seriously. Thank you for choosing SD Zone.
+            </p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-text">
+            <p>&copy; 2024 SD Zone. All rights reserved.</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">
+                <a href="/terms.html" style="color: #00f2fe; text-decoration: none;">Terms & Conditions</a> | 
+                <a href="/privacy.html" style="color: #00f2fe; text-decoration: none;">Privacy Policy</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

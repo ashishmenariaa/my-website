@@ -314,6 +314,82 @@
             z-index: 1;
         }
 
+        .screenshots-section {
+            margin: 6rem 0;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 4rem;
+        }
+
+        .screenshots-scroll {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            padding: 2rem 0;
+            scroll-behavior: smooth;
+        }
+
+        .screenshots-scroll::-webkit-scrollbar {
+            height: 12px;
+        }
+
+        .screenshots-scroll::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 10px;
+        }
+
+        .screenshots-scroll::-webkit-scrollbar-thumb {
+            background: var(--success-gradient);
+            border-radius: 10px;
+        }
+
+        .screenshot-item {
+            min-width: 700px;
+            max-width: 700px;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 242, 254, 0.3);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .screenshot-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0, 242, 254, 0.3);
+            border-color: rgba(0, 242, 254, 0.6);
+        }
+
+        .screenshot-item img {
+            width: 100%;
+            height: 400px;
+            object-fit: contain;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .screenshot-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-accent);
+        }
+
         .core-feature-section {
             background: linear-gradient(145deg, rgba(0, 242, 254, 0.08) 0%, rgba(0, 242, 254, 0.02) 100%);
             backdrop-filter: blur(20px);
@@ -363,18 +439,6 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             box-shadow: 0 8px 30px rgba(0, 242, 254, 0.4);
-            position: relative;
-            z-index: 1;
-        }
-
-        .section-title {
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
             position: relative;
             z-index: 1;
         }
@@ -890,12 +954,6 @@
             margin-bottom: 0.75rem;
         }
 
-        @media (max-width: 1024px) {
-            .features-grid {
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            }
-        }
-
         @media (max-width: 768px) {
             .hero-title {
                 font-size: 3rem;
@@ -953,6 +1011,15 @@
             .cta-section {
                 padding: 3rem 2rem;
             }
+
+            .screenshot-item {
+                min-width: 95%;
+                max-width: 95%;
+            }
+
+            .screenshot-item img {
+                height: 300px;
+            }
         }
     </style>
 </head>
@@ -974,7 +1041,7 @@
                 <a href="/" class="nav-link">Home</a>
                 <a href="/subscriptions.html" class="nav-link">Pricing</a>
                 <a href="/features.html" class="nav-link">Features</a>
-               <a href="/contact.html" class="nav-link">Contact</a>
+                <a href="/contact.html" class="nav-link">Contact</a>
             </div>
         </nav>
     </header>
@@ -1003,6 +1070,46 @@
     </section>
 
     <div class="container">
+        <section class="screenshots-section">
+            <h2 class="section-title">See It In Action</h2>
+            <p class="section-subtitle">Real indicator screenshots showing exact entry and exit signals</p>
+            
+            <div class="screenshots-scroll">
+                <div class="screenshot-item">
+                    <img src="b1.png" alt="Buy Signal 1">
+                    <div class="screenshot-label">🟢 Buy Signal - Demand Zone Entry</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="b2.png" alt="Buy Signal 2">
+                    <div class="screenshot-label">🟢 Buy Signal - Perfect Setup</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="b3.png" alt="Buy Signal 3">
+                    <div class="screenshot-label">🟢 Buy Signal - High Probability</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="b4.png" alt="Buy Signal 4">
+                    <div class="screenshot-label">🟢 Buy Signal - Zone Activation</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="b5.png" alt="Buy Signal 5">
+                    <div class="screenshot-label">🟢 Buy Signal - Entry Point</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="s1.png" alt="Sell Signal 1">
+                    <div class="screenshot-label">🔴 Sell Signal - Supply Zone</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="s2.png" alt="Sell Signal 2">
+                    <div class="screenshot-label">🔴 Sell Signal - Short Entry</div>
+                </div>
+                <div class="screenshot-item">
+                    <img src="s3.png" alt="Sell Signal 3">
+                    <div class="screenshot-label">🔴 Sell Signal - Reversal Point</div>
+                </div>
+            </div>
+        </section>
+
         <section class="core-feature-section">
             <div class="core-badge">⭐ CORE FEATURE</div>
             <h2 class="section-title">High-Probability Zone Detection</h2>
@@ -1035,8 +1142,8 @@
 
         <section class="steps-section">
             <div class="steps-header">
-                <h2 class="section-title" style="text-align: center;">How It Works</h2>
-                <p style="text-align: center; color: var(--text-secondary); font-size: 1.25rem; max-width: 700px; margin: 1rem auto 0;">
+                <h2 class="section-title">How It Works</h2>
+                <p style="color: var(--text-secondary); font-size: 1.25rem; max-width: 700px; margin: 1rem auto 0;">
                     Simple, effective, and designed for traders of all experience levels
                 </p>
             </div>
