@@ -92,26 +92,7 @@ app.post('/api/auth/register', async (req, res, next) => {
   }
 });
 
-// Login
-app.post('/api/auth/login', async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-      return res.status(400).json({ success: false, message: 'Email and password required' });
-    }
-
-    const user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) {
-      return res.status(401).json({ success: false, message: 'Invalid credentials' });
-    }
-
-    const isValidPassword = await user.comparePassword(password);
-    if (!isValidPassword) {
-      return res.status(401).json({ success: false, message: 'Invalid credentials' });
-    }
-    const { generateToken, setTokenCookie } = require('./middleware/auth');  // Add this import
-
+// Login - FIXED VERSION (single endpoint)
 app.post('/api/auth/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -132,7 +113,7 @@ app.post('/api/auth/login', async (req, res, next) => {
 
     // Generate JWT token
     const token = generateToken(user._id);
-    setTokenCookie(res, token);  // Set as HTTP-only cookie
+    setTokenCookie(res, token);
 
     res.json({ 
       success: true, 
@@ -143,15 +124,10 @@ app.post('/api/auth/login', async (req, res, next) => {
     next(err);
   }
 });
-  } catch (err) {
-    next(err);
-  }
-});
 
-// Get current user info (check if logged in)
+// Get current user info
 app.get('/api/auth/me', async (req, res, next) => {
   try {
-    // For now, return error - in production, check JWT token or session
     res.status(401).json({ 
       success: false, 
       message: 'Not logged in' 
@@ -163,6 +139,7 @@ app.get('/api/auth/me', async (req, res, next) => {
 
 // Logout
 app.post('/api/auth/logout', (req, res) => {
+  res.clearCookie('token');
   res.json({ 
     success: true, 
     message: 'Logged out successfully' 
@@ -194,7 +171,6 @@ app.get('/', (req, res) => {
 // ----------------------
 cron.schedule('0 9 * * *', () => {
   console.log('⏰ Running daily expiry check at 9 AM');
-  // checkExpiringSubscriptions();
 });
 
 // Graceful shutdown
