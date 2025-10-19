@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const cron = require('node-cron');
+const { generateToken, setTokenCookie } = require('./middleware/auth');
 
 // Import User model
 const User = require('./models/user');
@@ -109,12 +110,39 @@ app.post('/api/auth/login', async (req, res, next) => {
     if (!isValidPassword) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
+    const { generateToken, setTokenCookie } = require('./middleware/auth');  // Add this import
+
+app.post('/api/auth/login', async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: 'Email and password required' });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+
+    const isValidPassword = await user.comparePassword(password);
+    if (!isValidPassword) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+
+    // Generate JWT token
+    const token = generateToken(user._id);
+    setTokenCookie(res, token);  // Set as HTTP-only cookie
 
     res.json({ 
       success: true, 
       message: 'Login successful',
       user: user.toJSON()
     });
+  } catch (err) {
+    next(err);
+  }
+});
   } catch (err) {
     next(err);
   }

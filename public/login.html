@@ -458,19 +458,20 @@
             const data = await response.json();
             console.log("Login response data:", data);
 
-            if (data.success) {
-                showAlert('Login successful! Redirecting...', 'success');
-                btnText.textContent = 'Success!';
-
-                // Save auth info
-                localStorage.setItem('authToken', 'logged-in');
-                sessionStorage.setItem('user', JSON.stringify({
-                    name: data.user?.name || 'User',
-                    email: email,
-                    hasActiveSubscription: data.user?.hasActiveSubscription || false,
-                    activePlan: data.user?.activePlan || null,
-                    daysRemaining: data.user?.daysRemaining || 0
-                }));
+         if (data.success) {
+    showAlert('Login successful! Redirecting...', 'success');
+    btnText.textContent = 'Success!';
+    
+    // Generate JWT token on backend and it will be set as HTTP-only cookie automatically
+    // Save user to sessionStorage
+    sessionStorage.setItem('user', JSON.stringify({
+        id: data.user?._id,
+        name: data.user?.name || 'User',
+        email: email,
+        hasActiveSubscription: data.user?.hasActiveSubscription || false,
+        activePlan: data.user?.activePlan || null,
+        daysRemaining: data.user?.daysRemaining || 0
+    }));
 
                 const urlParams = new URLSearchParams(window.location.search);
                 const redirect = urlParams.get('redirect') || '/subscriptions.html';
