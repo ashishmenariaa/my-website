@@ -970,18 +970,32 @@
     <script>
         let currentUser = null;
 
+     
         function showAlert(message, type) {
-            const container = document.getElementById('alert-container');
-            const alert = document.createElement('div');
-            alert.className = `alert alert-${type}`;
-            alert.innerHTML = message;
-            container.appendChild(alert);
-            setTimeout(() => alert.remove(), 5000);
+    const container = document.getElementById('alert-container');
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type}`;
+    alert.innerHTML = message;
+    container.appendChild(alert);
+    setTimeout(() => alert.remove(), 5000);
+}
+// Initialize currentUser from localStorage
+function initCurrentUser() {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+        try {
+            currentUser = JSON.parse(userStr);
+            console.log('Loaded user from localStorage:', currentUser);
+        } catch (e) {
+            console.error('Failed to parse user data:', e);
+            currentUser = null;
         }
+    }
+}
 
-        function isUserLoggedIn() {
-            return sessionStorage.getItem('user') !== null;
-        }
+       function isUserLoggedIn() {
+    return localStorage.getItem('user') !== null;  // Changed from sessionStorage
+}
 
         function getUserInitials(name) {
             if (!name) return 'U';
@@ -1009,7 +1023,7 @@
             // `;
             
             if (isUserLoggedIn()) {
-                const userObj = JSON.parse(sessionStorage.getItem('user'));
+    const userObj = JSON.parse(localStorage.getItem('user'));  // Changed from sessionStorage
                 const initials = getUserInitials(userObj.name);
                 
                 navLinks.innerHTML = baseLinks + `
@@ -1299,12 +1313,9 @@
             }
         }
 
-        // window.addEventListener('load', async function() {
-        //     await checkAuth();
-        //     await loadPlans();
-            window.addEventListener('load', async function() {
-    // await checkAuth();  // Comment out - use client-side session
-    renderNavbar();  // Add this
+     window.addEventListener('load', async function() {
+    initCurrentUser();  // ADD THIS LINE
+    renderNavbar();
     await loadPlans();
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.5s ease-in-out';
