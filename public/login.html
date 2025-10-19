@@ -513,11 +513,14 @@
     });
 
     // Initialize
-    window.addEventListener('load', async function() {
-        console.log("Login page loaded.");
-        await clearStaleSessionIfNeeded();
+ window.addEventListener('load', async function() {
+    console.log("Login page loaded.");
+    // Skip clearStaleSessionIfNeeded on login page - just clear storage
+    sessionStorage.clear();
+    localStorage.clear();
 
-        const loginForm = document.getElementById('login-form');
+    const loginForm = document.getElementById('login-form');
+        
         if (!loginForm) {
             console.error("No login form found.");
             return;
