@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - SD Zone</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-accent: #00f2fe;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+            color: var(--text-primary);
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .grid-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(37, 99, 235, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+
+        .header {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #334155;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--success-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.2s;
+            padding: 0.5rem 1rem;
+        }
+
+        .nav-link:hover { color: var(--text-accent); }
+
+        .container {
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .page-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .content-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            border-radius: 20px;
+            padding: 3rem;
+            transition: all 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 242, 254, 0.4);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .content-card h2 {
+            color: var(--text-accent);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .content-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.2rem;
+        }
+
+        .full-width-card {
+            grid-column: 1 / -1;
+        }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .stat-box {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-10px);
+            border-color: rgba(0, 242, 254, 0.5);
+            box-shadow: 0 20px 50px rgba(0, 242, 254, 0.3);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--success-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .team-section {
+            text-align: center;
+            margin: 4rem 0;
+        }
+
+        .team-section h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .team-intro {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .founder-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 242, 254, 0.3);
+            border-radius: 25px;
+            padding: 3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .founder-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .founder-avatar {
+            width: 120px;
+            height: 120px;
+            background: var(--success-gradient);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.4);
+        }
+
+        .founder-info h3 {
+            font-size: 2rem;
+            color: var(--text-accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .founder-title {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .founder-bio {
+            color: var(--text-secondary);
+            line-height: 1.9;
+        }
+
+        .values-section {
+            margin: 4rem 0;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .value-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+        }
+
+        .value-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .value-title {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .value-description {
+            color: var(--text-secondary);
+        }
+
+        .cta-section {
+            background: rgba(0, 242, 254, 0.1);
+            border: 2px solid rgba(0, 242, 254, 0.3);
+            border-radius: 25px;
+            padding: 4rem 3rem;
+            text-align: center;
+            margin: 4rem 0;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .cta-section p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.2rem 3rem;
+            background: var(--success-gradient);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.4);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(0, 242, 254, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 2.5rem; }
+            .content-grid { grid-template-columns: 1fr; }
+            .founder-header { flex-direction: column; text-align: center; }
+            .founder-card { text-align: center; }
+            .nav-container { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg">
+        <div class="grid-pattern"></div>
+    </div>
+
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">SD Zone</a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/subscriptions.html" class="nav-link">Pricing</a>
+                <a href="/features.html" class="nav-link">Features</a>
+                <a href="/about.html" class="nav-link">About</a>
+                <a href="/contact.html" class="nav-link">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">About SD Zone</h1>
+            <p class="page-subtitle">Empowering traders with precision supply & demand zone analysis since 2020</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="content-card">
+                <h2>🎯 Our Mission</h2>
+                <p>To democratize professional-grade trading education and signals, making institutional-level analysis accessible to retail traders across India.</p>
+                <p>We believe every trader deserves access to high-quality market insights without the complexity and cost typically associated with professional trading systems.</p>
+            </div>
+
+            <div class="content-card">
+                <h2>🚀 Our Vision</h2>
+                <p>To become India's most trusted supply and demand zone trading platform, known for accuracy, transparency, and genuine trader education.</p>
+                <p>We envision a community where traders make informed decisions based on solid technical analysis rather than emotions or speculation.</p>
+            </div>
+
+            <div class="content-card full-width-card">
+                <h2>📖 Our Story</h2>
+                <p>SD Zone was born from a simple observation: most retail traders struggle not because they lack intelligence or dedication, but because they don't have access to the right tools and education. The institutional knowledge of supply and demand zones—where big money enters and exits the market—was kept behind expensive paywalls or complex training programs.</p>
+                <p>In 2020, we started sharing free educational content about supply and demand trading on social media. The response was overwhelming. Thousands of traders resonated with our straightforward, no-nonsense approach to technical analysis. This community grew to over 11,000 followers who trusted our insights.</p>
+                <p>Recognizing the need for a more comprehensive solution, we launched SD Zone—a platform that combines precision trading signals with educational content, all delivered through an intuitive interface that works seamlessly with TradingView.</p>
+                <p>Today, SD Zone serves thousands of active traders, maintaining an 87% accuracy rate while staying true to our founding principle: education first, profits second.</p>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <div class="stat-box">
+                <div class="stat-number">11K+</div>
+                <div class="stat-label">Instagram Followers</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">87%</div>
+                <div class="stat-label">Signal Accuracy</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">5+</div>
+                <div class="stat-label">Years Experience</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">10K+</div>
+                <div class="stat-label">Active Traders</div>
+            </div>
+        </div>
+
+        <div class="team-section">
+            <h2>Meet Our Founder</h2>
+            <p class="team-intro">Led by a passionate trader who understands the challenges of the Indian stock market</p>
+            
+            <div class="founder-card">
+                <div class="founder-header">
+                    <div class="founder-avatar">👨‍💼</div>
+                    <div class="founder-info">
+                        <h3>Ashish Menaria</h3>
+                        <p class="founder-title">Founder & Lead Analyst</p>
+                    </div>
+                </div>
+                <div class="founder-bio">
+                    <p>At just 23 years old, Ashish has dedicated the last 5 years to mastering the Indian stock market. Starting his trading journey in 2020, he quickly realized that success in trading requires more than just luck—it demands discipline, proper education, and the right analytical tools.</p>
+                    <p>Specializing in Options Trading, Swing Trading, and Intraday strategies, Ashish developed a deep understanding of supply and demand zones—the key areas where institutional traders operate. His unique approach combines technical analysis with risk management principles that prioritize capital preservation.</p>
+                    <p>What sets Ashish apart is his commitment to genuine education. Rather than promising overnight riches or guaranteed profits, he focuses on teaching traders the "why" behind every setup. His honest, transparent approach has earned him a loyal following of over 11,000 traders on Instagram who value his daily market insights.</p>
+                    <p>Through SD Zone, Ashish brings institutional-grade analysis to retail traders, making professional trading strategies accessible to everyone.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="values-section">
+            <div class="page-header">
+                <h2 class="page-title" style="font-size: 2.5rem;">Our Core Values</h2>
+            </div>
+            <div class="values-grid">
+                <div class="value-card">
+                    <div class="value-icon">🎓</div>
+                    <h3 class="value-title">Education First</h3>
+                    <p class="value-description">We believe informed traders make better decisions. Every signal comes with educational context to help you learn and grow.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">💯</div>
+                    <h3 class="value-title">Transparency</h3>
+                    <p class="value-description">We track and share our performance honestly. No hidden tricks, no false promises—just real results and honest communication.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">🛡️</div>
+                    <h3 class="value-title">Risk Management</h3>
+                    <p class="value-description">Protecting capital is our priority. Every signal includes proper stop-loss and risk-reward ratios to safeguard your investments.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">🤝</div>
+                    <h3 class="value-title">Community</h3>
+                    <p class="value-description">We're building a supportive community of traders who learn from each other and grow together.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">⚡</div>
+                    <h3 class="value-title">Innovation</h3>
+                    <p class="value-description">Constantly improving our algorithms and analysis methods to deliver the most accurate signals possible.</p>
+                </div>
+                <div class="value-card">
+                    <div class="value-icon">24/7</div>
+                    <h3 class="value-title">Support</h3>
+                    <p class="value-description">Our team is always available to help you succeed. Questions, concerns, or technical issues—we're here for you.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-card full-width-card">
+            <h2>🏢 About Sky Blue Multi Tech Enterprises</h2>
+            <p>SD Zone is a proud product of <strong>Sky Blue Multi Tech Enterprises</strong>, a technology-driven company focused on creating innovative solutions for the financial markets.</p>
+            <p>We combine cutting-edge technology with deep market expertise to build tools that empower traders. Our mission extends beyond just providing signals—we're committed to raising the standard of retail trading education in India.</p>
+            <p>With a focus on integrity, innovation, and user success, Sky Blue Multi Tech Enterprises is building a portfolio of products designed to help traders achieve their financial goals safely and sustainably.</p>
+        </div>
+
+        <div class="cta-section">
+            <h2>Ready to Join Our Community?</h2>
+            <p>Start your journey to becoming a more informed, disciplined, and profitable trader</p>
+            <a href="/subscriptions.html" class="cta-button">View Pricing Plans</a>
+        </div>
+    </div>
+</body>
+</html>

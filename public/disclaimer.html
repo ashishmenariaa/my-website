@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risk Disclaimer - SD Zone</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-accent: #00f2fe;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0a0a;
+            color: var(--text-primary);
+            line-height: 1.8;
+        }
+
+        .header {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #334155;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--success-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.2s;
+            padding: 0.5rem 1rem;
+        }
+
+        .nav-link:hover { color: var(--text-accent); }
+
+        .container {
+            max-width: 900px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .last-updated {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .content-section {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .content-section h2 {
+            color: #ff6b6b;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .content-section h3 {
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .content-section p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .content-section ul {
+            color: var(--text-secondary);
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .content-section li {
+            margin-bottom: 0.8rem;
+        }
+
+        .warning-box {
+            background: rgba(255, 107, 107, 0.15);
+            border-left: 4px solid #ff6b6b;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        .warning-box strong {
+            color: #ff6b6b;
+        }
+
+        .info-box {
+            background: rgba(0, 242, 254, 0.1);
+            border-left: 4px solid #00f2fe;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 2rem; }
+            .content-section { padding: 2rem 1.5rem; }
+            .nav-container { flex-direction: column; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">SD Zone</a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/subscriptions.html" class="nav-link">Pricing</a>
+                <a href="/contact.html" class="nav-link">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">⚠️ Risk Disclaimer</h1>
+            <p class="last-updated">Last Updated: October 19, 2024</p>
+        </div>
+
+        <div class="content-section">
+            <div class="warning-box">
+                <strong>IMPORTANT WARNING:</strong> Trading in stocks, derivatives, and other financial instruments carries a high level of risk and may not be suitable for all investors. You could lose all or more than your initial investment. Please read this disclaimer carefully before using our services.
+            </div>
+
+            <h2>General Trading Risks</h2>
+            <p><strong>SD Zone</strong>, operated by <strong>Sky Blue Multi Tech Enterprises</strong>, provides trading signals, analysis, and educational content. By using our services, you acknowledge and accept the following risks:</p>
+
+            <h3>1. Market Risks</h3>
+            <ul>
+                <li><strong>Volatility:</strong> Stock markets are highly volatile and prices can fluctuate dramatically in short periods</li>
+                <li><strong>Unpredictability:</strong> Market movements cannot be predicted with absolute certainty</li>
+                <li><strong>Economic Factors:</strong> Global events, news, and economic conditions can cause sudden market changes</li>
+                <li><strong>Liquidity Risk:</strong> You may not be able to exit positions at desired prices during volatile periods</li>
+                <li><strong>Gap Risk:</strong> Markets can gap up or down, causing significant losses beyond stop-loss levels</li>
+            </ul>
+
+            <h3>2. Financial Loss Risk</h3>
+            <div class="warning-box">
+                <strong>YOU CAN LOSE MONEY:</strong> Trading involves substantial risk of loss. You should only trade with money you can afford to lose. Never invest borrowed money or funds needed for living expenses.
+            </div>
+            <ul>
+                <li>Past performance does not guarantee future results</li>
+                <li>Even with our 87% claimed accuracy rate, losses are inevitable</li>
+                <li>Leverage and derivatives can amplify both gains AND losses</li>
+                <li>You may lose your entire investment or more</li>
+            </ul>
+
+            <h3>3. No Investment Advice</h3>
+            <p><strong>SD Zone does NOT provide investment advice.</strong> Our services include:</p>
+            <ul>
+                <li>Trading signals based on technical analysis</li>
+                <li>Educational content about supply and demand zones</li>
+                <li>Market analysis and commentary</li>
+            </ul>
+            <p><strong>This is NOT personalized financial advice.</strong> We do not know your:</p>
+            <ul>
+                <li>Financial situation or net worth</li>
+                <li>Risk tolerance or investment objectives</li>
+                <li>Tax situation or legal constraints</li>
+                <li>Personal circumstances or needs</li>
+            </ul>
+
+            <h3>4. Performance Disclaimers</h3>
+            <div class="warning-box">
+                <strong>HYPOTHETICAL OR SIMULATED RESULTS:</strong> Any performance data, statistics, or success rates mentioned are based on historical analysis and do not represent guaranteed future results.
+            </div>
+            <ul>
+                <li>The 87% accuracy rate is historical and may not reflect future performance</li>
+                <li>Individual results will vary based on execution, timing, and market conditions</li>
+                <li>Screenshots or testimonials may not be representative of typical results</li>
+                <li>Backtested results have inherent limitations and may not reflect actual trading</li>
+            </ul>
+
+            <h3>5. No Guarantees</h3>
+            <p>We make <strong>NO GUARANTEES</strong> regarding:</p>
+            <ul>
+                <li>Profitability or returns on any trade or signal</li>
+                <li>Accuracy of signals in future market conditions</li>
+                <li>Timeliness or continuity of service delivery</li>
+                <li>Your ability to achieve similar results as presented</li>
+                <li>Prevention of losses or protection of capital</li>
+            </ul>
+
+            <h3>6. User Responsibility</h3>
+            <p>By using SD Zone services, you agree that:</p>
+            <ul>
+                <li><strong>YOU are solely responsible</strong> for all trading decisions</li>
+                <li>You will conduct your own research and due diligence</li>
+                <li>You understand the risks involved in trading</li>
+                <li>You will not rely solely on our signals for trading decisions</li>
+                <li>You accept full responsibility for any profits or losses</li>
+                <li>You will trade within your risk tolerance and financial capacity</li>
+            </ul>
+
+            <h3>7. No Liability</h3>
+            <p><strong>Sky Blue Multi Tech Enterprises and SD Zone</strong> shall NOT be liable for:</p>
+            <ul>
+                <li>Any trading losses you may incur</li>
+                <li>Missed trades due to technical issues or delays</li>
+                <li>Errors, omissions, or inaccuracies in signals or content</li>
+                <li>Third-party platform failures or broker issues</li>
+                <li>Tax implications or legal consequences of trading</li>
+                <li>Any direct, indirect, incidental, or consequential damages</li>
+            </ul>
+
+            <h3>8. Independent Decision Making</h3>
+            <div class="info-box">
+                <strong>Important:</strong> Our signals and analysis are tools to assist your research. Always make independent decisions based on your own analysis, risk tolerance, and financial situation.
+            </div>
+
+            <h3>9. Seek Professional Advice</h3>
+            <p>Before trading or making investment decisions:</p>
+            <ul>
+                <li>Consult with a qualified financial advisor</li>
+                <li>Speak with a tax professional about implications</li>
+                <li>Ensure you understand all risks involved</li>
+                <li>Verify that trading aligns with your financial goals</li>
+            </ul>
+
+            <h3>10. Regulatory Compliance</h3>
+            <p>SD Zone is an educational and signal provider service. We are NOT:</p>
+            <ul>
+                <li>A registered investment advisor (RIA)</li>
+                <li>A SEBI-registered entity providing investment advice</li>
+                <li>A broker or dealer</li>
+                <li>Responsible for regulatory compliance of your trading activities</li>
+            </ul>
+            <p>You are responsible for complying with all applicable laws and regulations in your jurisdiction.</p>
+
+            <h3>11. Age and Eligibility</h3>
+            <p>Our services are only for individuals who:</p>
+            <ul>
+                <li>Are 18 years or older</li>
+                <li>Are legally eligible to trade in their jurisdiction</li>
+                <li>Have the legal capacity to enter into binding contracts</li>
+                <li>Meet all regulatory requirements for trading</li>
+            </ul>
+
+            <h3>12. Educational Purpose</h3>
+            <p>Our content is primarily educational and intended to:</p>
+            <ul>
+                <li>Help you understand supply and demand trading concepts</li>
+                <li>Improve your technical analysis skills</li>
+                <li>Provide market insights and perspectives</li>
+                <li>Support your independent research and learning</li>
+            </ul>
+
+            <h3>13. Service Changes and Termination</h3>
+            <p>We reserve the right to:</p>
+            <ul>
+                <li>Modify, suspend, or discontinue services at any time</li>
+                <li>Change signal methodology or accuracy rates</li>
+                <li>Update pricing and subscription terms</li>
+                <li>Terminate accounts for violations of terms</li>
+            </ul>
+
+            <div class="warning-box">
+                <strong>FINAL WARNING:</strong> By using SD Zone services, you explicitly acknowledge that you have read, understood, and accepted all risks outlined in this disclaimer. If you do not accept these risks, DO NOT use our services.
+            </div>
+
+            <h3>14. Contact Information</h3>
+            <p>For questions about risks or our services:</p>
+            <p><strong>Email:</strong> help.sdzone@gmail.com</p>
+            <p><strong>Company:</strong> Sky Blue Multi Tech Enterprises</p>
+
+            <div class="info-box">
+                <strong>Remember:</strong> Successful trading requires knowledge, discipline, risk management, and emotional control. Never risk more than you can afford to lose. Trading should be approached with caution and proper education.
+            </div>
+
+            <p style="margin-top: 2rem; font-weight: 600;">By subscribing to or using SD Zone services, you confirm that you have read, understood, and accepted this Risk Disclaimer in its entirety.</p>
+        </div>
+    </div>
+</body>
+</html>

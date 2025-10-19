@@ -544,6 +544,83 @@
             100% { transform: rotate(360deg); }
         }
 
+        .footer {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 242, 254, 0.1);
+            padding: 4rem 0 2rem;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: var(--success-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+            color: var(--text-secondary);
+            transition: color 0.3s;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--text-accent);
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .success-badge {
+            display: inline-block;
+            background: var(--warning-gradient);
+            color: #000;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
+        }
+
         @media (max-width: 768px) {
             .page-title { font-size: 2rem; }
             .nav-container { flex-direction: column; gap: 1rem; }
@@ -588,6 +665,49 @@
             </div>
         </div>
     </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SD Zone</h3>
+                <p>Elite trading signals and analytics platform designed for serious traders who demand consistent results and professional-grade tools.</p>
+                <p style="margin-top: 1rem; font-size: 0.9rem;">A product of <strong>Sky Blue Multi Tech Enterprises</strong></p>
+                <div class="success-badge">87% Success Rate</div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/subscriptions.html">Pricing Plans</a></li>
+                    <li><a href="/features.html">Features</a></li>
+                    <li><a href="/about.html">About Us</a></li>
+                    <li><a href="/contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="/terms.html">Terms & Conditions</a></li>
+                    <li><a href="/privacy.html">Privacy Policy</a></li>
+                    <li><a href="/refund.html">Refund Policy</a></li>
+                    <li><a href="/disclaimer.html">Risk Disclaimer</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul>
+                    <li>📧 help.sdzone@gmail.com</li>
+                    <li>🕒 24/7 Live Support</li>
+                    <li>💬 <a href="https://t.me/ashishmenaria" target="_blank">Telegram Community</a></li>
+                    <li>📸 <a href="https://www.instagram.com/ashish__menaria?igsh=Z29oamRmZjFkOHg=" target="_blank">Instagram (11K+)</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 SD Zone by Sky Blue Multi Tech Enterprises. All rights reserved.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem;">Trading involves risk - past performance doesn't guarantee future results.</p>
+        </div>
+    </footer>
 
     <script>
         let currentUser = null;
