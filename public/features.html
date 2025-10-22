@@ -314,11 +314,6 @@
             z-index: 1;
         }
 
-        .screenshots-section {
-            margin: 6rem 0;
-            text-align: center;
-        }
-
         .section-title {
             font-size: 3rem;
             font-weight: 900;
@@ -333,61 +328,6 @@
             font-size: 1.2rem;
             color: var(--text-secondary);
             margin-bottom: 4rem;
-        }
-
-        .screenshots-scroll {
-            display: flex;
-            gap: 2rem;
-            overflow-x: auto;
-            padding: 2rem 0;
-            scroll-behavior: smooth;
-        }
-
-        .screenshots-scroll::-webkit-scrollbar {
-            height: 12px;
-        }
-
-        .screenshots-scroll::-webkit-scrollbar-track {
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 10px;
-        }
-
-        .screenshots-scroll::-webkit-scrollbar-thumb {
-            background: var(--success-gradient);
-            border-radius: 10px;
-        }
-
-        .screenshot-item {
-            min-width: 700px;
-            max-width: 700px;
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(0, 242, 254, 0.3);
-            border-radius: 20px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .screenshot-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 60px rgba(0, 242, 254, 0.3);
-            border-color: rgba(0, 242, 254, 0.6);
-        }
-
-        .screenshot-item img {
-            width: 100%;
-            height: 400px;
-            object-fit: contain;
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        .screenshot-label {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-accent);
         }
 
         .core-feature-section {
@@ -1011,15 +951,6 @@
             .cta-section {
                 padding: 3rem 2rem;
             }
-
-            .screenshot-item {
-                min-width: 95%;
-                max-width: 95%;
-            }
-
-            .screenshot-item img {
-                height: 300px;
-            }
         }
     </style>
 </head>
@@ -1046,70 +977,7 @@
         </nav>
     </header>
 
-    <!-- <section class="hero-section">
-        <div class="hero-content">
-            <div class="hero-badge">🎯 Advanced Trading System</div>
-            <h1 class="hero-title">Precision Zone Trading</h1>
-            <p class="hero-subtitle">Identify high-probability supply and demand zones with 87-90% accuracy. Execute trades with confidence using our battle-tested algorithmic system designed for consistent profitability.</p>
-            
-            <div class="stats-banner">
-                <div class="stat-item">
-                    <span class="stat-number">87-90%</span>
-                    <span class="stat-label">Win Rate</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">1:4</span>
-                    <span class="stat-label">Risk-Reward</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">10K+</span>
-                    <span class="stat-label">Active Users</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <div class="container">
-        <section class="screenshots-section">
-            <h2 class="section-title">See It In Action</h2>
-            <p class="section-subtitle">Real indicator screenshots showing exact entry and exit signals</p>
-            
-            <div class="screenshots-scroll">
-                <div class="screenshot-item">
-                    <img src="b1.png" alt="Buy Signal 1">
-                    <div class="screenshot-label">🟢 Buy Signal - Demand Zone Entry</div>
-                </div>
-                <div class="screenshot-item">
-                    <img src="b2.png" alt="Buy Signal 2">
-                    <div class="screenshot-label">🟢 Buy Signal - Perfect Setup</div>
-                </div>
-                <div class="screenshot-item">
-                    <img src="b3.png" alt="Buy Signal 3">
-                    <div class="screenshot-label">🟢 Buy Signal - High Probability</div>
-                </div>
-                <div class="screenshot-item">
-                    <img src="b4.png" alt="Buy Signal 4">
-                    <div class="screenshot-label">🟢 Buy Signal - Zone Activation</div>
-                </div>
-                <div class="screenshot-item">
-                    <img src="b5.png" alt="Buy Signal 5">
-                    <div class="screenshot-label">🟢 Buy Signal - Entry Point</div>
-                </div>
-                <div class="screenshot-item">
-                    <img src="s1.png" alt="Sell Signal 1">
-                    <div class="screenshot-label">🔴 Sell Signal - Supply Zone</div>
-                </div>
-                <div class="screenshot-item">
-                    <img src="s2.png" alt="Sell Signal 2">
-                    <div class="screenshot-label">🔴 Sell Signal - Short Entry</div>
-                </div>
-                <div class="screenshot-item">
-                    <img src="s3.png" alt="Sell Signal 3">
-                    <div class="screenshot-label">🔴 Sell Signal - Reversal Point</div>
-                </div>
-            </div>
-        </section> -->
-
         <section class="core-feature-section">
             <div class="core-badge">⭐ CORE FEATURE</div>
             <h2 class="section-title">High-Probability Zone Detection</h2>
@@ -1135,9 +1003,9 @@
                 </div>
             </div>
 
-            <!-- <p class="section-description">
-                When price enters these validated zones, our indicator generates <span class="highlight-text">precise entry signals</span> with pre-calculated stop-loss and take-profit levels, ensuring you maintain optimal risk management on every single trade you execute.
-            </p> -->
+            <p class="section-description">
+                These zones are identified using advanced technical analysis and provide traders with <span class="highlight-text">key reference levels</span> for their own trading decisions and strategies.
+            </p>
         </section>
 
         <section class="steps-section">
@@ -1157,28 +1025,20 @@
                     </div>
                 </div>
 
-                <!-- <div class="step-card">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h3>📡 Signal Generation</h3>
-                        <p>When price approaches a validated zone, the system generates clear buy or sell signals with visual markers on your chart, including precise entry price, optimal stop-loss placement, and multiple take-profit targets for maximum profitability.</p>
-                    </div>
-                </div> -->
-
                 <div class="step-card">
                     <div class="step-number">2</div>
                     <div class="step-content">
-                        <h3>🛡️ Risk Management</h3>
-                        <p>Every signal includes pre-calculated risk parameters ensuring a minimum 1:4 risk-reward ratio. You know your potential loss and gain before entering any trade, allowing you to manage your portfolio with confidence.</p>
+                        <h3>📊 Visual Analysis</h3>
+                        <p>Zones are displayed clearly on your charts with color-coded markers, making it easy to identify key support and resistance levels where price is likely to react. Use these zones as reference points for your trading strategy.</p>
                     </div>
                 </div>
 
-                <!-- <div class="step-card">
-                    <div class="step-number">4</div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
                     <div class="step-content">
-                        <h3>🚀 Trade Execution</h3>
-                        <p>Execute the trade based on the signal, set your stop-loss and take-profit levels as indicated, and let the market work in your favor. Our zones have proven reliability across all timeframes and market conditions.</p>
-                    </div> -->
+                        <h3>🛡️ Risk Assessment</h3>
+                        <p>Evaluate potential trade opportunities by analyzing zone strength and confluence with other technical factors. Make informed decisions about entry points and risk management based on zone analysis.</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1186,56 +1046,56 @@
         <section class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">🎯</div>
-                <h3 class="feature-title">Pinpoint Accuracy</h3>
-                <p class="feature-description">87-90% win rate achieved through rigorous backtesting across multiple markets and timeframes. Our zones identify the exact price levels where reversals occur with remarkable precision.</p>
+                <h3 class="feature-title">Accurate Zone Detection</h3>
+                <p class="feature-description">Advanced algorithms identify high-probability supply and demand zones through rigorous analysis of price action, volume patterns, and institutional trading behavior across multiple timeframes.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">⚡</div>
-                <h3 class="feature-title">Real-Time Alerts</h3>
-                <p class="feature-description">Receive instant notifications when price enters a high-probability zone. Never miss a trading opportunity with email, SMS, and in-app push alerts delivered to your devices.</p>
+                <h3 class="feature-title">Real-Time Updates</h3>
+                <p class="feature-description">Zones are automatically updated as new price data becomes available, ensuring you always have the most current and relevant support and resistance levels for your analysis.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">📊</div>
                 <h3 class="feature-title">Multi-Timeframe Analysis</h3>
-                <p class="feature-description">Works seamlessly on all timeframes from 1-minute scalping to daily swing trading. The algorithm intelligently adapts to your preferred trading style and strategy.</p>
+                <p class="feature-description">Works seamlessly on all timeframes from 1-minute to daily charts. The algorithm intelligently adapts to your preferred trading style and timeframe requirements.</p>
             </div>
 
             <div class="feature-card">
-                <div class="feature-icon">💰</div>
-                <h3 class="feature-title">Optimal Risk-Reward</h3>
-                <p class="feature-description">Every signal maintains a minimum 1:4 risk-reward ratio. Risk 1% to potentially gain 4% or more on each trade with proper position sizing and disciplined execution.</p>
+                <div class="feature-icon">💡</div>
+                <h3 class="feature-title">Educational Tool</h3>
+                <p class="feature-description">Learn to identify supply and demand zones independently by studying how the indicator marks key levels. Perfect for developing your technical analysis skills and market understanding.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">🔄</div>
-                <h3 class="feature-title">Dynamic Updates</h3>
-                <p class="feature-description">Zones are automatically updated as new price data becomes available. The indicator continuously learns and adapts to evolving market conditions for sustained performance.</p>
+                <h3 class="feature-title">Dynamic Zones</h3>
+                <p class="feature-description">Zones evolve with market conditions, automatically adjusting to reflect current price action and maintaining relevance as market structure changes over time.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">📈</div>
                 <h3 class="feature-title">Visual Clarity</h3>
-                <p class="feature-description">Clean, intuitive chart visualization with color-coded zones, clear entry signals, and easy-to-read profit targets. No clutter, just actionable trading information.</p>
+                <p class="feature-description">Clean, intuitive chart visualization with color-coded zones and clear level markings. No clutter, just actionable reference points for your trading analysis.</p>
             </div>
 
             <div class="feature-card">
-                <div class="feature-icon">🛡️</div>
-                <h3 class="feature-title">Built-in Protection</h3>
-                <p class="feature-description">Automatic stop-loss calculation based on zone invalidation levels ensures you exit losing trades quickly while letting winning positions run to full targets.</p>
+                <div class="feature-icon">🎨</div>
+                <h3 class="feature-title">Customizable Display</h3>
+                <p class="feature-description">Adjust colors, line styles, and zone transparency to match your charting preferences and ensure optimal visibility across different chart themes.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">🌐</div>
                 <h3 class="feature-title">Universal Compatibility</h3>
-                <p class="feature-description">Use the indicator on stocks, indices, forex, commodities, and cryptocurrencies. The zone logic works universally across all liquid financial markets.</p>
+                <p class="feature-description">Use the indicator on stocks, indices, forex, commodities, and cryptocurrencies. The zone detection logic works universally across all liquid financial markets.</p>
             </div>
 
             <div class="feature-card">
                 <div class="feature-icon">📱</div>
                 <h3 class="feature-title">Mobile Ready</h3>
-                <p class="feature-description">Full functionality on TradingView mobile app. Monitor zones and receive alerts wherever you are, ensuring you never miss high-probability trading opportunities.</p>
+                <p class="feature-description">Full functionality on TradingView mobile app. Monitor zones and analyze markets wherever you are, ensuring you never miss important technical levels.</p>
             </div>
         </section>
 
@@ -1250,7 +1110,7 @@
                     <div class="benefit-icon">✓</div>
                     <div class="benefit-text">
                         <strong>No Repainting</strong>
-                        Signals are final and never change once generated, ensuring honest performance tracking and reliable backtesting results
+                        Zones remain fixed once drawn and never change, ensuring honest analysis and reliable backtesting for your trading strategies
                     </div>
                 </div>
 
@@ -1258,7 +1118,7 @@
                     <div class="benefit-icon">✓</div>
                     <div class="benefit-text">
                         <strong>Easy to Use</strong>
-                        No complex settings or configurations required. Simply add to your chart and start identifying high-probability trades immediately
+                        No complex settings or configurations required. Simply add to your chart and start analyzing high-probability zones immediately
                     </div>
                 </div>
 
@@ -1266,15 +1126,15 @@
                     <div class="benefit-icon">✓</div>
                     <div class="benefit-text">
                         <strong>Beginner Friendly</strong>
-                        Clear visual signals make it perfect for new traders while powerful enough for experienced professionals
+                        Clear visual zones make it perfect for new traders learning technical analysis while powerful enough for experienced professionals
                     </div>
                 </div>
 
                 <div class="benefit-item">
                     <div class="benefit-icon">✓</div>
                     <div class="benefit-text">
-                        <strong>Proven Results</strong>
-                        Thousands of satisfied traders using our zones daily with consistent positive results and documented success
+                        <strong>Educational Value</strong>
+                        Learn institutional-level supply and demand analysis by observing how zones form and how price reacts at these critical levels
                     </div>
                 </div>
 
@@ -1298,8 +1158,8 @@
 
         <section class="cta-section">
             <div class="cta-content">
-                <h2 class="cta-title">Ready to Transform Your Trading?</h2>
-                <p class="cta-description">Join thousands of successful traders using SD Zone to identify high-probability setups and execute profitable trades with confidence every single day.</p>
+                <h2 class="cta-title">Ready to Enhance Your Trading?</h2>
+                <p class="cta-description">Join thousands of traders using SD Zone to identify high-probability supply and demand zones for better technical analysis and informed trading decisions.</p>
                 <a href="/subscriptions.html" class="cta-button">View Pricing Plans</a>
                 <p class="cta-guarantee">
                     ✓ 7-Day Money-Back Guarantee &nbsp;•&nbsp; ✓ Cancel Anytime &nbsp;•&nbsp; ✓ Instant Access
@@ -1312,7 +1172,7 @@
         <div class="footer-text">
             <p>&copy; 2024 SD Zone. All rights reserved.</p>
             <p style="font-size: 0.95rem; opacity: 0.7;">
-                Trading involves risk. Past performance does not guarantee future results. SD Zone provides educational tools only.
+                This is an educational tool for technical analysis. Trading involves risk. Past performance does not guarantee future results.
             </p>
         </div>
     </footer>
