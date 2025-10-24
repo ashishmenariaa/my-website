@@ -1,7 +1,7 @@
+// middleware/auth.js
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const BlacklistedToken = require('../models/blacklistedToken');
-
 
 // Generate JWT token
 const generateToken = (userId) => {
@@ -22,19 +22,10 @@ const setTokenCookie = (res, token) => {
 
 // Check if user is authenticated
 const authenticate = async (req, res, next) => {
-  // Log incoming token
-  let debugToken;
-  if (req.cookies && req.cookies.token) {
-    debugToken = req.cookies.token;
-  } else if (req.headers.cookie) {
-    debugToken = require('cookie').parse(req.headers.cookie).token;
-  } else {
-    debugToken = null;
-  }
-  console.log('AUTH CHECK: Incoming token:', debugToken);
   try {
-    // Check cookie first, then Authorization header
-    let token = req.cookies.token;
+    // Get token from cookies or Authorization header
+    let token = req.cookies?.token;
+    
     if (!token && req.headers.authorization) {
       const authHeader = req.headers.authorization;
       if (authHeader.startsWith('Bearer ')) {
@@ -50,16 +41,17 @@ const authenticate = async (req, res, next) => {
       });
     }
 
-      // Check persistent blacklist
-      const blacklisted = await BlacklistedToken.findOne({ token });
-      if (blacklisted) {
-        res.clearCookie('token');
-        return res.status(401).json({
-          success: false,
-          message: 'Token has been revoked.'
-        });
-      }
+    // Check if token is blacklisted
+    const blacklisted = await BlacklistedToken.findOne({ token });
+    if (blacklisted) {
+      res.clearCookie('token');
+      return res.status(401).json({
+        success: false,
+        message: 'Token has been revoked.'
+      });
+    }
 
+    // Verify token
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
@@ -71,7 +63,8 @@ const authenticate = async (req, res, next) => {
       });
     }
 
-    const user = await User.findById(decoded.id).select('-passwordHash');
+    // Find user in database
+    const user = await User.findById(decoded.id).select('-password');
 
     if (!user) {
       res.clearCookie('token');
@@ -81,13 +74,62 @@ const authenticate = async (req, res, next) => {
       });
     }
 
+    // Attach user and userId to request object
     req.user = user;
+    req.userId = user._id;
+    
     next();
   } catch (error) {
+    console.error('Auth error:', error.message);
     res.clearCookie('token');
     res.status(401).json({
       success: false,
-      message: 'Invalid token.'
+      message: 'Authentication failed.'
+    });
+  }
+};
+
+// Logout - add token to blacklist
+const logout = async (req, res, next) => {
+  try {
+    const token = req.cookies?.token;
+    
+    if (token) {
+      // Add token to blacklist
+      await BlacklistedToken.create({ 
+        token,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+      });
+    }
+    
+    res.clearCookie('token');
+    res.json({ 
+      success: true, 
+      message: 'Logged out successfully' 
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Verify token exists (optional middleware)
+const verifyToken = async (req, res, next) => {
+  try {
+    const token = req.cookies?.token;
+    
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: 'No token provided'
+      });
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+    next();
+  } catch (err) {
+    res.status(401).json({
+      success: false,
+      message: 'Invalid token'
     });
   }
 };
@@ -95,5 +137,7 @@ const authenticate = async (req, res, next) => {
 module.exports = {
   generateToken,
   setTokenCookie,
-  authenticate
+  authenticate,
+  logout,
+  verifyToken
 };
