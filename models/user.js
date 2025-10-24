@@ -31,6 +31,12 @@ const UserSchema = new mongoose.Schema({
     startDate: Date,
     endDate: Date
   },
+  // TradingView ID
+  tradingViewId: {
+    type: String,
+    default: null,
+    sparse: true
+  },
   resetPasswordToken: {
     type: String,
     default: undefined
