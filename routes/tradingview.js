@@ -2,32 +2,12 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
-
-// Middleware to verify user is logged in
-const authMiddleware = async (req, res, next) => {
-  try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ success: false, message: 'Not authenticated' });
-    }
-    
-    const jwt = require('jsonwebtoken');
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userId = decoded.userId;
-    next();
-  } catch (err) {
-    res.status(401).json({ success: false, message: 'Invalid token' });
-  }
-};
+const { authenticate } = require('../middleware/auth');
 
 // Add or update TradingView ID
-router.post('/add-tradingview', authMiddleware, async (req, res, next) => {
+router.post('/add-tradingview', authenticate, async (req, res, next) => {
   try {
-    console.log('📨 Request body:', req.body);
-    
     const { tradingViewId } = req.body;
-
-    console.log('📨 Received tradingViewId:', tradingViewId);
 
     if (!tradingViewId || tradingViewId.trim() === '') {
       return res.status(400).json({ 
@@ -37,13 +17,12 @@ router.post('/add-tradingview', authMiddleware, async (req, res, next) => {
     }
 
     const user = await User.findByIdAndUpdate(
-      req.userId,
+      req.user._id,
       { tradingViewId: tradingViewId.trim() },
       { new: true }
     );
 
     if (!user) {
-      console.error('User not found for ID:', req.userId);
       return res.status(404).json({ 
         success: false, 
         message: 'User not found' 
@@ -61,9 +40,9 @@ router.post('/add-tradingview', authMiddleware, async (req, res, next) => {
 });
 
 // Get user's TradingView ID
-router.get('/get-tradingview', authMiddleware, async (req, res, next) => {
+router.get('/get-tradingview', authenticate, async (req, res, next) => {
   try {
-    const user = await User.findById(req.userId);
+    const user = await User.findById(req.user._id);
     
     res.json({ 
       success: true, 
