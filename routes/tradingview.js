@@ -1,11 +1,27 @@
-// src/routes/tradingview.js
+// routes/tradingview.js
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
-const { verifyToken } = require('../middleware/auth');
+
+// Middleware to verify user is logged in
+const authMiddleware = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'Not authenticated' });
+    }
+    
+    const jwt = require('jsonwebtoken');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.userId;
+    next();
+  } catch (err) {
+    res.status(401).json({ success: false, message: 'Invalid token' });
+  }
+};
 
 // Add or update TradingView ID
-router.post('/add-tradingview', verifyToken, async (req, res, next) => {
+router.post('/add-tradingview', authMiddleware, async (req, res, next) => {
   try {
     const { tradingviewId } = req.body;
 
@@ -33,7 +49,7 @@ router.post('/add-tradingview', verifyToken, async (req, res, next) => {
 });
 
 // Get user's TradingView ID
-router.get('/get-tradingview', verifyToken, async (req, res, next) => {
+router.get('/get-tradingview', authMiddleware, async (req, res, next) => {
   try {
     const user = await User.findById(req.userId);
     
