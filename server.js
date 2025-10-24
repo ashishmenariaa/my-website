@@ -14,6 +14,7 @@ const User = require('./models/user');
 const plansRoutes = require('./routes/plans');
 const paymentsRoutes = require('./routes/payments');
 const contactRoutes = require('./routes/contact');
+const tradingviewRoutes = require('./routes/tradingview'); // 🆕 TradingView routes
 
 const app = express();
 
@@ -92,7 +93,7 @@ app.post('/api/auth/register', async (req, res, next) => {
   }
 });
 
-// Login - FIXED VERSION (single endpoint)
+// Login
 app.post('/api/auth/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -150,6 +151,7 @@ app.post('/api/auth/logout', (req, res) => {
 app.use('/api/plans', plansRoutes);
 app.use('/api/payments', paymentsRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/tradingview', tradingviewRoutes); // 🆕 Add TradingView routes
 
 // Test API
 app.get('/api/test', (req, res) => {

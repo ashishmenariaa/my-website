@@ -913,37 +913,38 @@
             }
         }
 
-        async function verifyPayment(paymentData, planId, planName) {
-            try {
-                showAlert('Payment successful! Verifying...', 'success');
-                
-                const response = await fetch('/api/payments/verify', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                        razorpay_payment_id: paymentData.razorpay_payment_id,
-                        razorpay_order_id: paymentData.razorpay_order_id,
-                        razorpay_signature: paymentData.razorpay_signature,
-                        planId: planId
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    showAlert(`Payment Successful! Your ${planName} subscription is now active!`, 'success');
-                    currentUser.hasActiveSubscription = true;
-                    setTimeout(() => window.location.reload(), 2000);
-                } else {
-                    throw new Error(data.message || 'Payment verification failed');
-                }
-                
-            } catch (error) {
-                console.error('Verification error:', error);
-                showAlert(`Payment verification failed: ${error.message}`, 'error');
-            }
+       async function verifyPayment(paymentData, planId, planName) {
+    try {
+        showAlert('Payment successful! Verifying...', 'success');
+        
+        const response = await fetch('/api/payments/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+                razorpay_payment_id: paymentData.razorpay_payment_id,
+                razorpay_order_id: paymentData.razorpay_order_id,
+                razorpay_signature: paymentData.razorpay_signature,
+                planId: planId
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showAlert(`Payment Successful! Your ${planName} subscription is now active!`, 'success');
+            currentUser.hasActiveSubscription = true;
+            // 🆕 REDIRECT TO TRADINGVIEW PAGE INSTEAD OF RELOAD
+            setTimeout(() => window.location.href = '/tradingview.html', 2000);
+        } else {
+            throw new Error(data.message || 'Payment verification failed');
         }
+        
+    } catch (error) {
+        console.error('Verification error:', error);
+        showAlert(`Payment verification failed: ${error.message}`, 'error');
+    }
+}
 
         window.addEventListener('load', async function() {
             initCurrentUser();
