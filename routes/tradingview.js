@@ -23,9 +23,13 @@ const authMiddleware = async (req, res, next) => {
 // Add or update TradingView ID
 router.post('/add-tradingview', authMiddleware, async (req, res, next) => {
   try {
-    const { tradingviewId } = req.body;
+    console.log('📨 Request body:', req.body);
+    
+    const { tradingViewId } = req.body;
 
-    if (!tradingviewId || tradingviewId.trim() === '') {
+    console.log('📨 Received tradingViewId:', tradingViewId);
+
+    if (!tradingViewId || tradingViewId.trim() === '') {
       return res.status(400).json({ 
         success: false, 
         message: 'TradingView ID is required' 
@@ -34,7 +38,7 @@ router.post('/add-tradingview', authMiddleware, async (req, res, next) => {
 
     const user = await User.findByIdAndUpdate(
       req.userId,
-      { tradingviewId: tradingviewId.trim() },
+      { tradingViewId: tradingViewId.trim() },
       { new: true }
     );
 
@@ -55,7 +59,7 @@ router.get('/get-tradingview', authMiddleware, async (req, res, next) => {
     
     res.json({ 
       success: true, 
-      tradingviewId: user?.tradingviewId || null 
+      tradingViewId: user?.tradingViewId || null 
     });
   } catch (err) {
     next(err);
