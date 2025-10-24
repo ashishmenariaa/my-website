@@ -443,7 +443,7 @@
             try {
                 console.log('📤 Submitting TradingView ID:', tradingViewId);
 
-                const response = await fetch('/api/tradingview/update-tradingview-id', {
+                const response = await fetch('/api/tradingview/add-tradingview', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
