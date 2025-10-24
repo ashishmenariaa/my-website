@@ -42,6 +42,14 @@ router.post('/add-tradingview', authMiddleware, async (req, res, next) => {
       { new: true }
     );
 
+    if (!user) {
+      console.error('User not found for ID:', req.userId);
+      return res.status(404).json({ 
+        success: false, 
+        message: 'User not found' 
+      });
+    }
+
     res.json({ 
       success: true, 
       message: 'TradingView ID saved successfully',
