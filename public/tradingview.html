@@ -65,7 +65,7 @@
         }
 
         .container {
-            max-width: 550px;
+            max-width: 600px;
             width: 100%;
             position: relative;
             z-index: 1;
@@ -205,18 +205,76 @@
             color: rgba(255, 255, 255, 0.4);
         }
 
-        .form-hint {
-            font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.5);
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .steps-box {
+            margin-top: 16px;
+            background: rgba(0, 242, 254, 0.05);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 12px;
+            padding: 18px 22px;
         }
 
-        .hint-icon {
-            width: 16px;
-            height: 16px;
+        .steps-title {
+            font-size: 0.95rem;
+            color: #00f2fe;
+            font-weight: 600;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .steps-list {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .steps-list li {
+            counter-increment: step-counter;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.6;
+            padding-left: 32px;
+            position: relative;
+        }
+
+        .steps-list li:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .steps-list li:last-child {
+            margin-bottom: 0;
+        }
+
+        .steps-list a {
+            color: #00f2fe;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            border-bottom: 1px solid transparent;
+        }
+
+        .steps-list a:hover {
+            color: #4facfe;
+            border-bottom-color: #4facfe;
+        }
+
+        .steps-list strong {
+            color: white;
+            font-weight: 600;
         }
 
         .submit-btn {
@@ -319,6 +377,17 @@
             .subtitle {
                 font-size: 0.95rem;
             }
+
+            .steps-list li {
+                font-size: 0.85rem;
+                padding-left: 30px;
+            }
+
+            .steps-list li:before {
+                width: 22px;
+                height: 22px;
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
@@ -354,17 +423,22 @@
                         id="tradingViewId"
                         class="form-input"
                         placeholder="e.g., john_trader123"
-                        pattern="[a-zA-Z0-9_]{3,15}"
-                        maxlength="15"
                         required
                         autofocus
                     />
-                    <p class="form-hint">
-                        <svg class="hint-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        3-15 characters: letters, numbers, and underscores only
-                    </p>
+                    
+                    <div class="steps-box">
+                        <div class="steps-title">
+                            <span>📍</span>
+                            <span>How to find your TradingView ID:</span>
+                        </div>
+                        <ol class="steps-list">
+                            <li>Go to <a href="https://www.tradingview.com" target="_blank" rel="noopener noreferrer">TradingView.com</a></li>
+                            <li>Login to your account</li>
+                            <li>Click on the <strong>user icon</strong> in the top right corner</li>
+                            <li>Copy your <strong>username/ID</strong> and paste it above</li>
+                        </ol>
+                    </div>
                 </div>
 
                 <button type="submit" class="submit-btn" id="submitBtn">
@@ -411,10 +485,9 @@
             errorAlert.classList.remove('show');
         }
 
-        // Validate TradingView ID format
+        // Validate TradingView ID format - minimum 3 characters, no max limit
         function isValidTradingViewId(id) {
-            const regex = /^[a-zA-Z0-9_]{3,15}$/;
-            return regex.test(id);
+            return id.length >= 3 && /^[a-zA-Z0-9_]+$/.test(id);
         }
 
         // Handle form submission
@@ -431,7 +504,7 @@
             }
 
             if (!isValidTradingViewId(tradingViewId)) {
-                showError('Invalid format. Use 3-15 characters: letters, numbers, and underscores only.');
+                showError('Invalid format. Please use at least 3 characters with letters, numbers, and underscores only.');
                 tradingViewIdInput.focus();
                 return;
             }
