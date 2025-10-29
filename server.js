@@ -112,6 +112,9 @@ app.get('/plans', requireLogin, (req, res) => {
 
 // ✅ Add any other protected pages as needed
 
+// ✅ Serve static files AFTER protection routes
+app.use(express.static(path.join(__dirname, 'public')));
+
 // ----------------------
 // Cron Jobs
 // ----------------------
