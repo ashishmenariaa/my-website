@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="/logo.svg">
     <style>
         * {
             margin: 0;
@@ -598,6 +599,129 @@
             font-size: 1.05rem;
         }
 
+        /* Carousel Styles */
+        .carousel-section {
+            margin: 8rem 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .carousel-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 242, 254, 0.3);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 25px 70px rgba(0, 242, 254, 0.2);
+        }
+
+        .carousel-wrapper {
+            overflow: visible;
+            width: 100%;
+            position: relative;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            width: 100%;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 16/9;
+            background: rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+
+        .slide-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 15px;
+        }
+
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 242, 254, 0.2);
+            border: 2px solid rgba(0, 242, 254, 0.5);
+            color: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .carousel-nav:hover {
+            background: var(--success-gradient);
+            border-color: var(--success-gradient);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-nav.prev {
+            left: 1rem;
+        }
+
+        .carousel-nav.next {
+            right: 1rem;
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 2rem 0;
+            background: rgba(0, 0, 0, 0.3);
+            flex-wrap: wrap;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(0, 242, 254, 0.4);
+            border: 2px solid rgba(0, 242, 254, 0.6);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--success-gradient);
+            border-color: var(--success-gradient);
+            width: 35px;
+            border-radius: 10px;
+        }
+
+        .carousel-counter {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -944,6 +1068,16 @@
                 padding: 2rem 1.5rem;
             }
 
+            .carousel-slide {
+                padding: 1rem;
+            }
+
+            .carousel-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
             .cta-title {
                 font-size: 2.5rem;
             }
@@ -990,7 +1124,7 @@
                 
                 <div class="zone-box supply">
                     <div class="zone-label">🔴 Supply Zone (Resistance)</div>
-                    <div class="zone-description">High-probability area where price tends to reverse downward due to heavy selling pressure from institutional traders. These zones form at price levels where sellers overwhelm buyers.</div>
+                    <div class="zone-description">High-probability area where price tends to reverse downward due to heavy selling pressure from institutional traders.</div>
                 </div>
 
                 <div class="price-movement">
@@ -999,7 +1133,7 @@
 
                 <div class="zone-box demand">
                     <div class="zone-label">🟢 Demand Zone (Support)</div>
-                    <div class="zone-description">High-probability area where price tends to reverse upward due to strong buying pressure from institutional traders. These zones form at price levels where buyers overwhelm sellers.</div>
+                    <div class="zone-description">High-probability area where price tends to reverse upward due to strong buying pressure from institutional traders.</div>
                 </div>
             </div>
 
@@ -1041,6 +1175,50 @@
                     </div>
                 </div>
             </div>
+        </section>
+
+        <section class="carousel-section">
+            <div class="carousel-header">
+                <h2 class="section-title">See It In Action</h2>
+                <p class="section-subtitle">Swipe left and right to explore real trading examples</p>
+            </div>
+
+            <div class="carousel-container">
+                <div class="carousel-wrapper">
+                    <div class="carousel-track" id="carouselTrack">
+                        <div class="carousel-slide">
+                            <img src="b1.png" alt="Example 1" class="slide-image">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="b2.png" alt="Example 2" class="slide-image">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="b3.png" alt="Example 3" class="slide-image">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="b4.png" alt="Example 4" class="slide-image">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="b5.png" alt="Example 5" class="slide-image">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="s1.png" alt="Setup 1" class="slide-image">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="s2.png" alt="Setup 2" class="slide-image">
+                        </div>
+                        <div class="carousel-slide">
+                            <img src="s3.png" alt="Setup 3" class="slide-image">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="carousel-nav prev" onclick="prevSlide()">❮</button>
+                <button class="carousel-nav next" onclick="nextSlide()">❯</button>
+            </div>
+
+            <div class="carousel-dots" id="dotsContainer"></div>
+            <div class="carousel-counter"><span id="currentSlide">1</span> / 8</div>
         </section>
 
         <section class="features-grid">
@@ -1176,5 +1354,103 @@
             </p>
         </div>
     </footer>
+
+    <script>
+        let currentSlide = 0;
+        const totalSlides = 8;
+
+        function initDots() {
+            const dotsContainer = document.getElementById('dotsContainer');
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = `dot ${i === 0 ? 'active' : ''}`;
+                dot.onclick = () => goToSlide(i);
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        function updateCarousel() {
+            const track = document.getElementById('carouselTrack');
+            track.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+            
+            document.getElementById('currentSlide').textContent = currentSlide + 1;
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateCarousel();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateCarousel();
+        }
+
+        function goToSlide(n) {
+            currentSlide = n;
+            updateCarousel();
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Touch support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.querySelector('.carousel-wrapper').addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.querySelector('.carousel-wrapper').addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchStartX - touchEndX > 50) nextSlide();
+            if (touchEndX - touchStartX > 50) prevSlide();
+        }
+
+        // Auto-play carousel
+        let autoplayInterval;
+
+        function startAutoplay() {
+            autoplayInterval = setInterval(() => {
+                nextSlide();
+            }, 4000); // Change slide every 4 seconds
+        }
+
+        function stopAutoplay() {
+            clearInterval(autoplayInterval);
+        }
+
+        // Pause autoplay on user interaction
+        document.querySelector('.carousel-wrapper').addEventListener('mouseenter', stopAutoplay);
+        document.querySelector('.carousel-wrapper').addEventListener('mouseleave', startAutoplay);
+        
+        document.querySelectorAll('.carousel-nav, .dot').forEach(el => {
+            el.addEventListener('click', () => {
+                stopAutoplay();
+                setTimeout(startAutoplay, 8000); // Resume after 8 seconds of inactivity
+            });
+        });
+
+        document.addEventListener('keydown', () => {
+            stopAutoplay();
+            setTimeout(startAutoplay, 8000);
+        });
+
+        // Initialize
+        initDots();
+        startAutoplay();
+    </script>
 </body>
 </html>
