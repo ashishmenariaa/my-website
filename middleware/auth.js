@@ -1,7 +1,5 @@
-// middleware/auth.js
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const BlacklistedToken = require('../models/blacklistedToken');
 
 // Generate JWT token
 const generateToken = (userId) => {
@@ -20,7 +18,7 @@ const setTokenCookie = (res, token) => {
   });
 };
 
-// Check if user is authenticated
+// Check if user is authenticated (for API routes)
 const authenticate = async (req, res, next) => {
   try {
     // Get token from cookies or Authorization header
@@ -38,16 +36,6 @@ const authenticate = async (req, res, next) => {
       return res.status(401).json({
         success: false,
         message: 'Access denied. No token provided.'
-      });
-    }
-
-    // Check if token is blacklisted
-    const blacklisted = await BlacklistedToken.findOne({ token });
-    if (blacklisted) {
-      res.clearCookie('token');
-      return res.status(401).json({
-        success: false,
-        message: 'Token has been revoked.'
       });
     }
 
@@ -89,47 +77,79 @@ const authenticate = async (req, res, next) => {
   }
 };
 
-// Logout - add token to blacklist
-const logout = async (req, res, next) => {
+// Check if user is authenticated (for HTML pages)
+const requireLogin = async (req, res, next) => {
   try {
-    const token = req.cookies?.token;
-    
-    if (token) {
-      // Add token to blacklist
-      await BlacklistedToken.create({ 
-        token,
-        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-      });
-    }
-    
-    res.clearCookie('token');
-    res.json({ 
-      success: true, 
-      message: 'Logged out successfully' 
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-
-// Verify token exists (optional middleware)
-const verifyToken = async (req, res, next) => {
-  try {
+    // Get token from cookies
     const token = req.cookies?.token;
     
     if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: 'No token provided'
+      // Save the original URL they tried to access
+      const returnUrl = encodeURIComponent(req.originalUrl);
+      return res.redirect(`/login?returnTo=${returnUrl}`);
+    }
+
+    // Verify token
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+    } catch (err) {
+      res.clearCookie('token');
+      return res.redirect('/login?message=session_expired');
+    }
+
+    // Find user in database
+    const user = await User.findById(decoded.id).select('-password');
+    
+    if (!user) {
+      res.clearCookie('token');
+      return res.redirect('/login?message=user_not_found');
+    }
+
+    // Attach user to request
+    req.user = user;
+    req.userId = user._id;
+    
+    next();
+  } catch (error) {
+    console.error('RequireLogin error:', error.message);
+    res.clearCookie('token');
+    res.redirect('/login?message=error');
+  }
+};
+
+// Check if user has active subscription
+const requireSubscription = async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Please login first' 
       });
     }
 
-    jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+    // Check subscription status
+    if (!req.user.subscriptionStatus || req.user.subscriptionStatus !== 'active') {
+      return res.status(403).json({ 
+        success: false, 
+        message: 'Active subscription required. Please subscribe to access this feature.' 
+      });
+    }
+
+    // Check subscription expiry
+    if (req.user.subscriptionEndDate && new Date(req.user.subscriptionEndDate) < new Date()) {
+      return res.status(403).json({ 
+        success: false, 
+        message: 'Your subscription has expired. Please renew to continue.' 
+      });
+    }
+
     next();
   } catch (err) {
-    res.status(401).json({
-      success: false,
-      message: 'Invalid token'
+    console.error('Subscription check error:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error checking subscription status' 
     });
   }
 };
@@ -138,6 +158,6 @@ module.exports = {
   generateToken,
   setTokenCookie,
   authenticate,
-  logout,
-  verifyToken
+  requireLogin,
+  requireSubscription
 };

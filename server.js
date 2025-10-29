@@ -43,7 +43,7 @@ connectDB();
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+// Don't serve static files yet - we need to check auth first
 
 // ----------------------
 // Helper Functions
@@ -87,7 +87,7 @@ app.use('/api/contact', authenticate, contactRoutes);
 app.use('/api/tradingview', authenticate, tradingviewRoutes);
 
 // ✅ Home route - redirect to login if not authenticated, else show dashboard
-app.get('/', (req, res) => {
+app.get('/', (req, res, next) => {
   const token = req.cookies?.token;
   
   if (!token) {
