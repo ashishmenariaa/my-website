@@ -43,11 +43,11 @@ router.post('/signup', async (req, res) => {
     }
 
     // Create user
-    const user = new User({
-      name: name.trim(),
-      email: email.toLowerCase(),
-      passwordHash: password // Will be hashed by pre-save middleware
-    });
+  const user = new User({
+  name: name.trim(),
+  email: email.toLowerCase(),
+  password: password // ← CORRECT
+});
 
     await user.save();
 
