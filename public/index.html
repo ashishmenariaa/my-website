@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="/logo.svg"><link rel="icon" type="image/svg+xml" href="/logo.svg">
+    <link rel="icon" type="image/svg+xml" href="/logo.svg">
     <style>
         * {
             margin: 0;
@@ -133,6 +133,134 @@
         @keyframes gridMove {
             0% { transform: translate(0, 0); }
             100% { transform: translate(40px, 40px); }
+        }
+
+        /* Subscription Status Banner */
+        .subscription-banner {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.15) 0%, rgba(67, 233, 123, 0.15) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(0, 242, 254, 0.3);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 99;
+            display: none;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .subscription-banner.show {
+            display: block;
+        }
+
+        .banner-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .banner-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex: 1;
+        }
+
+        .banner-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--success-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
+        }
+
+        .banner-info {
+            flex: 1;
+        }
+
+        .banner-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .banner-details {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .banner-highlight {
+            color: var(--text-accent);
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .banner-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .days-remaining {
+            text-align: center;
+            padding: 0.75rem 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+        }
+
+        .days-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--text-accent);
+            font-family: 'JetBrains Mono', monospace;
+            line-height: 1;
+        }
+
+        .days-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .banner-button {
+            padding: 0.7rem 1.5rem;
+            background: var(--success-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        .banner-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
         }
 
         .header {
@@ -564,24 +692,24 @@
         .mentor-photo {
             width: 100%;
             max-width: 400px;
-            aspect-ratio: 3 / 4; /* fits 750×1000 */
-          
+            aspect-ratio: 3 / 4;
             background: linear-gradient(135deg, #00f2fe, #4facfe);
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 20px 60px rgba(0, 242, 254, 0.3);
-    border: 3px solid rgba(0, 242, 254, 0.3);
-    position: relative;
-    overflow: hidden;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 60px rgba(0, 242, 254, 0.3);
+            border: 3px solid rgba(0, 242, 254, 0.3);
+            position: relative;
+            overflow: hidden;
         }
+
         .mentor-photo img {
-    width: 100%;
-    height: 100%;
-    border-radius: 27px;
-    object-fit: cover;
-}
+            width: 100%;
+            height: 100%;
+            border-radius: 27px;
+            object-fit: cover;
+        }
 
         .mentor-photo::before {
             content: '';
@@ -928,6 +1056,16 @@
             .expertise-tags {
                 justify-content: center;
             }
+
+            .banner-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .banner-right {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         @media (max-width: 768px) {
@@ -980,6 +1118,14 @@
             .mentor-photo {
                 font-size: 5rem;
             }
+
+            .banner-icon {
+                display: none;
+            }
+
+            .days-remaining {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -991,6 +1137,29 @@
             <div class="orb"></div>
             <div class="orb"></div>
             <div class="orb"></div>
+        </div>
+    </div>
+
+    <!-- Subscription Status Banner (shown only for active subscribers) -->
+    <div class="subscription-banner" id="subscription-banner">
+        <div class="banner-content">
+            <div class="banner-left">
+                <div class="banner-icon">✓</div>
+                <div class="banner-info">
+                    <div class="banner-title">Active Subscription</div>
+                    <div class="banner-details">
+                        <span class="banner-highlight" id="banner-plan-name">Professional Plan</span> • 
+                        Valid until <span class="banner-highlight" id="banner-expiry-date">Jan 30, 2026</span>
+                    </div>
+                </div>
+            </div>
+            <div class="banner-right">
+                <div class="days-remaining">
+                    <div class="days-number" id="banner-days-remaining">92</div>
+                    <div class="days-label">Days Left</div>
+                </div>
+                <a href="/subscriptions.html" class="banner-button">View Details</a>
+            </div>
         </div>
     </div>
 
@@ -1022,76 +1191,30 @@
             </div>
         </div>
     </section>
+
     <section class="about-section">
-    <div class="about-container">
-        <!-- Left: Mentor Image -->
-        <div class="about-image">
-         <img src="mentor-photo.jpg" alt="Ashish Menaria">
-  
-        </div>
-
-        <!-- Right: Content -->
-        <div class="about-content">
-            <span class="section-label">Meet Your Mentor</span>
-            <h2 class="about-title">Ashish Menaria — Empowering Traders Since 2020</h2>
-            
-            <p class="about-description">
-                Hi, I’m <strong>Ashish Menaria</strong>. At just 23 years old, I’ve dedicated the last 5 years to mastering the Indian stock market. 
-                With a strong foundation in <b>Options Trading</b>, <b>Swing Trading</b>, and <b>Intraday strategies</b>, I’ve built a community of over 
-                <b>11,000 followers on Instagram</b> who trust my market insights and educational content.
-            </p>
-
-            <p class="about-description">
-                My approach is simple — identify high-quality <b>supply and demand zones</b> where institutional traders operate, and execute 
-                with precision. I believe in genuine education over flashy promises, helping traders understand the “why” behind every setup.
-            </p>
-
-            <!-- Stats Section -->
-            <div class="about-stats">
-                <div class="stat-box">
-                    <div class="stat-value">11K+</div>
-                    <div class="stat-label">Instagram Followers</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value">5</div>
-                    <div class="stat-label">Years Experience</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value">23</div>
-                    <div class="stat-label">Young & Driven</div>
-                </div>
-            </div>
-
-            <!-- Tags -->
-            <div class="expertise-tags">
-                <span class="tag">📊 Options Trading</span>
-                <span class="tag">📈 Swing Trading</span>
-                <span class="tag">⚡ Intraday</span>
-                <span class="tag">🇮🇳 Indian Markets</span>
-                <span class="tag">🎓 Education First</span>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-    <!-- <section class="about-section">
         <div class="about-container">
             <div class="about-image">
-                <div class="mentor-photo.jpg">
-                    👨‍💼
+                <div class="mentor-photo">
+                    <img src="mentor-photo.jpg" alt="Ashish Menaria">
                 </div>
             </div>
+
             <div class="about-content">
                 <span class="section-label">Meet Your Mentor</span>
-                <h2 class="about-title">Empowering Traders Since 2020</h2>
-                <p class="about-description">
-                    At just 23 years old, I've dedicated the last 5 years to mastering the Indian stock market. With a strong foundation in Options Trading, Swing Trading, and Intraday strategies, I've built a community of over 11,000 followers on Instagram who trust my analysis and educational content.
-                </p>
-                <p class="about-description">
-                    My approach is simple: identify high-quality supply and demand zones where institutional traders operate, and execute with precision. I believe in genuine education over flashy promises, helping traders understand the 'why' behind every trade setup.
-                </p>
+                <h2 class="about-title">Ashish Menaria — Empowering Traders Since 2020</h2>
                 
+                <p class="about-description">
+                    Hi, I'm <strong>Ashish Menaria</strong>. At just 23 years old, I've dedicated the last 5 years to mastering the Indian stock market. 
+                    With a strong foundation in <b>Options Trading</b>, <b>Swing Trading</b>, and <b>Intraday strategies</b>, I've built a community of over 
+                    <b>11,000 followers on Instagram</b> who trust my market insights and educational content.
+                </p>
+
+                <p class="about-description">
+                    My approach is simple — identify high-quality <b>supply and demand zones</b> where institutional traders operate, and execute 
+                    with precision. I believe in genuine education over flashy promises, helping traders understand the "why" behind every setup.
+                </p>
+
                 <div class="about-stats">
                     <div class="stat-box">
                         <div class="stat-value">11K+</div>
@@ -1116,7 +1239,7 @@
                 </div>
             </div>
         </div>
-    </section> -->
+    </section>
 
     <div class="container">
         <section class="stats-section">
@@ -1139,11 +1262,6 @@
         </section>
 
         <section class="features-grid" id="features">
-            <!-- <div class="feature-card">
-                <div class="feature-icon">📈</div>
-                <h3 class="feature-title">Real-time Signals</h3>
-                <p class="feature-description">Get instant buy/sell alerts directly on your TradingView charts with precise entry and exit points for maximum profitability.</p>
-            </div> -->
             <div class="feature-card">
                 <div class="feature-icon">🎯</div>
                 <h3 class="feature-title">High Accuracy</h3>
@@ -1165,10 +1283,10 @@
                 <p class="feature-description">Set up personalized notifications via email, SMS, and push alerts to never miss a trading opportunity.</p>
             </div>
             <div class="feature-card">
-    <div class="feature-icon">👨‍🏫</div>
-    <h3 class="feature-title">Mentor Support</h3>
-    <p class="feature-description">Live Zoom classes every Saturday & Sunday with direct access to Ashish Menaria. Get personalized guidance and real-time trade analysis.</p>
-</div>
+                <div class="feature-icon">👨‍🏫</div>
+                <h3 class="feature-title">Mentor Support</h3>
+                <p class="feature-description">Live Zoom classes every Saturday & Sunday with direct access to Ashish Menaria. Get personalized guidance and real-time trade analysis.</p>
+            </div>
             <div class="feature-card">
                 <div class="feature-icon">📞</div>
                 <h3 class="feature-title">Premium Support</h3>
@@ -1189,28 +1307,30 @@
                 <ul>
                     <li>📧 help.sdzone@gmail.com</li>
                     <li>🕒 24/7 Live Support</li>
-                    <!-- <li>💬 <a href="https://t.me/ashishmenaria" target="_blank">Telegram Community</a></li> -->
                 </ul>
             </div>
             <div class="footer-section">
                 <h3>Follow Us</h3>
                 <ul>
-                    <!-- <li><a href="https://t.me/ashishmenaria" target="_blank">📱 Telegram</a></li> -->
-                    <!-- <li><a href="#">📘 Facebook Community</a></li> -->
-                    <li><a href="https://www.instagram.com/ashish__menaria?igsh=Z29oamRmZjFkOHg=">📸 Instagram (11K+ followers)</a></li>
+                    <li><a href="https://www.instagram.com/ashish__menaria?igsh=Z29oamRmZjFkOHg=" target="_blank">📸 Instagram (11K+ followers)</a></li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; © 2025 SDZone | A product by Sky Blue Multi Tech Enterprises  
-
-
-            </p>
+            <p>&copy; 2025 SDZone | A product by Sky Blue Multi Tech Enterprises</p>
         </div>
     </footer>
 
     <script>
         let currentUser = null;
+
+        // Mock subscription data (replace with API call)
+        const mockSubscription = {
+            hasActiveSubscription: true,
+            planName: 'Professional',
+            expiryDate: '2026-01-30',
+            daysRemaining: 92
+        };
 
         function showAlert(message, type) {
             const container = document.getElementById('alert-container');
@@ -1234,11 +1354,28 @@
             return parts[0][0].toUpperCase();
         }
 
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        function displaySubscriptionBanner(subscription) {
+            if (!subscription || !subscription.hasActiveSubscription) {
+                document.getElementById('subscription-banner').classList.remove('show');
+                return;
+            }
+
+            document.getElementById('banner-plan-name').textContent = subscription.planName;
+            document.getElementById('banner-expiry-date').textContent = formatDate(subscription.expiryDate);
+            document.getElementById('banner-days-remaining').textContent = subscription.daysRemaining;
+            document.getElementById('subscription-banner').classList.add('show');
+        }
+
         function renderNavbar() {
             const navLinks = document.getElementById('nav-links');
           
-           const baseLinks = `
-    <a href="javascript:void(0)" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="nav-link">Home</a>
+            const baseLinks = `
+                <a href="javascript:void(0)" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="nav-link">Home</a>
                 <a href="/subscriptions.html" class="nav-link">Pricing</a>
                 <a href="/features.html" class="nav-link">Features</a>
                 <a href="/contact.html" class="nav-link">Contact</a>
@@ -1321,40 +1458,46 @@
             }
         }
 
-   function checkAuth() {
-    // Just render navbar based on sessionStorage
-    renderNavbar();
-    
-    // Check if user is logged in and show welcome message
-    if (isUserLoggedIn()) {
-        const userObj = JSON.parse(sessionStorage.getItem('user'));
-        if (userObj.hasActiveSubscription) {
-            showAlert(`Welcome back, ${userObj.name}! Your <strong>${userObj.activePlan?.name || 'subscription'}</strong> is active with ${userObj.daysRemaining} days remaining.`, 'info');
-        } else {
-            showAlert(`Welcome back, ${userObj.name}! Ready to start trading?`, 'success');
-        }
-    }
-}
-
-window.addEventListener('load', function() {
-    checkAuth();
-    
-    document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.5s ease-in-out';
-    setTimeout(() => {
-        document.body.style.opacity = '1';
-    }, 100);
-});
-
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        function checkAuth() {
+            renderNavbar();
+            
+            if (isUserLoggedIn()) {
+                const userObj = JSON.parse(sessionStorage.getItem('user'));
+                
+                // TODO: Replace with actual API call to fetch subscription data
+                // const subscription = await fetch('/api/user/subscription').then(r => r.json());
+                
+                // For now, use mock data (simulated)
+              // Fetch real subscription data
+try {
+    const response = await fetch('/api/subscription/status', { 
+        credentials: 'include' 
     });
-});
+    const data = await response.json();
+    
+    if (data.success && data.subscription && data.subscription.hasActiveSubscription) {
+        displaySubscriptionBanner({
+            hasActiveSubscription: true,
+            planName: data.subscription.planName,
+            expiryDate: data.subscription.endDate,
+            daysRemaining: data.subscription.daysRemaining
+        });
+    }
+} catch (error) {
+    console.error('Error fetching subscription:', error);
+}
+            }
+        }
+
+        window.addEventListener('load', function() {
+            checkAuth();
+            
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease-in-out';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
 
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {

@@ -203,7 +203,192 @@
             margin: 0 auto;
         }
 
+        /* Subscription Dashboard */
+        .subscription-dashboard {
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 242, 254, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subscription-dashboard::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--success-gradient);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .dashboard-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: var(--success-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .status-badge.pending {
+            background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+        }
+
+        .status-badge.expired {
+            background: linear-gradient(135deg, #ef5350 0%, #e53935 100%);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-card {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            border-color: rgba(0, 242, 254, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .dashboard-card-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-accent);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .dashboard-card-subtext {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .progress-bar-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50px;
+            height: 8px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--success-gradient);
+            border-radius: 50px;
+            transition: width 0.5s ease;
+        }
+
+        .tradingview-section {
+            background: rgba(0, 242, 254, 0.05);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .tradingview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .tradingview-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .tradingview-status {
+            font-size: 0.85rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            background: rgba(67, 233, 123, 0.2);
+            color: #43e97b;
+        }
+
+        .tradingview-status.pending {
+            background: rgba(255, 167, 38, 0.2);
+            color: #ffa726;
+        }
+
+        .tradingview-id {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--text-accent);
+            margin-bottom: 1rem;
+        }
+
+        .submit-id-button {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--success-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-id-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
+        }
+
+        .submit-id-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         /* Plans Grid */
+        .plans-section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 3rem 0 2rem;
+            color: var(--text-primary);
+        }
+
         .plans-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -489,6 +674,10 @@
                 font-size: 2rem;
             }
 
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
             .plans-grid {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
@@ -520,7 +709,6 @@
             <a href="/" class="logo">SD Zone</a>
             <div class="nav-links" id="nav-links">
                 <a href="/" class="nav-link">Home</a>
-                <!-- Profile/Logout/Login will be injected here by JS -->
             </div>
         </nav>
     </header>
@@ -533,10 +721,19 @@
 
         <div id="alert-container"></div>
 
-        <div id="plans-container" class="plans-grid">
-            <div class="loading">
-                <div class="spinner"></div>
-                Loading plans...
+        <!-- Subscription Dashboard (shown only if user has active subscription) -->
+        <div id="subscription-dashboard" style="display: none;">
+            <!-- Dashboard content will be injected here -->
+        </div>
+
+        <!-- Plans Section -->
+        <div id="plans-section">
+            <h2 class="plans-section-title" id="plans-title">Available Plans</h2>
+            <div id="plans-container" class="plans-grid">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Loading plans...
+                </div>
             </div>
         </div>
 
@@ -555,55 +752,172 @@
                 logoutUser();
             }
         });
-    // ...existing code...
 
-    // Hardcoded plans data with discount calculations
-    const plans = [
-        {
-            planId: 'starter',
-            name: 'Starter',
-            price: 999,
-            originalPrice: 1499,
-            durationMonths: 1,
-            description: 'Perfect for beginners starting their trading journey'
-        },
-        {
-            planId: 'professional',
-            name: 'Professional',
-            price: 2499,
-            originalPrice: 2997,
-            durationMonths: 3,
-            description: 'Most popular choice for serious traders'
-        },
-        {
-            planId: 'expert',
-            name: 'Expert',
-            price: 4499,
-            originalPrice: 5994,
-            durationMonths: 6,
-            description: 'Advanced package for experienced traders'
-        },
-        {
-            planId: 'elite',
-            name: 'Elite',
-            price: 7999,
-            originalPrice: 11988,
-            durationMonths: 12,
-            description: 'Ultimate trading experience'
+        // Mock subscription data (replace with API call)
+        const mockSubscription = {
+            isActive: true,
+            planName: 'Professional',
+            startDate: '2025-10-01',
+            endDate: '2026-01-01',
+            tradingViewId: 'user_tradingview_123',
+            tradingViewStatus: 'connected', // 'connected', 'pending', 'not_submitted'
+            paymentAmount: 2499,
+            paymentDate: '2025-10-01'
+        };
+
+        // Calculate remaining days
+        function calculateRemainingDays(endDate) {
+            const end = new Date(endDate);
+            const today = new Date();
+            const diffTime = end - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays > 0 ? diffDays : 0;
         }
-    ];
 
-    // Auth check helper
-    function isUserLoggedIn() {
-        return !!sessionStorage.getItem('user');
-    }
+        // Calculate total days
+        function calculateTotalDays(startDate, endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            const diffTime = end - start;
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
 
-                        if (isUserLoggedIn()) {
+        // Format date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        // Display subscription dashboard
+        function displaySubscriptionDashboard(subscription) {
+            if (!subscription || !subscription.isActive) {
+                document.getElementById('subscription-dashboard').style.display = 'none';
+                document.getElementById('plans-title').textContent = 'Available Plans';
+                return;
+            }
+
+            const remainingDays = calculateRemainingDays(subscription.endDate);
+            const totalDays = calculateTotalDays(subscription.startDate, subscription.endDate);
+            const progress = ((totalDays - remainingDays) / totalDays) * 100;
+
+            const dashboardHTML = `
+                <div class="subscription-dashboard">
+                    <div class="dashboard-header">
+                        <div class="dashboard-title">
+                            ✓ Your Subscription
+                        </div>
+                        <div class="status-badge ${subscription.isActive ? 'active' : 'expired'}">
+                            ${subscription.isActive ? 'Active' : 'Expired'}
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-label">Plan</div>
+                            <div class="dashboard-card-value" style="font-size: 1.5rem;">${subscription.planName}</div>
+                            <div class="dashboard-card-subtext">Premium Access</div>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-label">Remaining Days</div>
+                            <div class="dashboard-card-value">${remainingDays}</div>
+                            <div class="dashboard-card-subtext">Valid until ${formatDate(subscription.endDate)}</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-card">
+                            <div class="dashboard-card-label">Amount Paid</div>
+                            <div class="dashboard-card-value">₹${subscription.paymentAmount.toLocaleString()}</div>
+                            <div class="dashboard-card-subtext">Paid on ${formatDate(subscription.paymentDate)}</div>
+                        </div>
+                    </div>
+
+                    <div class="tradingview-section">
+                        <div class="tradingview-header">
+                            <div class="tradingview-title">TradingView Integration</div>
+                            <div class="tradingview-status ${subscription.tradingViewStatus}">
+                                ${subscription.tradingViewStatus === 'connected' ? '✓ Connected' : 
+                                  subscription.tradingViewStatus === 'pending' ? '⏳ Pending' : '⚠ Not Submitted'}
+                            </div>
+                        </div>
+                        ${subscription.tradingViewStatus === 'connected' ? 
+                            `<div class="tradingview-id">ID: ${subscription.tradingViewId}</div>` : 
+                            subscription.tradingViewStatus === 'pending' ?
+                            `<div class="tradingview-id">ID: ${subscription.tradingViewId}</div>
+                             <p style="color: var(--text-secondary); font-size: 0.9rem;">Your TradingView ID is being verified. You'll receive access within 24 hours.</p>` :
+                            `<p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">Submit your TradingView ID to activate strategy access</p>
+                             <button class="submit-id-button" onclick="submitTradingViewId()">Submit TradingView ID</button>`
+                        }
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('subscription-dashboard').innerHTML = dashboardHTML;
+            document.getElementById('subscription-dashboard').style.display = 'block';
+            document.getElementById('plans-title').textContent = 'Upgrade or Renew';
+        }
+
+        // Submit TradingView ID
+        function submitTradingViewId() {
+            const tradingViewId = prompt('Enter your TradingView Username:');
+            if (tradingViewId && tradingViewId.trim()) {
+                // TODO: Send to backend API
+                showAlert('TradingView ID submitted successfully! Verification in progress.', 'success');
+                // Update mock data
+                mockSubscription.tradingViewId = tradingViewId.trim();
+                mockSubscription.tradingViewStatus = 'pending';
+                displaySubscriptionDashboard(mockSubscription);
+            }
+        }
+
+        // Hardcoded plans data with discount calculations
+        const plans = [
+            {
+                planId: 'starter',
+                name: 'Starter',
+                price: 999,originalPrice: 1499,
+                durationMonths: 1,
+                description: 'Perfect for beginners starting their trading journey'
+            },
+            {
+                planId: 'professional',
+                name: 'Professional',
+                price: 2499,
+                originalPrice: 2997,
+                durationMonths: 3,
+                description: 'Most popular choice for serious traders'
+            },
+            {
+                planId: 'expert',
+                name: 'Expert',
+                price: 4499,
+                originalPrice: 5994,
+                durationMonths: 6,
+                description: 'Advanced package for experienced traders'
+            },
+            {
+                planId: 'elite',
+                name: 'Elite',
+                price: 7999,
+                originalPrice: 11988,
+                durationMonths: 12,
+                description: 'Ultimate trading experience'
+            }
+        ];
+
+        let currentUser = null;
+
+        // Auth check helper
+        function isUserLoggedIn() {
+            return !!sessionStorage.getItem('user');
+        }
+
         function renderNavbar() {
             const navLinks = document.getElementById('nav-links');
             navLinks.innerHTML = '<a href="/" class="nav-link">Home</a>';
             if (currentUser) {
-                // Get initials from name
                 let initials = 'U';
                 if (currentUser.name) {
                     const parts = currentUser.name.trim().split(' ');
@@ -622,7 +936,6 @@
                         </div>
                     </div>
                 `;
-                // Dropdown logic
                 setTimeout(() => {
                     const avatar = document.getElementById('profile-avatar');
                     const dropdown = document.getElementById('profile-dropdown');
@@ -635,8 +948,8 @@
                     });
                 }, 100);
             }
-    // ...existing code...
-                        // currentUser is no longer used
+        }
+
         function logoutUser() {
             sessionStorage.removeItem('user');
             localStorage.removeItem('authToken');
@@ -645,8 +958,8 @@
             setTimeout(() => {
                 window.location.href = '/login.html';
             }, 1000);
-    // ...existing code...
-                        if (!isUserLoggedIn()) {
+        }
+
         function showAlert(message, type = 'info') {
             const alertContainer = document.getElementById('alert-container');
             const alert = document.createElement('div');
@@ -661,7 +974,6 @@
 
         // Check if user is logged in
         async function checkAuth() {
-            // Try API auth first
             try {
                 const response = await fetch('/api/auth/me', { credentials: 'include' });
                 const data = await response.json();
@@ -673,7 +985,6 @@
             } catch (error) {
                 currentUser = null;
             }
-            // Fallback to local/session storage
             if (!currentUser) {
                 const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
                 const userDataString = sessionStorage.getItem('user') || localStorage.getItem('user');
@@ -737,10 +1048,10 @@
             if (!confirmed) return;
             try {
                 showAlert('Simulated payment successful! Your subscription is now active.', 'success');
-                // Simulate subscription activation
+                // Simulate subscription activation - refresh to show dashboard
                 setTimeout(() => {
-                    window.location.href = '/';
-                }, 2000);
+                    window.location.reload();
+                }, 1500);
             } catch (error) {
                 showAlert('Payment failed. Please try again.', 'error');
             }
@@ -749,9 +1060,15 @@
         // Initialize page
         document.addEventListener('DOMContentLoaded', async function() {
             await checkAuth();
+            
+            // Check if user has active subscription (mock check)
+            // TODO: Replace with actual API call to fetch user's subscription
+            const hasActiveSubscription = currentUser && Math.random() > 0.5; // Simulated
+            
+            if (hasActiveSubscription) {
+                displaySubscriptionDashboard(mockSubscription);
+            }
+            
             displayPlans();
         });
     // End of script
-    </script>
-</body>
-</html>

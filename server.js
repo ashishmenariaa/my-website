@@ -11,11 +11,12 @@ const { generateToken, setTokenCookie, authenticate, requireLogin } = require('.
 const User = require('./models/user');
 
 // Import routes
-const authRoutes = require('./routes/auth'); // ✅ ADD THIS
+const authRoutes = require('./routes/auth');
 const plansRoutes = require('./routes/plans');
 const paymentsRoutes = require('./routes/payments');
 const contactRoutes = require('./routes/contact');
-const tradingviewRoutes = require('./routes/tradingview'); // 🆕 TradingView routes
+const tradingviewRoutes = require('./routes/tradingview');
+const subscriptionRoutes = require('./routes/subscription'); // 🆕 NEW: Subscription routes
 
 const app = express();
 
@@ -43,7 +44,6 @@ connectDB();
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cookieParser());
-// Don't serve static files yet - we need to check auth first
 
 // ----------------------
 // Helper Functions
@@ -73,20 +73,21 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'Server is working!', timestamp: new Date() });
 });
 
-// ✅ Auth routes (includes both public endpoints like /signup, /login AND protected endpoints like /me, /logout)
+// Auth routes (includes both public endpoints like /signup, /login AND protected endpoints like /me, /logout)
 app.use('/api/auth', authRoutes);
 
 // ----------------------
 // PROTECTED Routes (Authentication Required)
 // ----------------------
 
-// ✅ Protect all API routes with authentication
+// Protect all API routes with authentication
 app.use('/api/plans', authenticate, plansRoutes);
 app.use('/api/payments', authenticate, paymentsRoutes);
 app.use('/api/contact', authenticate, contactRoutes);
 app.use('/api/tradingview', authenticate, tradingviewRoutes);
+app.use('/api/subscription', authenticate, subscriptionRoutes); // 🆕 NEW: Subscription endpoints
 
-// ✅ Home route - redirect to login if not authenticated, else show dashboard
+// Home route - redirect to login if not authenticated, else show dashboard
 app.get('/', (req, res, next) => {
   const token = req.cookies?.token;
   
@@ -97,7 +98,7 @@ app.get('/', (req, res, next) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// ✅ Add other protected pages here
+// Add other protected pages here
 app.get('/dashboard', requireLogin, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
 });
@@ -110,16 +111,55 @@ app.get('/plans', requireLogin, (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'plans.html'));
 });
 
-// ✅ Add any other protected pages as needed
-
-// ✅ Serve static files AFTER protection routes
+// Serve static files AFTER protection routes
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ----------------------
 // Cron Jobs
 // ----------------------
-cron.schedule('0 9 * * *', () => {
+// Daily subscription expiry check at 9 AM
+cron.schedule('0 9 * * *', async () => {
   console.log('⏰ Running daily expiry check at 9 AM');
+  
+  try {
+    const now = new Date();
+    const sevenDaysFromNow = new Date();
+    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+    
+    // Find users whose subscriptions are expiring within 7 days
+    const expiringUsers = await User.find({
+      'activePlan.endDate': { 
+        $gte: now, 
+        $lte: sevenDaysFromNow 
+      },
+      expiryWarningEmailSent: false
+    });
+    
+    console.log(`Found ${expiringUsers.length} subscriptions expiring within 7 days`);
+    
+    // TODO: Send warning emails to expiring users
+    for (const user of expiringUsers) {
+      console.log(`⚠️ Subscription expiring soon for: ${user.email}`);
+      // Send email notification here
+      user.expiryWarningEmailSent = true;
+      await user.save();
+    }
+    
+    // Find expired subscriptions
+    const expiredUsers = await User.find({
+      'activePlan.endDate': { $lt: now }
+    });
+    
+    console.log(`Found ${expiredUsers.length} expired subscriptions`);
+    
+    for (const user of expiredUsers) {
+      console.log(`❌ Subscription expired for: ${user.email}`);
+      // TODO: Revoke TradingView access, send expiry notification
+    }
+    
+  } catch (error) {
+    console.error('Error in expiry check cron:', error);
+  }
 });
 
 // Graceful shutdown
