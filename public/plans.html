@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         * {
             margin: 0;
@@ -737,12 +738,12 @@
             </div>
         </div>
 
-        <div class="security-info">
-            <h3 class="security-title">Secure Payment Processing</h3>
-            <p class="security-text">All payments are processed securely through encrypted channels.</p>
-            <p class="security-text">Currently using <span class="security-highlight">simulated payments</span> for testing purposes.</p>
-            <p class="security-text"><small>Razorpay integration coming soon!</small></p>
-        </div>
+       <div class="security-info">
+    <h3 class="security-title">🔒 Secure Payment Processing</h3>
+    <p class="security-text">All payments are processed securely through <span class="security-highlight">Razorpay</span></p>
+    <p class="security-text">Your payment information is encrypted and secure</p>
+    <p class="security-text"><small>Using test mode for development</small></p>
+</div>
     </div>
 
     <script>
@@ -1051,52 +1052,218 @@ async function submitTradingViewId() {
         }
 
         // Select plan (simulate payment for now)
-        async function selectPlan(planId, planName, price) {
-            if (!currentUser) {
-                showAlert('Please login first to purchase a subscription plan', 'error');
-                setTimeout(() => {
-                    window.location.href = '/login.html';
-                }, 2000);
-                return;
-            }
-            const confirmed = confirm(`Subscribe to ${planName} plan for ₹${price.toLocaleString()}?\n\n(This is a SIMULATED payment for testing purposes)`);
-            if (!confirmed) return;
-            try {
-                showAlert('Simulated payment successful! Your subscription is now active.', 'success');
-                // Simulate subscription activation - refresh to show dashboard
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
-            } catch (error) {
-                showAlert('Payment failed. Please try again.', 'error');
-            }
+    // Select plan - Real Razorpay integration
+async function selectPlan(planId, planName, price) {
+    if (!currentUser) {
+        showAlert('Please login first to purchase a subscription plan', 'error');
+        setTimeout(() => {
+            window.location.href = '/login.html';
+        }, 2000);
+        return;
+    }
+
+    try {
+        console.log('Creating payment order...');
+        
+        // Find the plan details
+        const plan = plans.find(p => p.planId === planId);
+        if (!plan) {
+            showAlert('Plan not found', 'error');
+            return;
         }
 
-        // Initialize page
-     async function submitTradingViewId() {
-    const tradingViewId = prompt('Enter your TradingView Username:');
-    if (!tradingViewId || !tradingViewId.trim()) return;
-    
-    try {
-        const response = await fetch('/api/subscription/tradingview-id', {
+        // Step 1: Create order on backend
+        const response = await fetch('/api/payments/create-order', {
             method: 'POST',
             credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tradingViewId: tradingViewId.trim() })
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                planId: planId,
+                amount: price,  // ✅ Amount in rupees
+                currency: 'INR'
+            })
         });
+
+        const data = await response.json();
         
+        if (!data.success) {
+            showAlert(data.message || 'Failed to create payment order', 'error');
+            return;
+        }
+
+        console.log('Order created successfully:', data.orderId);
+
+        // Step 2: Open Razorpay payment popup
+        const options = {
+            key: data.key,
+            amount: data.amount,
+            currency: data.currency,
+            name: 'SD Zone',
+            description: `${planName} - ${plan.durationMonths} Month${plan.durationMonths > 1 ? 's' : ''}`,
+            order_id: data.orderId,
+            handler: async function(razorpayResponse) {
+                // Step 3: Verify payment on backend
+                await verifyPayment(razorpayResponse, plan);
+            },
+            prefill: {
+                name: currentUser.name || '',
+                email: currentUser.email || ''
+            },
+            theme: {
+                color: '#00f2fe'
+            },
+            modal: {
+                ondismiss: function() {
+                    showAlert('Payment cancelled', 'info');
+                }
+            }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+
+    } catch (error) {
+        console.error('Payment error:', error);
+        showAlert('Failed to initiate payment. Please try again.', 'error');
+    }
+}
+
+// Verify payment after successful payment
+async function verifyPayment(razorpayResponse, plan) {
+    try {
+        console.log('Verifying payment...');
+        
+        const response = await fetch('/api/payments/verify', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                razorpay_order_id: razorpayResponse.razorpay_order_id,
+                razorpay_payment_id: razorpayResponse.razorpay_payment_id,
+                razorpay_signature: razorpayResponse.razorpay_signature,
+                planId: plan.planId,
+                planName: plan.name,
+                amount: plan.price,
+                duration: plan.durationMonths * 30 // Convert months to days
+            })
+        });
+
         const data = await response.json();
         
         if (data.success) {
-            showAlert('TradingView ID submitted successfully!', 'success');
-            // Reload to show updated data
-            setTimeout(() => window.location.reload(), 1500);
+            showAlert('🎉 Payment successful! Your subscription is now active.', 'success');
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
         } else {
-            showAlert(data.message || 'Failed to submit TradingView ID', 'error');
+            showAlert('Payment verification failed: ' + data.message, 'error');
         }
+
     } catch (error) {
-        console.error('Error:', error);
-        showAlert('Failed to submit TradingView ID', 'error');
+        console.error('Verification error:', error);
+        showAlert('Failed to verify payment. Please contact support.', 'error');
     }
 }
-    // End of script
+
+        // Initialize page
+  // Initialize page
+    // Add validateSession function first (before window.addEventListener)
+    async function validateSession() {
+        try {
+            const response = await fetch('/api/auth/me', { 
+                credentials: 'include' 
+            });
+            
+            if (!response.ok) {
+                sessionStorage.removeItem('user');
+                localStorage.removeItem('authToken');
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            const data = await response.json();
+            
+            if (!data.success || !data.user) {
+                sessionStorage.removeItem('user');
+                localStorage.removeItem('authToken');
+                window.location.href = '/login.html';
+                return;
+            }
+            
+            sessionStorage.setItem('user', JSON.stringify(data.user));
+            
+        } catch (error) {
+            console.error('Session validation error:', error);
+            sessionStorage.removeItem('user');
+            localStorage.removeItem('authToken');
+            window.location.href = '/login.html';
+        }
+    }
+
+    window.addEventListener('load', async function() {
+            // Validate session first
+            await validateSession();
+            
+            await checkAuth();
+            displayPlans();
+            
+            // Fetch and display subscription status with days remaining
+            if (currentUser) {
+                try {
+                    const response = await fetch('/api/subscription/status', { 
+                        credentials: 'include' 
+                    });
+                    const data = await response.json();
+                    
+                    if (data.success && data.subscription) {
+                        // Calculate days remaining
+                        const daysRemaining = calculateRemainingDays(data.subscription.endDate);
+                        
+                        // Display dashboard if subscription is active
+                        if (data.subscription.isActive) {
+                            displaySubscriptionDashboard({
+                                isActive: true,
+                                planName: data.subscription.planName,
+                                startDate: data.subscription.startDate,
+                                endDate: data.subscription.endDate,
+                                tradingViewId: data.subscription.tradingViewId || '',
+                                tradingViewStatus: data.subscription.tradingViewStatus || 'not_submitted',
+                                paymentAmount: data.subscription.amount || 0,
+                                paymentDate: data.subscription.startDate
+                            });
+                            
+                            // Show days remaining alert
+                            if (daysRemaining > 0) {
+                                showAlert(
+                                    `✓ Your ${data.subscription.planName} subscription is active! <strong>${daysRemaining} days remaining</strong> until ${formatDate(data.subscription.endDate)}`,
+                                    'success'
+                                );
+                            } else {
+                                showAlert('Your subscription has expired. Please renew to continue accessing premium features.', 'error');
+                            }
+                        } else {
+                            // No active subscription
+                            displaySubscriptionDashboard(null);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error fetching subscription status:', error);
+                    // If API fails, try using mock data for testing
+                    displaySubscriptionDashboard(mockSubscription);
+                }
+            }
+            
+            // Fade in animation
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease-in-out';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
