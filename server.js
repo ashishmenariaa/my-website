@@ -82,9 +82,9 @@ app.use('/api/auth', authRoutes);
 // Protect all API routes with authentication
 app.use('/api/plans', authenticate, plansRoutes);
 app.use('/api/payments', authenticate, paymentsRoutes);
+app.use('/api/subscription', authenticate, paymentsRoutes);
 app.use('/api/contact', authenticate, contactRoutes);
 app.use('/api/tradingview', authenticate, tradingviewRoutes);
-app.use('/api/subscription', authenticate, subscriptionRoutes); // ✅ Subscription endpoints
 
 // Home route - redirect to login if not authenticated, else show dashboard
 app.get('/', (req, res, next) => {
