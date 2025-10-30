@@ -1,3 +1,4 @@
+//auth.js in routes
 const express = require('express');
 const User = require('../models/user');
 const { generateToken, setTokenCookie, authenticate } = require('../middleware/auth');
