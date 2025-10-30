@@ -16,7 +16,6 @@ const plansRoutes = require('./routes/plans');
 const paymentsRoutes = require('./routes/payments');
 const contactRoutes = require('./routes/contact');
 const tradingviewRoutes = require('./routes/tradingview');
-const subscriptionRoutes = require('./routes/subscription'); // 🆕 NEW: Subscription routes
 
 const app = express();
 
@@ -85,7 +84,7 @@ app.use('/api/plans', authenticate, plansRoutes);
 app.use('/api/payments', authenticate, paymentsRoutes);
 app.use('/api/contact', authenticate, contactRoutes);
 app.use('/api/tradingview', authenticate, tradingviewRoutes);
-app.use('/api/subscription', authenticate, subscriptionRoutes); // 🆕 NEW: Subscription endpoints
+app.use('/api/subscription', authenticate, subscriptionRoutes); // ✅ Subscription endpoints
 
 // Home route - redirect to login if not authenticated, else show dashboard
 app.get('/', (req, res, next) => {
