@@ -860,17 +860,32 @@
         }
 
         // Submit TradingView ID
-        function submitTradingViewId() {
-            const tradingViewId = prompt('Enter your TradingView Username:');
-            if (tradingViewId && tradingViewId.trim()) {
-                // TODO: Send to backend API
-                showAlert('TradingView ID submitted successfully! Verification in progress.', 'success');
-                // Update mock data
-                mockSubscription.tradingViewId = tradingViewId.trim();
-                mockSubscription.tradingViewStatus = 'pending';
-                displaySubscriptionDashboard(mockSubscription);
-            }
+async function submitTradingViewId() {
+    const tradingViewId = prompt('Enter your TradingView Username:');
+    if (!tradingViewId || !tradingViewId.trim()) return;
+    
+    try {
+        const response = await fetch('/api/subscription/tradingview-id', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tradingViewId: tradingViewId.trim() })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showAlert('TradingView ID submitted successfully!', 'success');
+            // Reload to show updated data
+            setTimeout(() => window.location.reload(), 1500);
+        } else {
+            showAlert(data.message || 'Failed to submit TradingView ID', 'error');
         }
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('Failed to submit TradingView ID', 'error');
+    }
+}
 
         // Hardcoded plans data with discount calculations
         const plans = [
@@ -1058,17 +1073,30 @@
         }
 
         // Initialize page
-        document.addEventListener('DOMContentLoaded', async function() {
-            await checkAuth();
-            
-            // Check if user has active subscription (mock check)
-            // TODO: Replace with actual API call to fetch user's subscription
-            const hasActiveSubscription = currentUser && Math.random() > 0.5; // Simulated
-            
-            if (hasActiveSubscription) {
-                displaySubscriptionDashboard(mockSubscription);
-            }
-            
-            displayPlans();
+     async function submitTradingViewId() {
+    const tradingViewId = prompt('Enter your TradingView Username:');
+    if (!tradingViewId || !tradingViewId.trim()) return;
+    
+    try {
+        const response = await fetch('/api/subscription/tradingview-id', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tradingViewId: tradingViewId.trim() })
         });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showAlert('TradingView ID submitted successfully!', 'success');
+            // Reload to show updated data
+            setTimeout(() => window.location.reload(), 1500);
+        } else {
+            showAlert(data.message || 'Failed to submit TradingView ID', 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('Failed to submit TradingView ID', 'error');
+    }
+}
     // End of script
