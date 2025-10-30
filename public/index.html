@@ -1469,28 +1469,44 @@
                 
                 // For now, use mock data (simulated)
               // Fetch real subscription data
-try {
-    const response = await fetch('/api/subscription/status', { 
-        credentials: 'include' 
-    });
-    const data = await response.json();
-    
-    if (data.success && data.subscription && data.subscription.hasActiveSubscription) {
-        displaySubscriptionBanner({
-            hasActiveSubscription: true,
-            planName: data.subscription.planName,
-            expiryDate: data.subscription.endDate,
-            daysRemaining: data.subscription.daysRemaining
-        });
-    }
-} catch (error) {
-    console.error('Error fetching subscription:', error);
-}
+// Add validateSession function first
+        async function validateSession() {
+            try {
+                const response = await fetch('/api/auth/me', { 
+                    credentials: 'include' 
+                });
+                
+                if (!response.ok) {
+                    sessionStorage.removeItem('user');
+                    localStorage.removeItem('authToken');
+                    window.location.href = '/login.html';
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                if (!data.success || !data.user) {
+                    sessionStorage.removeItem('user');
+                    localStorage.removeItem('authToken');
+                    window.location.href = '/login.html';
+                    return;
+                }
+                
+                sessionStorage.setItem('user', JSON.stringify(data.user));
+                
+            } catch (error) {
+                console.error('Session validation error:', error);
+                sessionStorage.removeItem('user');
+                localStorage.removeItem('authToken');
+                window.location.href = '/login.html';
             }
         }
 
-        window.addEventListener('load', function() {
-            checkAuth();
+        window.addEventListener('load', async function() {
+            // Validate session first
+            await validateSession();
+            
+            await checkAuth();
             
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.5s ease-in-out';

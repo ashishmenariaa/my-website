@@ -987,7 +987,47 @@ async function checkAuth() {
         //         document.body.style.opacity = '1';
         //     }, 100);
         // });
-        window.addEventListener('load', async function() {
+     // Add validateSession function first (before window.addEventListener)
+async function validateSession() {
+    try {
+        const response = await fetch('/api/auth/me', { 
+            credentials: 'include' 
+        });
+        
+        if (!response.ok) {
+            // Session invalid - clear and redirect
+            sessionStorage.removeItem('user');
+            localStorage.removeItem('authToken');
+            window.location.href = '/login.html';
+            return;
+        }
+        
+        const data = await response.json();
+        
+        if (!data.success || !data.user) {
+            // Session invalid - clear and redirect
+            sessionStorage.removeItem('user');
+            localStorage.removeItem('authToken');
+            window.location.href = '/login.html';
+            return;
+        }
+        
+        // Session valid - update user data
+        sessionStorage.setItem('user', JSON.stringify(data.user));
+        
+    } catch (error) {
+        console.error('Session validation error:', error);
+        // On error, clear session and redirect
+        sessionStorage.removeItem('user');
+        localStorage.removeItem('authToken');
+        window.location.href = '/login.html';
+    }
+}
+
+window.addEventListener('load', async function() {
+    // Validate session before doing anything
+    await validateSession();
+    
     initCurrentUser();
     renderNavbar();
     await loadPlans();
