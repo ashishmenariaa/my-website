@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -818,6 +818,1112 @@
             { planId: 'professional', name: 'Professional', price: 2499, originalPrice: 2997, durationMonths: 3, popular: true },
             { planId: 'expert', name: 'Expert', price: 4499, originalPrice: 5994, durationMonths: 6 },
             { planId: 'elite', name: 'Elite', price: 7999, originalPrice: 11988, durationMonths: 12 }
+        ];
+
+        function showAlert(message, type = 'info') {
+            const container = document.getElementById('alert-container');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = message;
+            container.innerHTML = '';
+            container.appendChild(alert);
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        function getUserInitials(name) {
+            if (!name) return 'U';
+            const parts = name.trim().split(' ');
+            if (parts.length > 1) {
+                return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+            }
+            return parts[0][0].toUpperCase();
+        }
+
+        function renderNavbar() {
+            const navLinks = document.getElementById('nav-links');
+            const baseLinks = `
+                <a href="/" class="nav-link">Home</a>
+                <a href="/subscriptions.html" class="nav-link">Pricing</a>
+                <a href="/contact.html" class="nav-link">Contact</a>
+            `;
+
+            if (currentUser) {
+                const initials = getUserInitials(currentUser.name);
+                navLinks.innerHTML = baseLinks + `
+                    <div class="user-profile">
+                        <div class="user-avatar" id="user-avatar">${initials}</div>
+                        <div class="profile-dropdown" id="profile-dropdown">
+                            <div class="dropdown-header">
+                                <div class="dropdown-name">${currentUser.name || 'User'}</div>
+                                <div class="dropdown-email">${currentUser.email || ''}</div>
+                            </div>
+                            <button class="dropdown-item logout" id="logout-btn">
+                                <span>🚪</span>
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                setTimeout(() => {
+                    const avatar = document.getElementById('user-avatar');
+                    const dropdown = document.getElementById('profile-dropdown');
+                    const logoutBtn = document.getElementById('logout-btn');
+
+                    if (avatar && dropdown) {
+                        avatar.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            dropdown.classList.toggle('active');
+                        });
+
+                        document.addEventListener('click', (e) => {
+                            if (!avatar.contains(e.target) && !dropdown.contains(e.target)) {
+                                dropdown.classList.remove('active');
+                            }
+                        });
+                    }
+
+                    if (logoutBtn) {
+                        logoutBtn.addEventListener('click', handleLogout);
+                    }
+                }, 100);
+            } else {
+                navLinks.innerHTML = baseLinks + '<a href="/login.html" class="nav-btn">Login</a>';
+            }
+        }
+
+        async function handleLogout() {
+            showAlert('Logging out...', 'info');
+            try {
+                await fetch('/api/auth/logout', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+
+            sessionStorage.removeItem('user');
+            localStorage.removeItem('authToken');
+            currentUser = null;
+            showAlert('Logged out successfully!', 'success');
+            setTimeout(() => {
+                window.location.href = '/login.html';
+            }, 1000);
+        }
+
+        async function validateSession() {
+            try {
+                const response = await fetch('/api/auth/me', {
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Session invalid');
+                }
+
+                const data = await response.json();
+
+                if (data.success && data.user) {
+                    currentUser = data.user;
+                    sessionStorage.setItem('user', JSON.stringify(data.user));
+                } else {
+                    throw new Error('No user data');
+                }
+            } catch (error) {
+                console.error('Session validation error:', error);
+                sessionStorage.removeItem('user');
+                localStorage.removeItem('authToken');
+                currentUser = null;
+            }
+        }
+
+        function displayPlans(plans) {
+            const container = document.getElementById('plans-container');
+            const icons = ['🚀', '💎', '⚡', '👑'];
+
+            container.innerHTML = plans.map((plan, index) => {
+                const isPopular = plan.popular || index === 1;
+                const savings = index > 0 ? Math.round(((defaultPlans[0].price * plan.durationMonths) - plan.price) / (defaultPlans[0].price * plan.durationMonths) * 100) : 0;
+                const planIcon = icons[index] || '💎';
+
+                const buttonText = currentUser ? `Get ${plan.name} Plan` : 'Login to Subscribe';
+                const buttonClass = currentUser ? 'plan-button' : 'plan-button login-required';
+                const buttonAction = currentUser ? `purchasePlan('${plan.planId}', '${plan.name}', ${plan.price})` : `redirectToLogin()`;
+
+                return `
+                    <div class="plan-card ${isPopular ? 'featured' : ''}">
+                        ${isPopular ? '<div class="popular-badge">Most Popular</div>' : ''}
+                        ${savings > 0 ? `<div class="savings-badge">Save ${savings}%</div>` : ''}
+
+                        <div class="plan-icon">${planIcon}</div>
+                        <div class="plan-name">${plan.name}</div>
+                        ${plan.originalPrice ? `<div class="original-price">₹${plan.originalPrice.toLocaleString()}</div>` : ''}
+                        <div class="plan-price">₹${plan.price.toLocaleString()}<small>/total</small></div>
+                        ${savings > 0 ? `<div class="discount-badge">${savings}% OFF</div>` : ''}
+                        <div class="plan-duration">${plan.durationMonths} Month${plan.durationMonths > 1 ? 's' : ''} Access</div>
+                        <div class="plan-description">Professional trading signals with real-time zone detection and custom alerts.</div>
+
+                        <button class="${buttonClass}" onclick="${buttonAction}">${buttonText}</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function redirectToLogin() {
+            showAlert('Please login first to purchase a subscription', 'error');
+            setTimeout(() => {
+                window.location.href = '/login.html';
+            }, 1500);
+        }
+
+        async function purchasePlan(planId, planName, price) {
+            if (!currentUser) {
+                redirectToLogin();
+                return;
+            }
+
+            try {
+                showAlert('Creating payment order...', 'info');
+
+                const plan = defaultPlans.find(p => p.planId === planId);
+
+                if (!plan) {
+                    throw new Error('Plan not found');
+                }
+
+                const orderResponse = await fetch('/api/payments/create-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        planId: plan.planId,
+                        amount: plan.price,
+                        currency: 'INR'
+                    })
+                });
+
+                const orderData = await orderResponse.json();
+
+                if (!orderData.success) {
+                    throw new Error(orderData.message || 'Failed to create order');
+                }
+
+                if (typeof Razorpay === 'undefined') {
+                    throw new Error('Razorpay is not loaded');
+                }
+
+                const options = {
+                    key: orderData.key,
+                    amount: orderData.amount,
+                    currency: orderData.currency,
+                    order_id: orderData.orderId,
+                    name: 'SD Zone',
+                    description: `${planName} Plan - ${plan.durationMonths} Month${plan.durationMonths > 1 ? 's' : ''}`,
+                    handler: function(response) {
+                        verifyPayment(response, plan);
+                    },
+                    prefill: {
+                        name: currentUser.name || '',
+                        email: currentUser.email || ''
+                    },
+                    theme: { color: '#00f2fe' },
+                    modal: {
+                        ondismiss: function() {
+                            showAlert('Payment cancelled', 'error');
+                        }
+                    }
+                };
+
+                const razorpay = new Razorpay(options);
+                razorpay.open();
+
+            } catch (error) {
+                console.error('Purchase error:', error);
+                showAlert(`Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function verifyPayment(paymentData, plan) {
+            try {
+                showAlert('Payment successful! Verifying...', 'success');
+
+                const response = await fetch('/api/payments/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        razorpay_payment_id: paymentData.razorpay_payment_id,
+                        razorpay_order_id: paymentData.razorpay_order_id,
+                        razorpay_signature: paymentData.razorpay_signature,
+                        planId: plan.planId,
+                        planName: plan.name,
+                        amount: plan.price,
+                        duration: plan.durationMonths * 30
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('🎉 Payment Successful! Your subscription is now active!', 'success');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    throw new Error(data.message || 'Payment verification failed');
+                }
+
+            } catch (error) {
+                console.error('Verification error:', error);
+                showAlert(`Payment verification failed: ${error.message}`, 'error');
+            }
+        }
+
+        window.addEventListener('load', async function() {
+            // Validate session first
+            await validateSession();
+
+            // Render navbar
+            renderNavbar();
+
+            // Display plans
+            displayPlans(defaultPlans);
+
+            // Fade in animation
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease-in-out';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Plans - SD Zone</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --accent: #00f2fe;
+            --success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --bg-primary: #0a0a0a;
+            --bg-card: rgba(30, 41, 59, 0.95);
+            --shadow-intense: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .floating-orbs {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #2563eb, transparent);
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+            filter: blur(40px);
+        }
+
+        .orb:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb:nth-child(2) {
+            width: 250px;
+            height: 250px;
+            top: 60%;
+            right: 15%;
+            animation-delay: -5s;
+            background: radial-gradient(circle at 30% 30%, #00f2fe, transparent);
+        }
+
+        .orb:nth-child(3) {
+            width: 200px;
+            height: 200px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: -10s;
+            background: radial-gradient(circle at 30% 30%, #43e97b, transparent);
+        }
+
+        .orb:nth-child(4) {
+            width: 280px;
+            height: 280px;
+            top: 20%;
+            right: 25%;
+            animation-delay: -15s;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1);
+                opacity: 0.1;
+            }
+            25% { 
+                transform: translate(-30px, -40px) scale(1.2);
+                opacity: 0.2;
+            }
+            50% { 
+                transform: translate(40px, -30px) scale(0.9);
+                opacity: 0.1;
+            }
+            75% { 
+                transform: translate(-20px, 30px) scale(1.1);
+                opacity: 0.18;
+            }
+        }
+
+        .grid-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(37, 99, 235, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 30s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(40px, 40px); }
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 242, 254, 0.1);
+            padding: 1.2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: var(--success);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+        }
+
+        .nav-btn {
+            background: var(--success);
+            color: white;
+            padding: 0.7rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.5);
+        }
+
+        .user-profile {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 42px;
+            height: 42px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 242, 254, 0.3);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(0, 242, 254, 0.3);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.5);
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: rgba(30, 41, 59, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(51, 65, 85, 0.8);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            min-width: 240px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+        }
+
+        .profile-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-name {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .dropdown-email {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.25rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .dropdown-item.logout {
+            color: #ff6b6b;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-item.logout:hover {
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff8a8a;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .page-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Alert System */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            border: 1px solid;
+            backdrop-filter: blur(10px);
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .alert::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 2px 0 0 2px;
+        }
+
+        .alert-success {
+            background: linear-gradient(145deg, rgba(0, 242, 254, 0.15) 0%, rgba(0, 242, 254, 0.05) 100%);
+            color: #00f2fe;
+            border-color: rgba(0, 242, 254, 0.3);
+        }
+
+        .alert-success::before {
+            background: var(--success);
+        }
+
+        .alert-error {
+            background: linear-gradient(145deg, rgba(255, 107, 107, 0.15) 0%, rgba(255, 107, 107, 0.05) 100%);
+            color: #ff6b6b;
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        .alert-error::before {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+
+        .alert-info {
+            background: linear-gradient(145deg, rgba(67, 233, 123, 0.15) 0%, rgba(67, 233, 123, 0.05) 100%);
+            color: #43e97b;
+            border-color: rgba(67, 233, 123, 0.3);
+        }
+
+        .alert-info::before {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Plans Grid */
+        .plans-grid {
+            display: grid;
+            gap: 2rem;
+            margin: 3rem 0;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .plan-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            border-radius: 25px;
+            padding: 2.5rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.4s ease;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 550px;
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--success);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 242, 254, 0.3);
+            border-color: rgba(0, 242, 254, 0.5);
+        }
+
+        .plan-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .plan-card.featured {
+            border: 2px solid #00f2fe;
+            transform: scale(1.05);
+        }
+
+        .plan-card.featured:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--success);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .savings-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: #000;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .plan-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--success);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.3);
+        }
+
+        .plan-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price small {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+        }
+
+        .discount-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: #000;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .plan-duration {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .plan-description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+            flex-grow: 1;
+            line-height: 1.8;
+        }
+
+        .plan-button {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: auto;
+        }
+
+        .plan-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s;
+        }
+
+        .plan-button:hover::before {
+            left: 100%;
+        }
+
+        .plan-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 242, 254, 0.5);
+        }
+
+        .plan-button.login-required {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .plan-button.login-required:hover {
+            box-shadow: 0 8px 30px rgba(240, 147, 251, 0.5);
+        }
+
+        .plan-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            grid-column: 1 / -1;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(0, 242, 254, 0.3);
+            border-top: 2px solid #00f2fe;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 242, 254, 0.1);
+            padding: 4rem 0 2rem;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: var(--success);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-section p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+            color: var(--text-secondary);
+            transition: color 0.3s;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent);
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .success-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: #000;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
+        }
+
+        @media (max-width: 1024px) {
+            .plans-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .plan-card.featured {
+                transform: scale(1);
+            }
+
+            .plan-card.featured:hover {
+                transform: translateY(-10px) scale(1.02);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .plans-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .profile-dropdown {
+                right: auto;
+                left: 0;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg">
+        <div class="grid-pattern"></div>
+        <div class="floating-orbs">
+            <div class="orb"></div>
+            <div class="orb"></div>
+            <div class="orb"></div>
+            <div class="orb"></div>
+        </div>
+    </div>
+
+    <header class="header">
+        <nav class="nav-container">
+            <a href="/" class="logo">SD ZONE</a>
+            <div class="nav-links" id="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/subscriptions.html" class="nav-link">Pricing</a>
+                <a href="/contact.html" class="nav-link">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Choose Your Trading Plan</h1>
+            <p class="page-subtitle">Professional trading indicators with 87% accuracy. Start your profitable trading journey today.</p>
+        </div>
+
+        <div id="alert-container"></div>
+        <div id="plans-container" class="plans-grid">
+            <div class="loading">
+                <div class="spinner"></div>
+                Loading plans...
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>SD Zone</h3>
+                <p>Elite trading signals and analytics platform designed for serious traders who demand consistent results and professional-grade tools.</p>
+                <p style="margin-top: 1rem; font-size: 0.9rem;">A product of <strong>Sky Blue Multi Tech Enterprises</strong></p>
+                <div class="success-badge">87% Success Rate</div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/subscriptions.html">Pricing Plans</a></li>
+                    <li><a href="/contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="/terms.html">Terms & Conditions</a></li>
+                    <li><a href="/privacy.html">Privacy Policy</a></li>
+                    <li><a href="/refund.html">Refund Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <ul>
+                    <li>📧 help.sdzone@gmail.com</li>
+                    <li>🕒 24/7 Live Support</li>
+                    <li>📸 <a href="https://www.instagram.com/ashish__menaria?igsh=Z29oamRmZjFkOHg=" target="_blank">Instagram (11K+)</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 SD Zone by Sky Blue Multi Tech Enterprises. All rights reserved.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem;">Trading involves risk - past performance doesn't guarantee future results.</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentUser = null;
+
+        const defaultPlans = [
+            { planId: 'starter_1m', name: 'Starter', price: 999, originalPrice: 1499, durationMonths: 1 },
+            { planId: 'professional_3m', name: 'Professional', price: 2499, originalPrice: 2997, durationMonths: 3, popular: true },
+            { planId: 'expert_6m', name: 'Expert', price: 4499, originalPrice: 5994, durationMonths: 6 },
+            { planId: 'elite_12m', name: 'Elite', price: 7999, originalPrice: 11988, durationMonths: 12 },
+            { planId: 'test_1rs', name: 'Test Plan (₹1)', price: 1, durationMonths: 1, test: true }
         ];
 
         function showAlert(message, type = 'info') {
