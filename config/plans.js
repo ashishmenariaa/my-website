@@ -69,22 +69,22 @@ const plans = [
       "Live Zoom classes (Sat & Sun)",
       "Exclusive strategies"
     ]
+  },
+
+  // ✅ TEST PLAN (For ₹1 Payment Gateway Testing)
+  {
+    planId: "test_1rs",
+    name: "Test Plan (₹1)",
+    durationMonths: 1,
+    durationDays: 30,
+    price: 1,
+    amountInPaise: 100,
+    description: "Test plan for payment gateway testing",
+    features: [
+      "Payment testing only",
+      "30 days validity"
+    ]
   }
 ];
 
 module.exports = plans;
-
-/* 
-// TEST PLAN - ₹1 for testing payments (COMMENTED OUT)
-// Uncomment below for payment gateway testing only
-{
-  planId: "test_1rs",
-  name: "Test Plan (₹1)",
-  durationMonths: 1,
-  durationDays: 30,
-  price: 1,
-  amountInPaise: 100,
-  description: "Test plan for payment gateway testing - DO NOT USE IN PRODUCTION",
-  features: ["Payment testing only", "30 days validity"]
-}
-*/
