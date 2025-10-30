@@ -82,9 +82,72 @@ app.use('/api/auth', authRoutes);
 // Protect all API routes with authentication
 app.use('/api/plans', authenticate, plansRoutes);
 app.use('/api/payments', authenticate, paymentsRoutes);
-app.use('/api/subscription', authenticate, paymentsRoutes);
 app.use('/api/contact', authenticate, contactRoutes);
 app.use('/api/tradingview', authenticate, tradingviewRoutes);
+
+// Subscription status endpoint - NEW: returns days remaining and subscription info
+app.get('/api/subscription/status', authenticate, async (req, res) => {
+  try {
+    const userId = req.userId;
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'User not found' 
+      });
+    }
+    
+    // Check if user has active subscription
+    const now = new Date();
+    const hasActiveSubscription = user.activePlan && 
+                                   user.activePlan.endDate && 
+                                   new Date(user.activePlan.endDate) > now;
+    
+    if (!hasActiveSubscription) {
+      return res.json({
+        success: true,
+        subscription: {
+          hasActiveSubscription: false
+        }
+      });
+    }
+    
+    // Calculate days remaining
+    const endDate = new Date(user.activePlan.endDate);
+    endDate.setHours(23, 59, 59, 999); // End of day
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Start of day
+    const diffTime = endDate - today;
+    const daysRemaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    return res.json({
+      success: true,
+      subscription: {
+        hasActiveSubscription: true,
+        isActive: true,
+        planId: user.activePlan.planId || 'unknown',
+        planName: user.activePlan.planName || 'Unknown Plan',
+        startDate: user.activePlan.startDate,
+        endDate: user.activePlan.endDate,
+        daysRemaining: daysRemaining > 0 ? daysRemaining : 0,
+        tradingViewId: user.tradingViewId || null,
+        tradingViewStatus: user.tradingViewStatus || 'not_submitted',
+        amount: user.activePlan.amount || 0
+      }
+    });
+    
+  } catch (error) {
+    console.error('Error fetching subscription status:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to fetch subscription status' 
+    });
+  }
+});
+
+// Other subscription routes handled by paymentsRoutes
+app.use('/api/subscription', authenticate, paymentsRoutes);
 
 // Home route - redirect to login if not authenticated, else show dashboard
 app.get('/', (req, res, next) => {
@@ -138,7 +201,8 @@ cron.schedule('0 9 * * *', async () => {
     
     // TODO: Send warning emails to expiring users
     for (const user of expiringUsers) {
-      console.log(`⚠️ Subscription expiring soon for: ${user.email}`);
+      const daysRemaining = Math.ceil((new Date(user.activePlan.endDate) - now) / (1000 * 60 * 60 * 24));
+      console.log(`⚠️ Subscription expiring in ${daysRemaining} days for: ${user.email}`);
       // Send email notification here
       user.expiryWarningEmailSent = true;
       await user.save();

@@ -912,51 +912,122 @@
                 showAlert(`Error: ${error.message}`, 'error');
             }
         }
-
-       async function verifyPayment(paymentData, planId, planName) {
-    try {
-        showAlert('Payment successful! Verifying...', 'success');
-        
-        const response = await fetch('/api/payments/verify', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({
-                razorpay_payment_id: paymentData.razorpay_payment_id,
-                razorpay_order_id: paymentData.razorpay_order_id,
-                razorpay_signature: paymentData.razorpay_signature,
-                planId: planId
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (data.success) {
-            showAlert(`Payment Successful! Your ${planName} subscription is now active!`, 'success');
-            currentUser.hasActiveSubscription = true;
-            // 🆕 REDIRECT TO TRADINGVIEW PAGE INSTEAD OF RELOAD
-            setTimeout(() => window.location.href = '/tradingview.html', 2000);
-        } else {
-            throw new Error(data.message || 'Payment verification failed');
+        // Replace the checkAuth function's subscription part with:
+async function checkAuth() {
+    renderNavbar();
+    
+    if (isUserLoggedIn()) {
+        try {
+            const response = await fetch('/api/subscription/status', { 
+                credentials: 'include' 
+            });
+            const data = await response.json();
+            
+            if (data.success && data.subscription && data.subscription.hasActiveSubscription) {
+                // Calculate days remaining
+                const endDate = new Date(data.subscription.endDate);
+                const today = new Date();
+                const diffTime = endDate - today;
+                const daysRemaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                displaySubscriptionBanner({
+                    hasActiveSubscription: true,
+                    planName: data.subscription.planName,
+                    expiryDate: data.subscription.endDate,
+                    daysRemaining: daysRemaining > 0 ? daysRemaining : 0
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching subscription:', error);
         }
-        
-    } catch (error) {
-        console.error('Verification error:', error);
-        showAlert(`Payment verification failed: ${error.message}`, 'error');
     }
 }
 
-        window.addEventListener('load', async function() {
-            initCurrentUser();
-            renderNavbar();
-            await loadPlans();
+//        async function verifyPayment(paymentData, planId, planName) {
+//     try {
+//         showAlert('Payment successful! Verifying...', 'success');
+        
+//         const response = await fetch('/api/payments/verify', {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             credentials: 'include',
+//             body: JSON.stringify({
+//                 razorpay_payment_id: paymentData.razorpay_payment_id,
+//                 razorpay_order_id: paymentData.razorpay_order_id,
+//                 razorpay_signature: paymentData.razorpay_signature,
+//                 planId: planId
+//             })
+//         });
+        
+//         const data = await response.json();
+        
+//         if (data.success) {
+//             showAlert(`Payment Successful! Your ${planName} subscription is now active!`, 'success');
+//             currentUser.hasActiveSubscription = true;
+//             // 🆕 REDIRECT TO TRADINGVIEW PAGE INSTEAD OF RELOAD
+//             setTimeout(() => window.location.href = '/tradingview.html', 2000);
+//         } else {
+//             throw new Error(data.message || 'Payment verification failed');
+//         }
+        
+//     } catch (error) {
+//         console.error('Verification error:', error);
+//         showAlert(`Payment verification failed: ${error.message}`, 'error');
+//     }
+// }
+
+        // window.addEventListener('load', async function() {
+        //     initCurrentUser();
+        //     renderNavbar();
+        //     await loadPlans();
             
-            document.body.style.opacity = '0';
-            document.body.style.transition = 'opacity 0.5s ease-in-out';
-            setTimeout(() => {
-                document.body.style.opacity = '1';
-            }, 100);
-        });
+        //     document.body.style.opacity = '0';
+        //     document.body.style.transition = 'opacity 0.5s ease-in-out';
+        //     setTimeout(() => {
+        //         document.body.style.opacity = '1';
+        //     }, 100);
+        // });
+        window.addEventListener('load', async function() {
+    initCurrentUser();
+    renderNavbar();
+    await loadPlans();
+    
+    // Fetch and display subscription status with days remaining
+    if (currentUser) {
+        try {
+            const response = await fetch('/api/subscription/status', { 
+                credentials: 'include' 
+            });
+            const data = await response.json();
+            
+            if (data.success && data.subscription) {
+                // Calculate days remaining
+                const endDate = new Date(data.subscription.endDate);
+                const today = new Date();
+                const diffTime = endDate - today;
+                const daysRemaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                
+                // Show alert if subscription is active
+                if (data.subscription.hasActiveSubscription && daysRemaining > 0) {
+                    showAlert(
+                        `✓ Your ${data.subscription.planName} subscription is active! <strong>${daysRemaining} days remaining</strong> until ${new Date(data.subscription.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`,
+                        'success'
+                    );
+                } else if (daysRemaining <= 0) {
+                    showAlert('Your subscription has expired. Please renew to continue accessing premium features.', 'error');
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching subscription status:', error);
+        }
+    }
+    
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.5s ease-in-out';
+    setTimeout(() => {
+        document.body.style.opacity = '1';
+    }, 100);
+});
     </script>
 </body>
 </html>

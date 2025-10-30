@@ -26,16 +26,26 @@ const UserSchema = new mongoose.Schema({
   // Subscription fields
   activePlan: {
     planId: String,
-    name: String,
-    price: Number,
+    planName: String,
+    amount: Number,
     startDate: Date,
-    endDate: Date
+    endDate: Date,
+    status: {
+      type: String,
+      enum: ['active', 'expired', 'cancelled'],
+      default: 'active'
+    }
   },
-  // TradingView ID
+  // TradingView Integration
   tradingViewId: {
     type: String,
     default: null,
     sparse: true
+  },
+  tradingViewStatus: {
+    type: String,
+    enum: ['not_submitted', 'pending', 'connected'],
+    default: 'not_submitted'
   },
   resetPasswordToken: {
     type: String,
