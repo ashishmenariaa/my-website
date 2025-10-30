@@ -1,3 +1,4 @@
+<!-- subscription.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -861,57 +862,81 @@
             setTimeout(() => window.location.href = '/login.html', 1500);
         }
 
-        async function purchasePlan(planId, planName, price) {
-            if (!currentUser) {
-                redirectToLogin();
-                return;
-            }
-            
-            try {
-                showAlert('Creating payment order...', 'info');
-                
-                const orderResponse = await fetch('/api/payments/create-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ planId })
-                });
-                
-                const orderData = await orderResponse.json();
-                
-                if (!orderData.success) throw new Error(orderData.message || 'Failed to create order');
-                if (typeof Razorpay === 'undefined') throw new Error('Razorpay is not loaded');
-                
-                const options = {
-                    key: orderData.key,
-                    amount: orderData.order.amount,
-                    currency: orderData.order.currency,
-                    order_id: orderData.order.id,
-                    name: 'SD Zone',
-                    description: `${planName} Plan`,
-                    handler: function(response) {
-                        verifyPayment(response, planId, planName);
-                    },
-                    prefill: {
-                        name: orderData.userDetails.name,
-                        email: orderData.userDetails.email
-                    },
-                    theme: { color: '#00f2fe' },
-                    modal: {
-                        ondismiss: function() {
-                            showAlert('Payment cancelled', 'error');
-                        }
-                    }
-                };
-                
-                const razorpay = new Razorpay(options);
-                razorpay.open();
-                
-            } catch (error) {
-                console.error('Purchase error:', error);
-                showAlert(`Error: ${error.message}`, 'error');
-            }
+       async function purchasePlan(planId, planName, price) {
+    if (!currentUser) {
+        redirectToLogin();
+        return;
+    }
+    
+    try {
+        showAlert('Creating payment order...', 'info');
+        
+        // Find the complete plan object
+        const plans = [
+            { planId: 'starter', name: 'Starter', price: 999, originalPrice: 1499, durationMonths: 1 },
+            { planId: 'professional', name: 'Professional', price: 2499, originalPrice: 2997, durationMonths: 3 },
+            { planId: 'expert', name: 'Expert', price: 4499, originalPrice: 5994, durationMonths: 6 },
+            { planId: 'elite', name: 'Elite', price: 7999, originalPrice: 11988, durationMonths: 12 }
+        ];
+        
+        const selectedPlan = plans.find(p => p.planId === planId);
+        
+        if (!selectedPlan) {
+            throw new Error('Plan not found');
         }
+        
+        // ✅ SEND AMOUNT IN THE REQUEST
+        const orderResponse = await fetch('/api/payments/create-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ 
+                planId: selectedPlan.planId,
+                amount: selectedPlan.price,  // ✅ ADD THIS
+                currency: 'INR'
+            })
+        });
+        
+        const orderData = await orderResponse.json();
+        
+        if (!orderData.success) {
+            throw new Error(orderData.message || 'Failed to create order');
+        }
+        
+        if (typeof Razorpay === 'undefined') {
+            throw new Error('Razorpay is not loaded');
+        }
+        
+        const options = {
+            key: orderData.key,
+            amount: orderData.amount,
+            currency: orderData.currency,
+            order_id: orderData.orderId,
+            name: 'SD Zone',
+            description: `${selectedPlan.name} Plan - ${selectedPlan.durationMonths} Month${selectedPlan.durationMonths > 1 ? 's' : ''}`,
+            handler: function(response) {
+                verifyPayment(response, selectedPlan);
+            },
+            prefill: {
+                name: currentUser.name || '',
+                email: currentUser.email || ''
+            },
+            theme: { color: '#00f2fe' },
+            modal: {
+                ondismiss: function() {
+                    showAlert('Payment cancelled', 'error');
+                }
+            }
+        };
+        
+        const razorpay = new Razorpay(options);
+        razorpay.open();
+        
+    } catch (error) {
+        console.error('Purchase error:', error);
+        showAlert(`Error: ${error.message}`, 'error');
+    }
+}
         // Replace the checkAuth function's subscription part with:
 async function checkAuth() {
     renderNavbar();
@@ -941,53 +966,41 @@ async function checkAuth() {
             console.error('Error fetching subscription:', error);
         }
     }
+}async function verifyPayment(paymentData, plan) {
+    try {
+        showAlert('Payment successful! Verifying...', 'success');
+        
+        const response = await fetch('/api/payments/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+                razorpay_payment_id: paymentData.razorpay_payment_id,
+                razorpay_order_id: paymentData.razorpay_order_id,
+                razorpay_signature: paymentData.razorpay_signature,
+                planId: plan.planId,
+                planName: plan.name,
+                amount: plan.price,
+                duration: plan.durationMonths * 30  // Convert to days
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showAlert(`🎉 Payment Successful! Your ${plan.name} subscription is now active!`, 'success');
+            setTimeout(() => window.location.reload(), 2000);
+        } else {
+            throw new Error(data.message || 'Payment verification failed');
+        }
+        
+    } catch (error) {
+        console.error('Verification error:', error);
+        showAlert(`Payment verification failed: ${error.message}`, 'error');
+    }
 }
 
-//        async function verifyPayment(paymentData, planId, planName) {
-//     try {
-//         showAlert('Payment successful! Verifying...', 'success');
-        
-//         const response = await fetch('/api/payments/verify', {
-//             method: 'POST',
-//             headers: { 'Content-Type': 'application/json' },
-//             credentials: 'include',
-//             body: JSON.stringify({
-//                 razorpay_payment_id: paymentData.razorpay_payment_id,
-//                 razorpay_order_id: paymentData.razorpay_order_id,
-//                 razorpay_signature: paymentData.razorpay_signature,
-//                 planId: planId
-//             })
-//         });
-        
-//         const data = await response.json();
-        
-//         if (data.success) {
-//             showAlert(`Payment Successful! Your ${planName} subscription is now active!`, 'success');
-//             currentUser.hasActiveSubscription = true;
-//             // 🆕 REDIRECT TO TRADINGVIEW PAGE INSTEAD OF RELOAD
-//             setTimeout(() => window.location.href = '/tradingview.html', 2000);
-//         } else {
-//             throw new Error(data.message || 'Payment verification failed');
-//         }
-        
-//     } catch (error) {
-//         console.error('Verification error:', error);
-//         showAlert(`Payment verification failed: ${error.message}`, 'error');
-//     }
-// }
 
-        // window.addEventListener('load', async function() {
-        //     initCurrentUser();
-        //     renderNavbar();
-        //     await loadPlans();
-            
-        //     document.body.style.opacity = '0';
-        //     document.body.style.transition = 'opacity 0.5s ease-in-out';
-        //     setTimeout(() => {
-        //         document.body.style.opacity = '1';
-        //     }, 100);
-        // });
-     // Add validateSession function first (before window.addEventListener)
 async function validateSession() {
     try {
         const response = await fetch('/api/auth/me', { 
