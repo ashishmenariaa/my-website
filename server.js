@@ -147,7 +147,8 @@ app.get('/api/subscription/status', authenticate, async (req, res) => {
 });
 
 // Other subscription routes handled by paymentsRoutes
-app.use('/api/subscription', authenticate, paymentsRoutes);
+//app.use('/api/subscription', authenticate, paymentsRoutes);
+app.use('/api/payment', authenticate, paymentsRoutes);
 
 // Home route - redirect to login if not authenticated, else show dashboard
 app.get('/', (req, res, next) => {
