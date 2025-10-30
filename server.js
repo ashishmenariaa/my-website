@@ -1,276 +1,217 @@
-// routes/payments.js
+/ server.js
+require('dotenv').config();
 const express = require('express');
-const router = express.Router();
-const User = require('../models/user');
-const Razorpay = require('razorpay');
-const crypto = require('crypto');
+const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+const path = require('path');
+const cron = require('node-cron');
+const { generateToken, setTokenCookie, authenticate, requireLogin } = require('./middleware/auth');
 
-// Initialize Razorpay
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET
-});
+// Import User model
+const User = require('./models/user');
 
-// =============================================
-// RAZORPAY PAYMENT ROUTES (ADD THESE)
-// =============================================
+// Import routes
+const authRoutes = require('./routes/auth');
+const plansRoutes = require('./routes/plans');
+const paymentsRoutes = require('./routes/payments');
+const contactRoutes = require('./routes/contact');
+const tradingviewRoutes = require('./routes/tradingview');
 
-// Create Razorpay order
-router.post('/create-order', async (req, res) => {
+const app = express();
+
+// ----------------------
+// MongoDB Connection
+// ----------------------
+const connectDB = async () => {
   try {
-    const { planId, amount, currency = 'INR' } = req.body;
-
-    if (!amount || amount <= 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'Valid amount is required'
-      });
-    }
-
-    // Create order in Razorpay
-    const options = {
-      amount: amount * 100, // Razorpay expects amount in paise
-      currency: currency,
-      receipt: `order_${Date.now()}`,
-      notes: {
-        userId: req.userId || req.user._id,
-        planId: planId
-      }
-    };
-
-    const order = await razorpay.orders.create(options);
-
-    res.json({
-      success: true,
-      orderId: order.id,
-      amount: order.amount,
-      currency: order.currency,
-      key: process.env.RAZORPAY_KEY_ID
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
     });
-
-  } catch (error) {
-    console.error('Error creating Razorpay order:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to create payment order'
-    });
+    console.log('✅ Connected to MongoDB');
+  } catch (err) {
+    console.error('❌ MongoDB connection error:', err.message);
+    setTimeout(connectDB, 5000);
   }
+};
+
+connectDB();
+
+// ----------------------
+// Middleware
+// ----------------------
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(cookieParser());
+
+// ----------------------
+// Helper Functions
+// ----------------------
+const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+// ----------------------
+// PUBLIC Routes (No Authentication Required)
+// ----------------------
+
+// Public login/signup pages
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
-// Verify Razorpay payment
-router.post('/verify', async (req, res) => {
-  try {
-    const {
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
-      planId,
-      planName,
-      amount,
-      duration
-    } = req.body;
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'signup.html'));
+});
 
-    // Verify signature
-    const body = razorpay_order_id + '|' + razorpay_payment_id;
-    const expectedSignature = crypto
-      .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-      .update(body.toString())
-      .digest('hex');
+// Health check (public)
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', uptime: process.uptime() });
+});
 
-    if (expectedSignature !== razorpay_signature) {
-      return res.status(400).json({
-        success: false,
-        message: 'Payment verification failed'
-      });
-    }
+// Test API (public)
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'Server is working!', timestamp: new Date() });
+});
 
-    // Payment verified - Update user subscription
-    const userId = req.userId || req.user._id;
-    const user = await User.findById(userId);
+// Auth routes (includes both public endpoints like /signup, /login AND protected endpoints like /me, /logout)
+app.use('/api/auth', authRoutes);
 
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found'
-      });
-    }
+// ----------------------
+// PROTECTED Routes (Authentication Required)
+// ----------------------
 
-    // Calculate subscription dates
-    const startDate = new Date();
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + (parseInt(duration) || 30));
+// Protect all API routes with authentication
+app.use('/api/plans', authenticate, plansRoutes);
+app.use('/api/payments', authenticate, paymentsRoutes);
+app.use('/api/subscription', authenticate, paymentsRoutes);
+app.use('/api/contact', authenticate, contactRoutes);
+app.use('/api/tradingview', authenticate, tradingviewRoutes);
 
-    // Update user's active plan
-    user.activePlan = {
-      planId: planId,
-      planName: planName,
-      amount: amount,
-      startDate: startDate,
-      endDate: endDate,
-      orderId: razorpay_order_id,
-      paymentId: razorpay_payment_id
-    };
-
-    user.expiryWarningEmailSent = false;
-    await user.save();
-
-    res.json({
-      success: true,
-      message: 'Payment verified and subscription activated',
-      subscription: {
-        planName: planName,
-        startDate: startDate,
-        endDate: endDate,
-        daysRemaining: parseInt(duration) || 30
-      }
-    });
-
-  } catch (error) {
-    console.error('Error verifying payment:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Payment verification failed'
-    });
+// Home route - redirect to login if not authenticated, else show dashboard
+app.get('/', (req, res, next) => {
+  const token = req.cookies?.token;
+  
+  if (!token) {
+    return res.redirect('/login');
   }
+  
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// =============================================
-// SUBSCRIPTION STATUS ROUTES (EXISTING)
-// =============================================
+// Add other protected pages here
+app.get('/dashboard', requireLogin, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
+});
 
-// Get user's subscription details
-router.get('/status', async (req, res) => {
+app.get('/profile', requireLogin, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'profile.html'));
+});
+
+app.get('/plans', requireLogin, (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'plans.html'));
+});
+
+// Serve static files AFTER protection routes
+app.use(express.static(path.join(__dirname, 'public')));
+
+// ----------------------
+// Cron Jobs
+// ----------------------
+// Daily subscription expiry check at 9 AM
+cron.schedule('0 9 * * *', async () => {
+  console.log('⏰ Running daily expiry check at 9 AM');
+  
   try {
-    const userId = req.userId || req.user._id;
-    const user = await User.findById(userId);
+    const now = new Date();
+    const sevenDaysFromNow = new Date();
+    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
     
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found'
-      });
-    }
-
-    const hasActiveSubscription = user.hasActiveSubscription();
-    const daysRemaining = user.getDaysRemaining();
-
-    // Build response
-    const subscriptionData = {
-      success: true,
-      subscription: {
-        isActive: hasActiveSubscription,
-        hasActiveSubscription: hasActiveSubscription,
-        daysRemaining: daysRemaining
-      }
-    };
-
-    // Add plan details if active
-    if (hasActiveSubscription && user.activePlan) {
-      subscriptionData.subscription.planName = user.activePlan.planName;
-      subscriptionData.subscription.planId = user.activePlan.planId;
-      subscriptionData.subscription.price = user.activePlan.amount;
-      subscriptionData.subscription.amount = user.activePlan.amount;
-      subscriptionData.subscription.startDate = user.activePlan.startDate;
-      subscriptionData.subscription.endDate = user.activePlan.endDate;
-      subscriptionData.subscription.expiryDate = user.activePlan.endDate;
-    }
-
-    // Add TradingView ID status
-    if (user.tradingViewId) {
-      subscriptionData.subscription.tradingViewId = user.tradingViewId;
-      subscriptionData.subscription.tradingViewStatus = 'connected';
-    } else {
-      subscriptionData.subscription.tradingViewStatus = 'not_submitted';
-    }
-
-    res.json(subscriptionData);
-
-  } catch (error) {
-    console.error('Error fetching subscription:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch subscription details'
+    // Find users whose subscriptions are expiring within 7 days
+    const expiringUsers = await User.find({
+      'activePlan.endDate': { 
+        $gte: now, 
+        $lte: sevenDaysFromNow 
+      },
+      expiryWarningEmailSent: false
     });
-  }
-});
-
-// Submit/Update TradingView ID
-router.post('/tradingview-id', async (req, res) => {
-  try {
-    const { tradingViewId } = req.body;
-
-    if (!tradingViewId || !tradingViewId.trim()) {
-      return res.status(400).json({
-        success: false,
-        message: 'TradingView ID is required'
-      });
-    }
-
-    const userId = req.userId || req.user._id;
-    const user = await User.findById(userId);
     
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found'
-      });
-    }
-
-    // Check if user has active subscription
-    if (!user.hasActiveSubscription()) {
-      return res.status(403).json({
-        success: false,
-        message: 'Active subscription required to submit TradingView ID'
-      });
-    }
-
-    // Update TradingView ID
-    user.tradingViewId = tradingViewId.trim();
-    await user.save();
-
-    res.json({
-      success: true,
-      message: 'TradingView ID submitted successfully',
-      tradingViewId: user.tradingViewId,
-      tradingViewStatus: 'connected'
-    });
-
-  } catch (error) {
-    console.error('Error submitting TradingView ID:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to submit TradingView ID'
-    });
-  }
-});
-
-// Get TradingView ID status
-router.get('/tradingview-id', async (req, res) => {
-  try {
-    const userId = req.userId || req.user._id;
-    const user = await User.findById(userId);
+    console.log(`Found ${expiringUsers.length} subscriptions expiring within 7 days`);
     
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found'
-      });
+    // TODO: Send warning emails to expiring users
+    for (const user of expiringUsers) {
+      console.log(`⚠️ Subscription expiring soon for: ${user.email}`);
+      // Send email notification here
+      user.expiryWarningEmailSent = true;
+      await user.save();
     }
-
-    res.json({
-      success: true,
-      tradingViewId: user.tradingViewId || null,
-      tradingViewStatus: user.tradingViewId ? 'connected' : 'not_submitted',
-      hasActiveSubscription: user.hasActiveSubscription()
+    
+    // Find expired subscriptions
+    const expiredUsers = await User.find({
+      'activePlan.endDate': { $lt: now }
     });
-
+    
+    console.log(`Found ${expiredUsers.length} expired subscriptions`);
+    
+    for (const user of expiredUsers) {
+      console.log(`❌ Subscription expired for: ${user.email}`);
+      // TODO: Revoke TradingView access, send expiry notification
+    }
+    
   } catch (error) {
-    console.error('Error fetching TradingView ID:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch TradingView ID'
-    });
+    console.error('Error in expiry check cron:', error);
   }
 });
 
-module.exports = router;
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM signal received: closing HTTP server');
+  server.close(() => {
+    console.log('HTTP server closed');
+    mongoose.connection.close(false, () => {
+      console.log('MongoDB connection closed');
+      process.exit(0);
+    });
+  });
+});
+
+// ----------------------
+// Error Handling
+// ----------------------
+app.use((err, req, res, next) => {
+  console.error('Error:', err.message);
+  
+  if (err.name === 'ValidationError') {
+    return res.status(400).json({ 
+      success: false, 
+      message: Object.values(err.errors).map(e => e.message).join(', ')
+    });
+  }
+
+  if (err.code === 11000) {
+    return res.status(409).json({ 
+      success: false, 
+      message: 'This record already exists'
+    });
+  }
+
+  res.status(err.status || 500).json({ 
+    success: false, 
+    message: process.env.NODE_ENV === 'production' 
+      ? 'Server error' 
+      : err.message 
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: 'Route not found' });
+});
+
+// ----------------------
+// Start Server
+// ----------------------
+const PORT = process.env.PORT || 5000;
+const server = app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Visit: http://localhost:${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+});
