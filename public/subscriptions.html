@@ -327,6 +327,42 @@
             margin: 0 auto;
         }
 
+        .sale-banner {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            border: 2px solid #ff8a8a;
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        .sale-banner h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .sale-banner p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 8px 30px rgba(255, 107, 107, 0.4);
+            }
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 12px 40px rgba(255, 107, 107, 0.6);
+            }
+        }
+
         .days-banner {
             background: rgba(0, 242, 254, 0.1);
             border: 1px solid rgba(0, 242, 254, 0.3);
@@ -481,12 +517,23 @@
             position: absolute;
             top: 15px;
             right: 15px;
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            color: #000;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: #fff;
             padding: 0.5rem 1rem;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             font-weight: 700;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
         }
 
         .plan-icon {
@@ -525,21 +572,22 @@
 
         .original-price {
             text-decoration: line-through;
-            color: var(--text-secondary);
-            font-size: 1rem;
-            font-weight: 400;
+            color: #ff6b6b;
+            font-size: 1.3rem;
+            font-weight: 600;
             margin-bottom: 0.5rem;
         }
 
         .discount-badge {
             display: inline-block;
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            color: #000;
-            padding: 0.25rem 0.75rem;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: #fff;
+            padding: 0.35rem 1rem;
             border-radius: 50px;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             font-weight: 700;
             margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         }
 
         .plan-duration {
@@ -727,6 +775,10 @@
                 font-size: 2rem;
             }
 
+            .sale-banner h2 {
+                font-size: 1.5rem;
+            }
+
             .plans-grid {
                 grid-template-columns: 1fr;
             }
@@ -779,6 +831,11 @@
         <div class="page-header">
             <h1 class="page-title">Choose Your Trading Plan</h1>
             <p class="page-subtitle">Professional trading indicators with 87% accuracy. Start your profitable trading journey today.</p>
+        </div>
+
+        <div class="sale-banner">
+            <h2>🔥 Limited Time Offer - 50% OFF! 🔥</h2>
+            <p>Get premium trading signals at half the price. Don't miss out!</p>
         </div>
 
         <div id="days-banner" class="days-banner"></div>
@@ -835,10 +892,10 @@
         let currentUser = null;
 
         const defaultPlans = [
-            { planId: 'starter_1m', name: 'Starter', price: 999, originalPrice: 1499, durationMonths: 1 },
-            { planId: 'professional_3m', name: 'Professional', price: 2499, originalPrice: 2997, durationMonths: 3, popular: true },
-            { planId: 'expert_6m', name: 'Expert', price: 4499, originalPrice: 5994, durationMonths: 6 },
-            { planId: 'elite_12m', name: 'Elite', price: 7999, originalPrice: 11988, durationMonths: 12 }
+            { planId: 'starter_1m', name: 'Starter', price: 999, originalPrice: 1998, durationMonths: 1 },
+            { planId: 'professional_3m', name: 'Professional', price: 2499, originalPrice: 4998, durationMonths: 3, popular: true },
+            { planId: 'expert_6m', name: 'Expert', price: 4499, originalPrice: 8998, durationMonths: 6 },
+            { planId: 'elite_12m', name: 'Elite', price: 7999, originalPrice: 15998, durationMonths: 12 }
             // { planId: 'test_1rs', name: 'Test Plan (₹1)', price: 1, durationMonths: 1, test: true }
         ];
 
@@ -969,7 +1026,6 @@
 
             container.innerHTML = plans.map((plan, index) => {
                 const isPopular = plan.popular || index === 1;
-                const savings = index > 0 ? Math.round(((defaultPlans[0].price * plan.durationMonths) - plan.price) / (defaultPlans[0].price * plan.durationMonths) * 100) : 0;
                 const planIcon = icons[index] || '💎';
 
                 const buttonText = currentUser ? `Get ${plan.name} Plan` : 'Login to Subscribe';
@@ -979,13 +1035,13 @@
                 return `
                     <div class="plan-card ${isPopular ? 'featured' : ''}">
                         ${isPopular ? '<div class="popular-badge">Most Popular</div>' : ''}
-                        ${savings > 0 ? `<div class="savings-badge">Save ${savings}%</div>` : ''}
+                        <div class="savings-badge">50% OFF</div>
 
                         <div class="plan-icon">${planIcon}</div>
                         <div class="plan-name">${plan.name}</div>
-                        ${plan.originalPrice ? `<div class="original-price">₹${plan.originalPrice.toLocaleString()}</div>` : ''}
+                        <div class="original-price">₹${plan.originalPrice.toLocaleString()}</div>
                         <div class="plan-price">₹${plan.price.toLocaleString()}<small>/total</small></div>
-                        ${savings > 0 ? `<div class="discount-badge">${savings}% OFF</div>` : ''}
+                        <div class="discount-badge">SAVE 50%</div>
                         <div class="plan-duration">${plan.durationMonths} Month${plan.durationMonths > 1 ? 's' : ''} Access</div>
                         <div class="plan-description">Professional trading signals with real-time zone detection and custom alerts.</div>
 
