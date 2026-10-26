@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/ashishmenariaa/my-website/actions/workflows/ci.yml/badge.svg)](https://github.com/ashishmenariaa/my-website/actions/workflows/ci.yml)
 
-A live web app ([sdzone.shop](https://sdzone.shop)) where traders buy subscriptions to TradingView indicators. Users sign up, pay through Razorpay, and submit their TradingView username to get access. Subscriptions expire automatically.
+A web app (deployed in 2025 at sdzone.shop) where traders buy subscriptions to TradingView indicators. Users sign up, pay through Razorpay, and submit their TradingView username to get access. Subscriptions expire automatically.
 
 **Stack:** Node.js · Express 5 · MongoDB / Mongoose · Razorpay · JWT (httpOnly cookie) · bcrypt · node-cron · Nodemailer · Helmet · express-rate-limit · `node:test`
 
