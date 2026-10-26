@@ -8,6 +8,8 @@ const transporter = require('../config/email');
 
 const router = express.Router();
 
+const hashToken = (token) => crypto.createHash('sha256').update(token).digest('hex');
+
 
 // ✅ Test route (PUBLIC - for debugging)
 router.get('/test', (req, res) => {
@@ -80,8 +82,6 @@ router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    console.log('🔐 Login attempt for:', email);
-
     // Validation
     if (!email || !password) {
       return res.status(400).json({
@@ -93,18 +93,14 @@ router.post('/login', async (req, res) => {
     // Find user
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
-      console.log('❌ User not found');
       return res.status(400).json({
         success: false,
         message: 'Invalid credentials'
       });
     }
 
-    console.log('👤 User found:', user.email);
-
     // Check password
     const isPasswordValid = await user.comparePassword(password);
-    console.log('✅ Password valid?', isPasswordValid);
 
     if (!isPasswordValid) {
       return res.status(400).json({
@@ -139,12 +135,7 @@ router.post('/login', async (req, res) => {
 // ✅ Get current user (PROTECTED - requires authentication)
 router.get('/me', authenticate, (req, res) => {
   try {
-    console.log('AUTH /me:', {
-      user: req.user ? { id: req.user._id, email: req.user.email, name: req.user.name } : null
-    });
-
     if (!req.user || !req.user.email || !req.user.name) {
-      console.log('AUTH /me: Not authenticated');
       return res.status(401).json({ success: false, message: 'Not authenticated' });
     }
 
@@ -188,9 +179,7 @@ router.post('/forgot-password', async (req, res) => {
   try {
     const { email } = req.body;
 
-    console.log('📧 Forgot password request for:', email);
-
-    if (!email) {
+    if (!email || typeof email !== 'string') {
       return res.status(400).json({
         success: false,
         message: 'Email is required'
@@ -201,7 +190,6 @@ router.post('/forgot-password', async (req, res) => {
     const user = await User.findOne({ email: email.toLowerCase() });
 
     if (!user) {
-      console.log('❌ User not found:', email);
       // Don't reveal if email exists or not (security best practice)
       return res.status(200).json({
         success: true,
@@ -209,27 +197,20 @@ router.post('/forgot-password', async (req, res) => {
       });
     }
 
-    console.log('✅ User found:', user.email);
-
     // Generate reset token (32 bytes = 64 hex characters)
     const resetToken = crypto.randomBytes(32).toString('hex');
     const resetTokenExpiry = Date.now() + 3600000; // 1 hour from now
 
-    console.log('🔑 Generated token:', resetToken);
-    console.log('⏰ Token expiry:', new Date(resetTokenExpiry));
-
-    // Save token to user
-    user.resetPasswordToken = resetToken;
+    // Store only a hash: a database leak must not expose working reset links
+    user.resetPasswordToken = hashToken(resetToken);
     user.resetPasswordExpiry = resetTokenExpiry;
     await user.save();
-
-    console.log('💾 Token saved to database');
 
     // Send email
     const mailOptions = forgotPasswordEmail(email, resetToken, user.name);
     await transporter.sendMail(mailOptions);
 
-    console.log('📧 Reset email sent to:', email);
+    console.log('📧 Password reset email sent for user', user._id.toString());
 
     res.json({
       success: true,
@@ -249,10 +230,8 @@ router.post('/reset-password', async (req, res) => {
   try {
     const { token, password } = req.body;
 
-    console.log('🔍 Reset password request');
-    console.log('⏰ Current time:', new Date());
-
-    if (!token || !password) {
+    // Reject objects like {"$ne": null}, which would otherwise act as a MongoDB query operator
+    if (typeof token !== 'string' || typeof password !== 'string' || !token || !password) {
       return res.status(400).json({
         success: false,
         message: 'Token and password are required'
@@ -269,11 +248,9 @@ router.post('/reset-password', async (req, res) => {
 
     // Find user with valid token
     const user = await User.findOne({
-      resetPasswordToken: token,
+      resetPasswordToken: hashToken(token),
       resetPasswordExpiry: { $gt: Date.now() }
     });
-
-    console.log('👤 User found:', user ? 'YES ✅' : 'NO ❌');
 
     if (!user) {
       return res.status(400).json({
@@ -282,18 +259,15 @@ router.post('/reset-password', async (req, res) => {
       });
     }
 
-    console.log('📧 User email:', user.email);
-    console.log('🔧 Setting new password (will be hashed by pre-save)');
-
-    // Set password directly (pre-save hook will hash it)
-    user.passwordHash = password;
+    // The pre-save hook hashes it. (Previously this set a non-existent "passwordHash" field,
+    // so resets silently never changed the password.)
+    user.password = password;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpiry = undefined;
 
-    console.log('💾 Saving user...');
     await user.save();
 
-    console.log('✅ Password updated successfully for:', user.email);
+    console.log('✅ Password reset for user', user._id.toString());
 
     res.json({
       success: true,

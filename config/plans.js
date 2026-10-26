@@ -71,9 +71,10 @@ const plans = [
     ]
   },
 
-  // ✅ TEST PLAN (For ₹1 Payment Gateway Testing)
+  // ✅ TEST PLAN (For ₹1 Payment Gateway Testing) — only purchasable when ENABLE_TEST_PLAN=true
   {
     planId: "test_1rs",
+    testOnly: true,
     name: "Test Plan (₹1)",
     durationMonths: 1,
     durationDays: 30,
@@ -87,4 +88,28 @@ const plans = [
   }
 ];
 
+// Older pages use short ids; map them to the canonical plan ids
+const PLAN_ALIASES = {
+  starter: "starter_1m",
+  professional: "professional_3m",
+  expert: "expert_6m",
+  elite: "elite_12m"
+};
+
+const testPlanEnabled = () => process.env.ENABLE_TEST_PLAN === "true";
+
+/** Plans a customer can see and buy. The ₹1 test plan is hidden unless explicitly enabled. */
+function purchasablePlans() {
+  return plans.filter(plan => !plan.testOnly || testPlanEnabled());
+}
+
+/** Server-side source of truth for price and duration. Returns undefined for unknown or disabled plans. */
+function findPlan(planId) {
+  if (typeof planId !== "string") return undefined;
+  const id = PLAN_ALIASES[planId] || planId;
+  return purchasablePlans().find(plan => plan.planId === id);
+}
+
 module.exports = plans;
+module.exports.purchasablePlans = purchasablePlans;
+module.exports.findPlan = findPlan;

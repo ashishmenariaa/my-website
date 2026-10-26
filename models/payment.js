@@ -49,4 +49,9 @@ const PaymentSchema = new mongoose.Schema({
   }
 });
 
+// One record per Razorpay order, and a Razorpay payment can only ever be applied once
+PaymentSchema.index({ razorpayOrderId: 1 }, { unique: true });
+PaymentSchema.index({ razorpayPaymentId: 1 }, { unique: true, partialFilterExpression: { razorpayPaymentId: { $type: 'string' } } });
+PaymentSchema.index({ userId: 1, createdAt: -1 });
+
 module.exports = mongoose.model('Payment', PaymentSchema);

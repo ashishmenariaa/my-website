@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const cron = require('node-cron');
+const helmet = require('helmet');
+const { rateLimit } = require('express-rate-limit');
 const { generateToken, setTokenCookie, authenticate, requireLogin } = require('./middleware/auth');
 
 // Import User model
@@ -24,10 +26,7 @@ const app = express();
 // ----------------------
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await mongoose.connect(process.env.MONGO_URI);
     console.log('✅ Connected to MongoDB');
   } catch (err) {
     console.error('❌ MongoDB connection error:', err.message);
@@ -40,9 +39,25 @@ connectDB();
 // ----------------------
 // Middleware
 // ----------------------
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ limit: '10mb', extended: true }));
+// Behind the hosting provider's proxy: needed for correct client IPs in rate limiting
+app.set('trust proxy', 1);
+
+// Security headers. CSP is off because the pages rely on inline scripts and the Razorpay checkout script.
+app.use(helmet({ contentSecurityPolicy: false }));
+
+app.use(express.json({ limit: '100kb' }));
+app.use(express.urlencoded({ limit: '100kb', extended: true }));
 app.use(cookieParser());
+
+// Slow down password guessing and email spam on the public auth endpoints
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 20,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many attempts. Please try again in 15 minutes.' }
+});
+app.use(['/api/auth/login', '/api/auth/signup', '/api/auth/forgot-password', '/api/auth/reset-password'], authLimiter);
 
 // ----------------------
 // Helper Functions
@@ -164,12 +179,12 @@ cron.schedule('0 9 * * *', async () => {
 // Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('SIGTERM signal received: closing HTTP server');
-  server.close(() => {
+  server.close(async () => {
     console.log('HTTP server closed');
-    mongoose.connection.close(false, () => {
-      console.log('MongoDB connection closed');
-      process.exit(0);
-    });
+    // Mongoose 8 close() returns a promise; the old callback form was never called, so the process hung
+    await mongoose.connection.close();
+    console.log('MongoDB connection closed');
+    process.exit(0);
   });
 });
 

@@ -1,9 +1,15 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
+// No fallback: with a known default secret anyone could forge login tokens
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
+
 // Generate JWT token
 const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET || 'fallback-secret', {
+  return jwt.sign({ id: userId }, JWT_SECRET, {
     expiresIn: '7d'
   });
 };
@@ -42,7 +48,7 @@ const authenticate = async (req, res, next) => {
     // Verify token
     let decoded;
     try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+      decoded = jwt.verify(token, JWT_SECRET);
     } catch (err) {
       res.clearCookie('token');
       return res.status(401).json({
@@ -92,7 +98,7 @@ const requireLogin = async (req, res, next) => {
     // Verify token
     let decoded;
     try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
+      decoded = jwt.verify(token, JWT_SECRET);
     } catch (err) {
       res.clearCookie('token');
       return res.redirect('/login?message=session_expired');
@@ -128,19 +134,10 @@ const requireSubscription = async (req, res, next) => {
       });
     }
 
-    // Check subscription status
-    if (!req.user.subscriptionStatus || req.user.subscriptionStatus !== 'active') {
+    if (!req.user.hasActiveSubscription()) {
       return res.status(403).json({ 
         success: false, 
         message: 'Active subscription required. Please subscribe to access this feature.' 
-      });
-    }
-
-    // Check subscription expiry
-    if (req.user.subscriptionEndDate && new Date(req.user.subscriptionEndDate) < new Date()) {
-      return res.status(403).json({ 
-        success: false, 
-        message: 'Your subscription has expired. Please renew to continue.' 
       });
     }
 

@@ -1,6 +1,6 @@
 //plans.js in routes
 const express = require('express');
-const plans = require('../config/plans');
+const { purchasablePlans } = require('../config/plans');
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ function calculateDaysFromMonths(months) {
 // Get all plans with enhanced info
 router.get('/', (req, res) => {
   // Add durationDays to each plan if not already present
-  const enhancedPlans = plans.map(plan => ({
+  const enhancedPlans = purchasablePlans().map(plan => ({
     ...plan,
     durationDays: plan.durationDays || calculateDaysFromMonths(plan.durationMonths),
     // Calculate savings percentage if originalPrice exists
@@ -31,7 +31,7 @@ router.get('/', (req, res) => {
 router.get('/:planId', (req, res) => {
   const { planId } = req.params;
   
-  const plan = plans.find(p => p.planId === planId);
+  const plan = purchasablePlans().find(p => p.planId === planId);
   
   if (!plan) {
     return res.status(404).json({
